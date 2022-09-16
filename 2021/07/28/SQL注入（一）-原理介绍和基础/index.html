@@ -18,28 +18,24 @@
   <meta name="author" content="HackerTerry">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言最近买了一台群晖nas，是已经停产的ds218play(因为没钱），开始了小白瞎折腾的漫长过程。因为长期住校，想通过域名访问家里群晖dsm实现多种功能，例如外网映射磁盘，但是这样以后发现内网无法用域名访问dsm!经过漫长的摸索以后，我这个小白竟然成功了!在这里分享给大家具体方法，不用putty，不用secureCRT即可实现! 正文首先在网上下载WinSCP软件，下载安装后如图  选择 SCP">
+    <meta name="description" content="前言最近刚刚结束“前端三剑客”的学习，而web方向在开始学习SQL注入。我个人觉得新手入门SQL注入有些难，而且碰到CTF题目也不太敢下手，所以在这里简单说一下新手需要注意的点。 正文0x01 SQL注入原理介绍当Web应用向后台数据库传递SQL语句进行数据库操作时。如果对用户输入的参数没有经过严格的过滤处理，那么攻击者就可以构造特殊的SQL语句，直接输入数据库引擎执行，获取或修改数据库中的数据。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="梅林固件路由器修改hosts实现内网通过域名访问群晖dsm">
-<meta property="og:url" content="https://rookieterry.github.io/2020/12/21/%E6%A2%85%E6%9E%97%E5%9B%BA%E4%BB%B6%E8%B7%AF%E7%94%B1%E5%99%A8%E4%BF%AE%E6%94%B9hosts%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E9%80%9A%E8%BF%87%E5%9F%9F%E5%90%8D%E8%AE%BF%E9%97%AE%E7%BE%A4%E6%99%96dsm/index.html">
+<meta property="og:title" content="SQL注入（一）--原理介绍和基础">
+<meta property="og:url" content="https://rookieterry.github.io/2021/07/28/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%B8%80%EF%BC%89-%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E5%92%8C%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
-<meta property="og:description" content="前言最近买了一台群晖nas，是已经停产的ds218play(因为没钱），开始了小白瞎折腾的漫长过程。因为长期住校，想通过域名访问家里群晖dsm实现多种功能，例如外网映射磁盘，但是这样以后发现内网无法用域名访问dsm!经过漫长的摸索以后，我这个小白竟然成功了!在这里分享给大家具体方法，不用putty，不用secureCRT即可实现! 正文首先在网上下载WinSCP软件，下载安装后如图  选择 SCP">
+<meta property="og:description" content="前言最近刚刚结束“前端三剑客”的学习，而web方向在开始学习SQL注入。我个人觉得新手入门SQL注入有些难，而且碰到CTF题目也不太敢下手，所以在这里简单说一下新手需要注意的点。 正文0x01 SQL注入原理介绍当Web应用向后台数据库传递SQL语句进行数据库操作时。如果对用户输入的参数没有经过严格的过滤处理，那么攻击者就可以构造特殊的SQL语句，直接输入数据库引擎执行，获取或修改数据库中的数据。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/09/14/iQrxMAhg5B9W2cl.jpg">
-<meta property="og:image" content="https://s2.loli.net/2022/09/14/41uNsDa2AlK37Cy.jpg">
-<meta property="og:image" content="https://s2.loli.net/2022/09/14/41uNsDa2AlK37Cy.jpg">
-<meta property="article:published_time" content="2020-12-21T09:35:00.000Z">
-<meta property="article:modified_time" content="2022-09-16T05:50:35.657Z">
+<meta property="article:published_time" content="2021-07-28T08:49:30.000Z">
+<meta property="article:modified_time" content="2022-09-16T06:29:33.546Z">
 <meta property="article:author" content="HackerTerry">
-<meta property="article:tag" content="数码折腾">
+<meta property="article:tag" content="SQL注入">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/09/14/iQrxMAhg5B9W2cl.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>梅林固件路由器修改hosts实现内网通过域名访问群晖dsm - HackerTerry&#39;s Blog</title>
+  <title>SQL注入（一）--原理介绍和基础 - HackerTerry&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -243,7 +239,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="梅林固件路由器修改hosts实现内网通过域名访问群晖dsm"></span>
+            <span id="subtitle" data-typed-text="SQL注入（一）--原理介绍和基础"></span>
           
         </div>
 
@@ -259,8 +255,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2020-12-21 17:35" pubdate>
-          星期一, 十二月 21日 2020, 5:35 下午
+        <time datetime="2021-07-28 16:49" pubdate>
+          星期三, 七月 28日 2021, 4:49 下午
         </time>
       </span>
     
@@ -272,7 +268,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          639 字
+          1k 字
         
       </span>
     
@@ -284,7 +280,7 @@
         
         
           <!-- compatible with older versions-->
-          6 分钟
+          9 分钟
         
       </span>
     
@@ -330,7 +326,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">梅林固件路由器修改hosts实现内网通过域名访问群晖dsm</h1>
+            <h1 style="display: none">SQL注入（一）--原理介绍和基础</h1>
             
               <p class="note note-info">
                 
@@ -343,18 +339,32 @@
             
               <div class="markdown-body">
                 
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近买了一台群晖nas，是已经停产的ds218play(因为没钱），开始了小白瞎折腾的漫长过程。因为长期住校，想通过域名访问家里群晖dsm实现多种功能，例如外网映射磁盘，但是这样以后发现内网无法用域名访问dsm!经过漫长的摸索以后，我这个小白竟然成功了!在这里分享给大家具体方法，不用putty，不用secureCRT即可实现!</p>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>首先在网上下载WinSCP软件，下载安装后如图</p>
-<p><img src="https://s2.loli.net/2022/09/14/iQrxMAhg5B9W2cl.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>选择 SCP 协议，主机名也就是自己路由器的管理页面 IP，用户名和密码也和登陆路由管理页面用的一样，连接即可。端口不变，填写完后点登录，如图</p>
-<p><img src="https://s2.loli.net/2022/09/14/41uNsDa2AlK37Cy.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>连上之后一路往回到路由根目录，进入&#x2F;jffs&#x2F;configs 目录，新建一个 dnsmasq.conf.add 文件，写入以下内容：<code>addn-hosts=/jffs/configs/hosts</code></p>
-<p>写入方式就和平时windows编辑txt文本文档一样，注意文件名就是dnsmasq.conf.add</p>
-<p>再新建一个文件，文件名就是hosts，再写入以下内容(我的群晖nas内网IP是192.168.50.66):</p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"><span class="hljs-number">192.168.50.66</span> www.xxx.xxx<br><br># 例如:<span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">2</span>.<span class="hljs-number">164</span> smartplugconnect.phicomm.com<br></code></pre></td></tr></table></figure>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近刚刚结束“前端三剑客”的学习，而web方向在开始学习SQL注入。我个人觉得新手入门SQL注入有些难，而且碰到CTF题目也不太敢下手，所以在这里简单说一下新手需要注意的点。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="0x01-SQL注入原理介绍"><a href="#0x01-SQL注入原理介绍" class="headerlink" title="0x01 SQL注入原理介绍"></a>0x01 SQL注入原理介绍</h3><p>当Web应用向后台数据库传递SQL语句进行数据库操作时。如果对用户输入的参数没有经过严格的过滤处理，那么攻击者就可以构造特殊的SQL语句，直接输入数据库引擎执行，获取或修改数据库中的数据。</p>
+<p>所以sql注入漏洞的本质是将用户输入的数据当做代码来执行。</p>
+<p>sql注入的两个关键条件：用户可以控制输入的内容；web应用把用户输入的内容带进数据库执行。</p>
+<h3 id="0x02-SQL注入基础"><a href="#0x02-SQL注入基础" class="headerlink" title="0x02 SQL注入基础"></a>0x02 SQL注入基础</h3><h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-built_in">system_user</span>()：  系统用户名<br><br><span class="hljs-keyword">user</span>()：  用户名<br><br><span class="hljs-built_in">current_user</span>()： 当前用户名<br><br><span class="hljs-built_in">session_user</span>()：  链接数据库的用户名<br><br>database()： 数据库名<br><br>version()：  MySQL数据库版本<br><br>load_file()：  转成<span class="hljs-number">16</span>进制或者<span class="hljs-number">10</span>进制 MySQL读取本地文件的函数<br><br>@<span class="hljs-variable">@datadir</span>： 读取数据库路径<br><br>@<span class="hljs-variable">@basedir</span>： MySQL安装路径<br><br>@<span class="hljs-variable">@version</span>_compile_os： 操作系统<br><br>group_concat()：将括号中的所有参数拼接成一个字符串<br><br>substr(str,<span class="hljs-keyword">start</span>,length):截取str字符串中从<span class="hljs-keyword">start</span>开始，长度为length的字符串<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://s2.loli.net/2022/09/14/41uNsDa2AlK37Cy.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>两个文件添加完以后，弹出的对话框选择“是”，再重启路由器。然后局域网内任何一台电脑(最好是其它电脑)用windows 的命令行或者powershell，ping一下你的域名，出现nas的内网IP就成功了!</p>
+<h4 id="必记的一库三表"><a href="#必记的一库三表" class="headerlink" title="必记的一库三表"></a>必记的一库三表</h4><p>一库：information_schema（MySQL默认数据库）</p>
+<p>三表:</p>
+<p>0x01 SCHEMATA：存储了MySQL下每一个数据库的相关信息</p>
+<ul>
+<li>schema_name（字段）：数据库名</li>
+</ul>
+<p>0x02 TABLES： 存储了MySQL下每一个表的相关信息</p>
+<ul>
+<li><p>TABLE_NAME（字段）：数据表名</p>
+</li>
+<li><p>TABLE_SCHEMATA（字段）：该数据表属于哪一个数据库</p>
+</li>
+</ul>
+<p>0x03 COLUMNS：存储了MySQL下每一个数据表中的所有列名</p>
+<ul>
+<li>COLUMN_NAME（字段）：字段名称</li>
+<li>TABLE_NAME（字段）：该字段属于哪一个数据表</li>
+<li>TABLE_SCHEMA（字段）：当前字段所属数据表所在的数据库名称</li>
+</ul>
+<p><strong>注意：这三张表在information_schema数据库下面，在SQL注入过程中不能直接指定表名，要使用“数据库名.数据表名”的形式，例如：information_schema.tables</strong>。</p>
 
                 
               </div>
@@ -373,7 +383,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4/" class="category-chain-item">网络运维</a>
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
   
   
 
@@ -388,7 +398,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E6%95%B0%E7%A0%81%E6%8A%98%E8%85%BE/">#数码折腾</a>
+        <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">#SQL注入</a>
       
     </div>
   
@@ -400,8 +410,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>梅林固件路由器修改hosts实现内网通过域名访问群晖dsm</div>
-      <div>https://rookieterry.github.io/2020/12/21/梅林固件路由器修改hosts实现内网通过域名访问群晖dsm/</div>
+      <div>SQL注入（一）--原理介绍和基础</div>
+      <div>https://rookieterry.github.io/2021/07/28/SQL注入（一）-原理介绍和基础/</div>
     </div>
     <div class="license-meta">
       
@@ -413,7 +423,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>星期一, 十二月 21日 2020, 5:35 下午</div>
+          <div>星期三, 七月 28日 2021, 4:49 下午</div>
         </div>
       
       
@@ -457,15 +467,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/12/23/%E7%BE%A4%E6%99%96NAS%E9%85%8D%E7%BD%AEDNSPodDDNS%E5%AE%9E%E7%8E%B0%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE/" title="群晖NAS配置DNSPodDDNS实现外网访问">
+                      <a href="/2021/10/05/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%BA%8C%EF%BC%89-Access%E6%B3%A8%E5%85%A5/" title="SQL注入（二）--Access注入">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">群晖NAS配置DNSPodDDNS实现外网访问</span>
+                        <span class="hidden-mobile">SQL注入（二）--Access注入</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2021/07/19/%E7%AE%80%E5%8D%95%E7%9A%84%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2/" title="简单的登录页面">
+                        <span class="hidden-mobile">简单的登录页面</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

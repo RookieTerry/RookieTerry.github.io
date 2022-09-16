@@ -268,15 +268,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2020/12/21/%E6%A2%85%E6%9E%97%E5%9B%BA%E4%BB%B6%E8%B7%AF%E7%94%B1%E5%99%A8%E4%BF%AE%E6%94%B9hosts%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E9%80%9A%E8%BF%87%E5%9F%9F%E5%90%8D%E8%AE%BF%E9%97%AE%E7%BE%A4%E6%99%96dsm/" target="_blank">
-          梅林固件路由器修改hosts实现内网通过域名访问群晖dsm
+        <a href="/2021/10/07/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%B8%89%EF%BC%89-WAF%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF/" target="_blank">
+          文件上传（三）--WAF绕过思路
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/12/21/%E6%A2%85%E6%9E%97%E5%9B%BA%E4%BB%B6%E8%B7%AF%E7%94%B1%E5%99%A8%E4%BF%AE%E6%94%B9hosts%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E9%80%9A%E8%BF%87%E5%9F%9F%E5%90%8D%E8%AE%BF%E9%97%AE%E7%BE%A4%E6%99%96dsm/" target="_blank">
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/10/07/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%B8%89%EF%BC%89-WAF%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF/" target="_blank">
         <div>
-          前言最近买了一台群晖nas，是已经停产的ds218play(因为没钱），开始了小白瞎折腾的漫长过程。因为长期住校，想通过域名访问家里群晖dsm实现多种功能，例如外网映射磁盘，但是这样以后发现内网无法用域名访问dsm!经过漫长的摸索以后，我这个小白竟然成功了!在这里分享给大家具体方法，不用putty，不用secureCRT即可实现! 正文首先在网上下载WinSCP软件，下载安装后如图  选择 SCP
+          这里我以著名的upload-labs文件上传靶场作为演示，图片因为博客搬迁丢失了qwq。 注意：由于WAF产品会不停更新换代，拦截手法也一再升级，所以这里介绍的方法可能会过时，请各位师傅灵活运用！这里的绕过手法只适用于黑名单，白名单只能配合文件包含或者iis7.5的解析漏洞！ 常用思路1.文件名后缀大小写绕过 2.文件名后缀双写绕过 3.命名规范绕过：尝试使用（正反）斜杠、星号、冒号(冒号会将文件
         </div>
       </a>
 
@@ -284,8 +284,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2020-12-21 17:35" pubdate>
-              2020-12-21
+            <time datetime="2021-10-07 18:04" pubdate>
+              2021-10-07
             </time>
           </div>
         
@@ -300,7 +300,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/" class="category-chain-item">技术文章</a>
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
   
   
 
@@ -315,7 +315,553 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/%E6%95%B0%E7%A0%81%E6%8A%98%E8%85%BE/">#数码折腾</a>
+              <a href="/tags/%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95/">#模糊测试</a>
+            
+              <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">#文件上传</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/07/Web%E6%BC%8F%E6%B4%9E%E7%BB%BC%E5%90%88/" target="_blank">
+          Web漏洞综合
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/10/07/Web%E6%BC%8F%E6%B4%9E%E7%BB%BC%E5%90%88/" target="_blank">
+        <div>
+          前段时间学业繁忙，没有时间整理笔记。正好中秋放假，我就在这里把上周所学的知识归纳总结一下。由于笔记中提到的几种攻击方法如今在红队实战中很少用到，所以对于以下方法只需了解即可，但是安服岗的面试中时常会问到这些。 XSSXSS，即“跨站脚本攻击”(Cross Site Scripting)，为了不和“层叠样式表”(Cascading Style Sheets, CSS)的缩写混淆，故将跨站脚本攻击缩写
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-07 17:59" pubdate>
+              2021-10-07
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/07/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%BA%8C%EF%BC%89-Apache%E5%92%8CNginx/" target="_blank">
+          文件上传（二）--Apache和Nginx
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/10/07/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%BA%8C%EF%BC%89-Apache%E5%92%8CNginx/" target="_blank">
+        <div>
+          下面我们来总结另外几个与中间件以及http请求头有关文件上传的漏洞，它们都与客户机或服务器的操作系统无关。 Apache文件名解析漏洞由于Apache解析文件后缀名的顺序是从右往左，所以我们可以在文件名最后加上Apache无法识别的文件后缀名来绕过。例如我们要上传一个PHP木马，那我们可以把文件名命名为”*.php.123”，其中”123”是Apache无法识别的后缀名，则Apache会解析左边的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-07 17:58" pubdate>
+              2021-10-07
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">#文件上传</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%B8%80%EF%BC%89-IIS/" target="_blank">
+          文件上传（一）--IIS
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/10/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%B8%80%EF%BC%89-IIS/" target="_blank">
+        <div>
+          形成原因文件上传漏洞是指由于程序员在对用户文件上传部分的控制不足或者处理缺陷，而导致的用户可以越过其本身权限向服务器上上传可执行的动态脚本文件。 这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，“文件上传”本身没有问题，有问题的是文件上传后，服务器怎么处理、解释文件。如果服务器的处理逻辑做的不够安全，则会导致严重的后果。文件上传漏洞本身就是一个危害巨
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-06 17:57" pubdate>
+              2021-10-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">#文件上传</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/06/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E5%9B%9B%EF%BC%89-WAF%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF/" target="_blank">
+          SQL注入（四）--WAF绕过思路
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/10/06/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E5%9B%9B%EF%BC%89-WAF%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF/" target="_blank">
+        <div>
+          什么是WAF什么是WAF？WAF(Web Application Firewall)，即网站应用防火墙，通过过滤和监视Web应用程序与Internet之间的HTTP通信来帮助保护Web应用程序。它通常可以保护Web应用程序免受跨站点伪造（CSRF&#x2F;SSRF），跨站点脚本（XSS），文件上传和SQL注入等攻击。 WAF工作在OSI模型的第七层（即应用层），并非用于防御所有类型的攻击。 WA
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-06 14:52" pubdate>
+              2021-10-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95/">#模糊测试</a>
+            
+              <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">#SQL注入</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/05/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%B8%89%EF%BC%89-SQL-server%E5%92%8COracle%E6%B3%A8%E5%85%A5/" target="_blank">
+          SQL注入（三）--SQL server和Oracle注入
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/10/05/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%B8%89%EF%BC%89-SQL-server%E5%92%8COracle%E6%B3%A8%E5%85%A5/" target="_blank">
+        <div>
+          SQL server和Oracle数据库注入简介ms SQL是指微软的SQL Server数据库服务器，它是一个数据库平台，提供数据库的从服务器到终端的完整的解决方案，其中数据库服务器部分，是一个数据库管理系统，用于建立、使用和维护数据库。 Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。它是在数据库领域一直处于领先地位的产品
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-05 17:54" pubdate>
+              2021-10-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">#SQL注入</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/10/05/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%BA%8C%EF%BC%89-Access%E6%B3%A8%E5%85%A5/" target="_blank">
+          SQL注入（二）--Access注入
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/10/05/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%BA%8C%EF%BC%89-Access%E6%B3%A8%E5%85%A5/" target="_blank">
+        <div>
+          Access数据库注入数据库简介Microsoft Office Access是由微软发布的关系数据库管理系统。它结合了 MicrosoftJet Database Engine 和 图形用户界面两项特点，是Microsoft Office 的系统程序之一。 Microsoft Office Access是微软把数据库引擎的图形用户界面和软件开发工具结合在一起的一个数据库管理系统。 注意：Acce
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-05 17:47" pubdate>
+              2021-10-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">#SQL注入</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/28/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%B8%80%EF%BC%89-%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E5%92%8C%E5%9F%BA%E7%A1%80/" target="_blank">
+          SQL注入（一）--原理介绍和基础
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/07/28/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%B8%80%EF%BC%89-%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E5%92%8C%E5%9F%BA%E7%A1%80/" target="_blank">
+        <div>
+          前言最近刚刚结束“前端三剑客”的学习，而web方向在开始学习SQL注入。我个人觉得新手入门SQL注入有些难，而且碰到CTF题目也不太敢下手，所以在这里简单说一下新手需要注意的点。 正文0x01 SQL注入原理介绍当Web应用向后台数据库传递SQL语句进行数据库操作时。如果对用户输入的参数没有经过严格的过滤处理，那么攻击者就可以构造特殊的SQL语句，直接输入数据库引擎执行，获取或修改数据库中的数据。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-28 16:49" pubdate>
+              2021-07-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">#SQL注入</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/19/%E7%AE%80%E5%8D%95%E7%9A%84%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2/" target="_blank">
+          简单的登录页面
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/07/19/%E7%AE%80%E5%8D%95%E7%9A%84%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2/" target="_blank">
+        <div>
+          前言在我的上一篇文章中，我讲到了本地建站前的准备工作，包括MySQL数据库的创建。现在，我将为大家讲解编写注册和登录页面的详细过程。请大家认真理解源代码中的注释！这里的MySQL数据库，只涉及到单表的CRUD操作，所以不是很难。 P.S.由于下学期太忙，一直没有更新，暑假才有时间总结。网页已经做出来几个月了，过程可能记得不是很清楚了，如有疑问敬请在评论区提出，我会尽量解答！ 正文CSS我不太会写，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-19 11:57" pubdate>
+              2021-07-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%89%8D%E7%AB%AF/">#前端</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/04/PHPstudy%E6%9C%AC%E5%9C%B0%E5%BB%BA%E7%AB%99/" target="_blank">
+          PHPstudy本地建站
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/04/04/PHPstudy%E6%9C%AC%E5%9C%B0%E5%BB%BA%E7%AB%99/" target="_blank">
+        <div>
+          前言  在经过了两周的学习以后，我终于结束了web前端（HTML5，JavaScript）部分内容以及后端（PHP，MySQL）部分内容的学习。通过这段时间的学习，我已经可以独立做出一个登录和注册的页面，并将其内容提交至MySQL数据库。下面，我将为大家详细介绍我搭建登录和注册页面的全过程。 准备工作  对于小白来说，我不推荐租借或购买虚拟主机（VPS）进行搭建网站的相关练习，因为搭建环境比较复杂
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-04 23:03" pubdate>
+              2021-04-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%89%8D%E7%AB%AF/">#前端</a>
             
           </div>
         
@@ -324,6 +870,12 @@
   </div>
 
 
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
 
 
 

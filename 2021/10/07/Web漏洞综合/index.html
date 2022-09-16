@@ -18,28 +18,23 @@
   <meta name="author" content="HackerTerry">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言最近买了一台群晖nas，是已经停产的ds218play(因为没钱），开始了小白瞎折腾的漫长过程。因为长期住校，想通过域名访问家里群晖dsm实现多种功能，例如外网映射磁盘，但是这样以后发现内网无法用域名访问dsm!经过漫长的摸索以后，我这个小白竟然成功了!在这里分享给大家具体方法，不用putty，不用secureCRT即可实现! 正文首先在网上下载WinSCP软件，下载安装后如图  选择 SCP">
+    <meta name="description" content="前段时间学业繁忙，没有时间整理笔记。正好中秋放假，我就在这里把上周所学的知识归纳总结一下。由于笔记中提到的几种攻击方法如今在红队实战中很少用到，所以对于以下方法只需了解即可，但是安服岗的面试中时常会问到这些。 XSSXSS，即“跨站脚本攻击”(Cross Site Scripting)，为了不和“层叠样式表”(Cascading Style Sheets, CSS)的缩写混淆，故将跨站脚本攻击缩写">
 <meta property="og:type" content="article">
-<meta property="og:title" content="梅林固件路由器修改hosts实现内网通过域名访问群晖dsm">
-<meta property="og:url" content="https://rookieterry.github.io/2020/12/21/%E6%A2%85%E6%9E%97%E5%9B%BA%E4%BB%B6%E8%B7%AF%E7%94%B1%E5%99%A8%E4%BF%AE%E6%94%B9hosts%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E9%80%9A%E8%BF%87%E5%9F%9F%E5%90%8D%E8%AE%BF%E9%97%AE%E7%BE%A4%E6%99%96dsm/index.html">
+<meta property="og:title" content="Web漏洞综合">
+<meta property="og:url" content="https://rookieterry.github.io/2021/10/07/Web%E6%BC%8F%E6%B4%9E%E7%BB%BC%E5%90%88/index.html">
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
-<meta property="og:description" content="前言最近买了一台群晖nas，是已经停产的ds218play(因为没钱），开始了小白瞎折腾的漫长过程。因为长期住校，想通过域名访问家里群晖dsm实现多种功能，例如外网映射磁盘，但是这样以后发现内网无法用域名访问dsm!经过漫长的摸索以后，我这个小白竟然成功了!在这里分享给大家具体方法，不用putty，不用secureCRT即可实现! 正文首先在网上下载WinSCP软件，下载安装后如图  选择 SCP">
+<meta property="og:description" content="前段时间学业繁忙，没有时间整理笔记。正好中秋放假，我就在这里把上周所学的知识归纳总结一下。由于笔记中提到的几种攻击方法如今在红队实战中很少用到，所以对于以下方法只需了解即可，但是安服岗的面试中时常会问到这些。 XSSXSS，即“跨站脚本攻击”(Cross Site Scripting)，为了不和“层叠样式表”(Cascading Style Sheets, CSS)的缩写混淆，故将跨站脚本攻击缩写">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/09/14/iQrxMAhg5B9W2cl.jpg">
-<meta property="og:image" content="https://s2.loli.net/2022/09/14/41uNsDa2AlK37Cy.jpg">
-<meta property="og:image" content="https://s2.loli.net/2022/09/14/41uNsDa2AlK37Cy.jpg">
-<meta property="article:published_time" content="2020-12-21T09:35:00.000Z">
-<meta property="article:modified_time" content="2022-09-16T05:50:35.657Z">
+<meta property="article:published_time" content="2021-10-07T09:59:36.000Z">
+<meta property="article:modified_time" content="2022-09-16T09:03:27.764Z">
 <meta property="article:author" content="HackerTerry">
-<meta property="article:tag" content="数码折腾">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/09/14/iQrxMAhg5B9W2cl.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>梅林固件路由器修改hosts实现内网通过域名访问群晖dsm - HackerTerry&#39;s Blog</title>
+  <title>Web漏洞综合 - HackerTerry&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -243,7 +238,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="梅林固件路由器修改hosts实现内网通过域名访问群晖dsm"></span>
+            <span id="subtitle" data-typed-text="Web漏洞综合"></span>
           
         </div>
 
@@ -259,8 +254,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2020-12-21 17:35" pubdate>
-          星期一, 十二月 21日 2020, 5:35 下午
+        <time datetime="2021-10-07 17:59" pubdate>
+          星期四, 十月 7日 2021, 5:59 下午
         </time>
       </span>
     
@@ -272,7 +267,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          639 字
+          3.5k 字
         
       </span>
     
@@ -284,7 +279,7 @@
         
         
           <!-- compatible with older versions-->
-          6 分钟
+          30 分钟
         
       </span>
     
@@ -330,12 +325,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">梅林固件路由器修改hosts实现内网通过域名访问群晖dsm</h1>
+            <h1 style="display: none">Web漏洞综合</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 小时前
+                    本文最后更新于：2 分钟前
                   
                 
               </p>
@@ -343,18 +338,74 @@
             
               <div class="markdown-body">
                 
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近买了一台群晖nas，是已经停产的ds218play(因为没钱），开始了小白瞎折腾的漫长过程。因为长期住校，想通过域名访问家里群晖dsm实现多种功能，例如外网映射磁盘，但是这样以后发现内网无法用域名访问dsm!经过漫长的摸索以后，我这个小白竟然成功了!在这里分享给大家具体方法，不用putty，不用secureCRT即可实现!</p>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>首先在网上下载WinSCP软件，下载安装后如图</p>
-<p><img src="https://s2.loli.net/2022/09/14/iQrxMAhg5B9W2cl.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>选择 SCP 协议，主机名也就是自己路由器的管理页面 IP，用户名和密码也和登陆路由管理页面用的一样，连接即可。端口不变，填写完后点登录，如图</p>
-<p><img src="https://s2.loli.net/2022/09/14/41uNsDa2AlK37Cy.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>连上之后一路往回到路由根目录，进入&#x2F;jffs&#x2F;configs 目录，新建一个 dnsmasq.conf.add 文件，写入以下内容：<code>addn-hosts=/jffs/configs/hosts</code></p>
-<p>写入方式就和平时windows编辑txt文本文档一样，注意文件名就是dnsmasq.conf.add</p>
-<p>再新建一个文件，文件名就是hosts，再写入以下内容(我的群晖nas内网IP是192.168.50.66):</p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"><span class="hljs-number">192.168.50.66</span> www.xxx.xxx<br><br># 例如:<span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">2</span>.<span class="hljs-number">164</span> smartplugconnect.phicomm.com<br></code></pre></td></tr></table></figure>
+                <p>前段时间学业繁忙，没有时间整理笔记。正好中秋放假，我就在这里把上周所学的知识归纳总结一下。由于笔记中提到的几种攻击方法如今在红队实战中很少用到，所以对于以下方法只需了解即可，但是安服岗的面试中时常会问到这些。</p>
+<h2 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h2><p>XSS，即“跨站脚本攻击”(Cross Site Scripting)，为了不和“层叠样式表”(Cascading Style Sheets, CSS)的缩写混淆，故将跨站脚本攻击缩写为XSS。恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页面时，嵌入Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。XSS攻击针对的是用户层面的攻击。</p>
+<p>XSS分为以下三种类型：存储型，反射型和DOM型。</p>
+<p>存储型XSS：存储型XSS，持久化，代码是存储在服务器中的，如在个人信息或发表文章等地方，插入代码，如果没有过滤或过滤不严，那么这些代码将储存到服务器中，用户访问该页面的时候触发代码执行。这种XSS比较危险，容易造成蠕虫，盗窃cookie 反射型XSS：非持久化，需要欺骗用户自己去点击链接才能触发XSS代码（服务器中没有这样的页面和内容），一般容易出现在搜索页面。反射型XSS大多数是用来盗取用户的Cookie信息。 DOM型XSS：不经过后端，DOM-XSS漏洞是基于文档对象模型(Document Object Model,DOM)的一种漏洞，DOM-XSS是通过url传入参数去控制触发的，其实也属于反射型XSS。</p>
+<h2 id="命令执行（RCE）"><a href="#命令执行（RCE）" class="headerlink" title="命令执行（RCE）"></a>命令执行（RCE）</h2><p>命令执行漏洞是指服务器没有对执行的命令进行过滤，用户可以随意执行系统命令，命令执行漏洞属于高危漏洞之一。</p>
+<p>如PHP的命令执行漏洞主要是基于一些函数的参数过滤不足导致，可以执行命令的函数有<code>system( )</code>、<code>exec( )</code>、<code>shell_exec( )</code>、<code>passthru( )</code>、<code>pcntl_execl( )</code>、<code>popen( )</code>、<code>proc_open( )</code>等。当攻击者可以控制这些函数中的参数时，就可以将恶意的系统命令拼接到正常命令中，从而造成命令执行攻击。PHP执行命令是继承WebServer用户的权限，这个用户一般都有权限向Web目录写文件，可见该漏洞的危害性相当大。</p>
+<p>例如案例中的webug靶场，就是当PHP版本为5.2.17或5.4.45时存在命令执行漏洞。我们只需要在登录页面抓包，在http请求头中加入<code>Accept-Encoding:gzip,deflate</code>和<code>Accept-Charset:c3lzdGVtKCdscycpOw== //这里c3lzdGVtKCdscycpOw==是system(&#39;ls&#39;);的base64编码</code>，即可在响应包中看到相应的结果。或者当网站框架是thinkPHP时，可以利用exp实施攻击。</p>
+<h2 id="逻辑漏洞"><a href="#逻辑漏洞" class="headerlink" title="逻辑漏洞"></a>逻辑漏洞</h2><p>权限类有以下三种：</p>
+<p>1.水平越权：普通用户&#x2F;管理员能访问其他普通用户&#x2F;管理员才能够访问的系统信息或者系统功能。</p>
+<p>2.垂直越权：普通用户能够访问管理员甚至超级管理员才能够访问的系统信息或者系统功能。</p>
+<p>3.未授权访问：游客能够访问普通用户甚至超级管理员才能访问的系统信息或者系统功能。</p>
+<p>其它的有支付金额修改、整数溢出、密码找回、验证码爆破等，这里就不再细说了。</p>
+<h2 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h2><p>CSRF（Cross Site Request Forgery, 跨站请求伪造）是一种网络的攻击方式，它在 2007 年曾被列为互联网 20 大安全隐患之一,也被称为“One Click Attack”或者Session Riding，通常缩写为CSRF或者XSRF，是一种对网站的恶意利用。尽管听起来像跨站脚本（<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://baike.baidu.com/view/50325.htm">XSS</a>），但它与XSS非常不同，并且攻击方式几乎相左。XSS利用站点内的信任用户，而CSRF则通过伪装来自受信任用户的请求来利用受信任的网站。与<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://baike.baidu.com/view/50325.htm">XSS</a>攻击相比，CSRF攻击往往不大流行（因此对其进行防范的资源也相当稀少）和难以防范，所以被认为比<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=http://baike.baidu.com/view/50325.htm">XSS</a>更具危险性。</p>
+<p>由于实战中条件较为苛刻（cookie未失效且知道相应参数），故现在很少使用。具体实施方法是：在本地编写一个伪造的页面，页面后端传递的参数和目标站点的相同，通过社工的方法引诱管理员点击相应按钮提交已经赋值的参数来新建一个管理员用户，再结合提权等手段拿到webshell。</p>
+<h2 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h2><p>SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。</p>
+<p>很多Web应用都提供了从其他服务器上获取数据的功能。使用用户指定的URL，Web应用可以获取图片，下载文件，读取文件内容等。这个功能如果被恶意使用，可以利用存在缺陷的web应用作为代理攻击远程和本地服务器。</p>
+<p>服务端提供了从其他服务器应用获取数据的功能且没有对目标地址做过滤与限制。大部分的web服务器架构中，web服务器自身都可以访问互联网和服务器所在的内网。</p>
+<p><strong>那SSRF可以做什么呢？</strong></p>
+<ul>
+<li>可以对外网服务器所在的内网、本地进行端口扫描，获取一些服务的banner信息 。</li>
+<li>攻击运行在内网或者本地的应用程序。</li>
+<li>对内网web应用进行指纹识别，通过访问默认文件实现 。<br>攻击内外网的web应用。sql注入、strut2、redis等。<br>利用file协议读取本地文件等。</li>
+</ul>
+<h2 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h2><p>序列化和反序列化存在于Java和PHP中，一般使用exp进行攻击，或者构造恶意的类。很多中间件都存在反序列化漏洞，例如fastjson、strut2、shiro、weblogic等。关于其中的原理，我将在以后的Java安全部分仔细探究。</p>
+<h2 id="常问面试题"><a href="#常问面试题" class="headerlink" title="常问面试题"></a>常问面试题</h2><p>1.SSRF过滤了127.0.0.1，怎么绕过？</p>
+<blockquote>
+<p>localhost</p>
+<p>十六进制编码</p>
+<p>@（例如<a target="_blank" rel="noopener" href="http://example.com@127.0.0.1/">http://example.com@127.0.0.1</a> ）</p>
+<p>短链接</p>
+<p>句号代替点</p>
+<p>DNS解析</p>
+<p>各种协议（gopher、sftp、gopher等等）</p>
+</blockquote>
+<p>2.PHP 代码执行的危险函数和PHP 命令执行函数有哪些？ </p>
+<blockquote>
+<p>PHP 代码执行的危险函数：</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-title function_ invoke__">call_user_func</span>()、 <br><br><span class="hljs-title function_ invoke__">call_user_func_array</span>()、<span class="hljs-title function_ invoke__">create_function</span>()、 <br><br><span class="hljs-title function_ invoke__">array_map</span>() <br></code></pre></td></tr></table></figure>
 
-<p><img src="https://s2.loli.net/2022/09/14/41uNsDa2AlK37Cy.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>两个文件添加完以后，弹出的对话框选择“是”，再重启路由器。然后局域网内任何一台电脑(最好是其它电脑)用windows 的命令行或者powershell，ping一下你的域名，出现nas的内网IP就成功了!</p>
+<blockquote>
+<p>PHP 命令执行函数：</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-title function_ invoke__">system</span>()、<span class="hljs-title function_ invoke__">shell_exec</span>()、 <br><br><span class="hljs-title function_ invoke__">passthru</span>()、<span class="hljs-title function_ invoke__">exec</span>()、<span class="hljs-title function_ invoke__">popen</span>()、<span class="hljs-title function_ invoke__">proc_open</span>()、<span class="hljs-title function_ invoke__">putenv</span>()<br></code></pre></td></tr></table></figure>
+
+<p>3.fastjson漏洞原理</p>
+<blockquote>
+<p>在请求包里面中发送恶意的json格式payload，漏洞在处理json对象的时候，没有对@type字段进行过滤，从而导致攻击者可以传入恶意的TemplatesImpl类，而这个类有一个字段就是_bytecodes，有部分函数会根据这个_bytecodes生成java实例，这就达到fastjson通过字段传入一个类，再通过这个类被生成时执行构造函数。</p>
+</blockquote>
+<p> 4.shiro反序列化漏洞原理？怎么发现？</p>
+<blockquote>
+<p>shiro反序列化主要是Apache shiro提供了一个remember的一个功能，用户登录成功后会生成经过加密并编码的cookie，保存在浏览器中方便用户的日常使用，而服务器对cookie的处理流程就是先获取浏览器上保存的cookie，然后将其bs64解码，再进行AES解密，再将其反序列化进行校验，而漏洞就是出现在这里，我们都知道AES它是一个硬编码，他是有默认密钥的，如果程序员没有去修改或者过于简单，那我们就可以进行cookie重构，先构造我们的恶意代码，然后将恶意代码进行序列化，然后AES加密(密钥我们已经爆破出来了)，再进行bs64编码，形成我们新的cookie，而服务器在处理时就会按照刚才的处理流程，就会在服务端触发我们构造的恶意代码。</p>
+<p>登陆失败时候会返回rememberMe&#x3D;deleteMe字段或者使用shiroScan被动扫描去发现。</p>
+</blockquote>
+<p>5.shiro不出网怎么利用？</p>
+<blockquote>
+<p>1.定位Web目录写入文件</p>
+<p>2.构造回显</p>
+<p>3.内存马</p>
+<p>4.时间延迟获取Web路径写入webshell</p>
+</blockquote>
+<p>6.XSS,CSRF,SSRF三种漏洞的区别</p>
+<blockquote>
+<p>XSS：XSS是服务器对用户输入的数据没有进行足够的过滤，导致客户端浏览器在渲染服务器返回的html页面时，出现了预期值之外的 脚本语句被执行。</p>
+<p>CSRF： CSRF是服务器端没有对用户提交的数据进行随机值校验，且对http请求包内的refer字段校验不严，导致攻击者可以 利用用户的Cookie信息伪造用户请求发送至服务器。 </p>
+<p>SSRF：SSRF是服务器对 用户提供的可控URL过于信任，没有对攻击者提供的URL进行地址限制和足够的检测，导致攻击者可以以此为跳板攻击内网或其他服务器</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Web安全top10漏洞的学习就告一段落了，下周将进行提权部分的学习，敬请期待！</p>
 
                 
               </div>
@@ -373,7 +424,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4/" class="category-chain-item">网络运维</a>
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
   
   
 
@@ -385,13 +436,6 @@
     </div>
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E6%95%B0%E7%A0%81%E6%8A%98%E8%85%BE/">#数码折腾</a>
-      
-    </div>
-  
 </div>
 
 
@@ -400,8 +444,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>梅林固件路由器修改hosts实现内网通过域名访问群晖dsm</div>
-      <div>https://rookieterry.github.io/2020/12/21/梅林固件路由器修改hosts实现内网通过域名访问群晖dsm/</div>
+      <div>Web漏洞综合</div>
+      <div>https://rookieterry.github.io/2021/10/07/Web漏洞综合/</div>
     </div>
     <div class="license-meta">
       
@@ -413,7 +457,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>星期一, 十二月 21日 2020, 5:35 下午</div>
+          <div>星期四, 十月 7日 2021, 5:59 下午</div>
         </div>
       
       
@@ -457,15 +501,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/12/23/%E7%BE%A4%E6%99%96NAS%E9%85%8D%E7%BD%AEDNSPodDDNS%E5%AE%9E%E7%8E%B0%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE/" title="群晖NAS配置DNSPodDDNS实现外网访问">
+                      <a href="/2021/10/07/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%B8%89%EF%BC%89-WAF%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF/" title="文件上传（三）--WAF绕过思路">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">群晖NAS配置DNSPodDDNS实现外网访问</span>
+                        <span class="hidden-mobile">文件上传（三）--WAF绕过思路</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2021/10/07/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%BA%8C%EF%BC%89-Apache%E5%92%8CNginx/" title="文件上传（二）--Apache和Nginx">
+                        <span class="hidden-mobile">文件上传（二）--Apache和Nginx</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
