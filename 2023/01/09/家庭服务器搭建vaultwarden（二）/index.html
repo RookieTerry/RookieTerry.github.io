@@ -1,0 +1,839 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言在上一篇文章中，我们讲到了如何搭建vaultwarden的服务端。在这篇文章中，我将教大家实现一个进阶玩法，那就是定时备份。不过在此之前，我插一句嘴：  其实上次的docker-compose.yml，可以简写为以下形式： 123456789101112131415161718192021version: &quot;3&quot;services:  vaultwarden: # 容器名，可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="家庭服务器搭建vaultwarden（二）">
+<meta property="og:url" content="https://rookieterry.github.io/2023/01/09/%E5%AE%B6%E5%BA%AD%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAvaultwarden%EF%BC%88%E4%BA%8C%EF%BC%89/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="前言在上一篇文章中，我们讲到了如何搭建vaultwarden的服务端。在这篇文章中，我将教大家实现一个进阶玩法，那就是定时备份。不过在此之前，我插一句嘴：  其实上次的docker-compose.yml，可以简写为以下形式： 123456789101112131415161718192021version: &quot;3&quot;services:  vaultwarden: # 容器名，可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/LHcE2GYKkyAPCw7.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/VeCLBOjwpnlxJP5.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/K83gupERrm574yd.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/baxwjhnI7tJc9ik.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/DhbXNcxZ39jwKfn.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/1OcfoG3dxtJiezE.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/tEG5pr1zHQPZTBa.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/HbeAKlGoXcNdCBV.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/voTRN1zndWLbgyI.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/Ob3ztVSrglNuE7H.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/7b8FnLzdcAW2lo5.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/zFlkOQr84yTp1fP.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/h6zA7PZEMSJqWG4.png">
+<meta property="og:image" content="https://s2.loli.net/2023/01/13/GnJbleOxcfi2MkC.png">
+<meta property="article:published_time" content="2023-01-09T23:11:16.000Z">
+<meta property="article:modified_time" content="2023-01-13T09:48:34.000Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="数码折腾">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2023/01/13/LHcE2GYKkyAPCw7.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>家庭服务器搭建vaultwarden（二） - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="家庭服务器搭建vaultwarden（二）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-09 23:11" pubdate>
+          星期一, 一月 9日 2023, 11:11 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">家庭服务器搭建vaultwarden（二）</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在上一篇文章中，我们讲到了如何搭建<code>vaultwarden</code>的服务端。在这篇文章中，我将教大家实现一个进阶玩法，那就是定时备份。不过在此之前，我插一句嘴：</p>
+<blockquote>
+<p>其实上次的<code>docker-compose.yml</code>，可以简写为以下形式：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;3&quot;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">vaultwarden:</span> <span class="hljs-comment"># 容器名，可以改</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">&quot;vaultwarden/server:latest&quot;</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/vw-data/:/data/</span> <span class="hljs-comment"># 前面的是服务器的目录，后面的是容器内部的</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">SIGNUPS_ALLOWED:</span> <span class="hljs-literal">false</span> <span class="hljs-comment"># 禁止其他人注册</span><br>      <span class="hljs-attr">WEBSOCKET_ENABLED:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 开启自动同步</span><br>      <span class="hljs-attr">INVITATIONS_ALLOWED:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 开启邀请注册</span><br>      <span class="hljs-attr">ADMIN_TOKEN:</span> <span class="hljs-string">xxxxxx</span> <span class="hljs-comment"># 自己生成</span><br><br>  <span class="hljs-attr">nginxpm:</span> <span class="hljs-comment"># 容器名，可以改</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">&#x27;jc21/nginx-proxy-manager:latest&#x27;</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;10042:80&#x27;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;10041:81&#x27;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;10043:443&#x27;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>把两个镜像的拉取和容器的启动合二为一，节省了不少麻烦的操作。</p>
+<p><strong>注意：第一次创建<code>vaultwarden</code>容器时还是要用图形化界面创建，只有创建完你的用户名和密码后，才能用上述的<code>yaml</code>文件启动。</strong></p>
+</blockquote>
+<p>其实有了宝塔面板，定时备份很简单。利用软件商店里面的插件，我们可以把密码数据库同步到公有云，也可以同步到私有云。下面，听我细说！</p>
+<h2 id="备份到公有云"><a href="#备份到公有云" class="headerlink" title="备份到公有云"></a>备份到公有云</h2><p>这里以腾讯云的COS为例（其实是因为去年双十一只花了1元就买了50G容量，约等于白嫖，不用白不用）。</p>
+<p>先登录腾讯云，实名认证后在“云产品”下拉框中选择“对象存储”：</p>
+<p><img src="https://s2.loli.net/2023/01/13/LHcE2GYKkyAPCw7.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="创建存储桶"><a href="#创建存储桶" class="headerlink" title="创建存储桶"></a>创建存储桶</h3><p>购买相应套餐后创建存储桶：</p>
+<p><img src="https://s2.loli.net/2023/01/13/VeCLBOjwpnlxJP5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://s2.loli.net/2023/01/13/K83gupERrm574yd.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后点“创建”即可。</p>
+<h3 id="创建子用户"><a href="#创建子用户" class="headerlink" title="创建子用户"></a>创建子用户</h3><p>接着打开”云产品“-“访问管理”-“用户”-“用户列表”，新建一个子用户，类型选“自定义创建”：</p>
+<p><img src="https://s2.loli.net/2023/01/13/baxwjhnI7tJc9ik.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://s2.loli.net/2023/01/13/DhbXNcxZ39jwKfn.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://s2.loli.net/2023/01/13/1OcfoG3dxtJiezE.png" srcset="/img/loading.gif" lazyload></p>
+<p>在策略中，我们只需要选择一个权限<code>QcloudAccessForCOSBatchRole</code>，这样这个子用户就只能操作COS相关的资源，不会影响到账号内的其他服务：</p>
+<p><img src="https://s2.loli.net/2023/01/13/tEG5pr1zHQPZTBa.png" srcset="/img/loading.gif" lazyload></p>
+<p>用户标签可以不创建，把生成的<code>SecretId</code>和<code>SecretKey</code>保存下来，并复制到宝塔插件中。</p>
+<h3 id="设置插件"><a href="#设置插件" class="headerlink" title="设置插件"></a>设置插件</h3><p>首先要在宝塔面板的“软件商店”中搜索并下载“腾讯云COS”插件，这里就不演示了。设置图示如下：</p>
+<p><img src="https://s2.loli.net/2023/01/13/HbeAKlGoXcNdCBV.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="auto-backup">设置自动备份</h3>
+
+<p>最后，在宝塔面板左侧栏的“计划任务”中设置定时自动备份：</p>
+<p><img src="https://s2.loli.net/2023/01/13/voTRN1zndWLbgyI.png" srcset="/img/loading.gif" lazyload></p>
+<p>OK，大功告成了！当然，自动备份的时间也是可以修改的。</p>
+<h2 id="备份到私有云"><a href="#备份到私有云" class="headerlink" title="备份到私有云"></a>备份到私有云</h2><p>有些师傅可能会担心：备份到公有云，还是不太放心，而且还是国内的公有云（懂得都懂）。如果你恰巧财力雄厚，你可以考虑购买一台nas服务器，如果有的话当我没说。这里我以群晖的nas服务器为例，现在我们登录进web管理页面，打开“控制面板”-“文件服务”-“FTP”，开启FTP服务：</p>
+<p><img src="https://s2.loli.net/2023/01/13/Ob3ztVSrglNuE7H.png" srcset="/img/loading.gif" lazyload alt="下面的SFTP服务也可以打开"></p>
+<h3 id="创建专用账户"><a href="#创建专用账户" class="headerlink" title="创建专用账户"></a>创建专用账户</h3><p>点左侧的“用户与群组”-“用户账号”-“新增”，为FTP服务专门创建一个账号：</p>
+<p><img src="https://s2.loli.net/2023/01/13/7b8FnLzdcAW2lo5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://s2.loli.net/2023/01/13/zFlkOQr84yTp1fP.png" srcset="/img/loading.gif" lazyload></p>
+<p>下一步只需要授予备份文件夹（需要在“共享文件夹”里单独创建）的可读写权限，其它的全部选“禁止访问”，由于个人隐私原因我就不截图了，其它选项按个人情况选择。应用程序的访问权限，只需要允许FTP和SFTP的：</p>
+<p><img src="https://s2.loli.net/2023/01/13/h6zA7PZEMSJqWG4.png" srcset="/img/loading.gif" lazyload alt="SFTP忘记画箭头了"></p>
+<h3 id="设置插件-1"><a href="#设置插件-1" class="headerlink" title="设置插件"></a>设置插件</h3><p>其它选项确认无误后，可以点击完成了。去宝塔面板的“软件商店”中搜索并下载“FTP存储空间”插件，按下图所示设置：</p>
+<p><img src="https://s2.loli.net/2023/01/13/GnJbleOxcfi2MkC.png" srcset="/img/loading.gif" lazyload alt="用户名填刚才创建的，IP填局域网的"></p>
+<p>定时自动备份的设置方法和上面<a href="#auto-backup">公有云</a>的类似，这里就不多说了。</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>如果你的<code>vaultwarden</code>出现了问题，删除容器后重新创建多少次也没用，那么建议你先清理一下无用的存储卷等，具体可参考文章：<a target="_blank" rel="noopener" href="https://note.qidong.name/2017/06/26/docker-clean/">https://note.qidong.name/2017/06/26/docker-clean/</a></p>
+<p>如果还是有问题，那可能就是镜像源的问题了。在宝塔面板中进入<code>docker</code>设置页面，加速URL可设置为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;registry-mirrors&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>    <span class="hljs-string">&quot;https://mirror.baidubce.com&quot;</span><br>  <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>再执行命令<code>systemctl daemon-reload</code>和<code>systemctl restart docker</code>（CentOS系统）重启<code>docker</code>服务。修改过后再打开<code>vaultwarden</code>的web页面，我惊喜地发现网页的图标变了，看来可能确实是镜像源的问题。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在这篇文章中，我教大家实现了密码数据库的自动备份，为数据安全又多加了一层保障。同样的，这种方法也适用于网站和个人博客的备份。</p>
+<p>关于自建密码管理器服务器的教程到这里也就暂时告一段落了，如果还有什么疑问或者技术上的问题，欢迎在评论区留言，我会尽量帮助你们。在这里给各位师傅拜个早年了！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/" class="category-chain-item">生活点滴</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%99%E7%A8%8B/">#教程</a>
+      
+        <a href="/tags/%E6%95%B0%E7%A0%81%E6%8A%98%E8%85%BE/">#数码折腾</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>家庭服务器搭建vaultwarden（二）</div>
+      <div>https://rookieterry.github.io/2023/01/09/家庭服务器搭建vaultwarden（二）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期一, 一月 9日 2023, 11:11 晚上</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/07/%E7%AC%AC%E4%BA%8C%E5%B1%8A%E2%80%9C%E6%B9%96%E5%8C%97%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E4%BF%A1%E5%88%9B%E5%A4%A7%E8%B5%9B%E2%80%9C%E5%A4%8D%E8%B5%9BWrite-up/" title="第二届“湖北省大学生信创大赛”复赛Write-up">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">第二届“湖北省大学生信创大赛”复赛Write-up</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/04/%E5%AE%B6%E5%BA%AD%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAvaultwarden%EF%BC%88%E4%B8%80%EF%BC%89/" title="家庭服务器搭建vaultwarden（一）">
+                        <span class="hidden-mobile">家庭服务器搭建vaultwarden（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo.terrynet.live/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

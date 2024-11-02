@@ -1,0 +1,830 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言最近翻看去年买的近源渗透有关的书籍，看到书中有关于WiFi钓鱼的部分，于是突然来了兴趣，在某淘宝店铺购买了两块无线网卡（一块只支持2.4G频段，另一块同时支持2.4G和5G频段），进行WiFi钓鱼。 不得非法入侵他人设备，遵纪守法，天网恢恢疏而不漏。 正文由于我购买的网卡会附赠配好环境的kali虚拟机，所以这里不作讲解。 这里我会列出几种钓鱼的方法，分为钓鱼获取WiFi密码和获取个人信息两种情">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kali渗透（三）--WiFi钓鱼和断网攻击">
+<meta property="og:url" content="https://rookieterry.github.io/2021/10/31/Kali%E6%B8%97%E9%80%8F%EF%BC%88%E4%B8%89%EF%BC%89-WiFi%E9%92%93%E9%B1%BC%E5%92%8C%E6%96%AD%E7%BD%91%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="前言最近翻看去年买的近源渗透有关的书籍，看到书中有关于WiFi钓鱼的部分，于是突然来了兴趣，在某淘宝店铺购买了两块无线网卡（一块只支持2.4G频段，另一块同时支持2.4G和5G频段），进行WiFi钓鱼。 不得非法入侵他人设备，遵纪守法，天网恢恢疏而不漏。 正文由于我购买的网卡会附赠配好环境的kali虚拟机，所以这里不作讲解。 这里我会列出几种钓鱼的方法，分为钓鱼获取WiFi密码和获取个人信息两种情">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/09/16/Vq1fbZATmkhI4c8.png">
+<meta property="article:published_time" content="2021-10-31T14:46:08.000Z">
+<meta property="article:modified_time" content="2022-09-17T08:51:28.000Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="kali渗透">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2022/09/16/Vq1fbZATmkhI4c8.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kali渗透（三）--WiFi钓鱼和断网攻击 - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kali渗透（三）--WiFi钓鱼和断网攻击"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-10-31 14:46" pubdate>
+          星期日, 十月 31日 2021, 2:46 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kali渗透（三）--WiFi钓鱼和断网攻击</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近翻看去年买的近源渗透有关的书籍，看到书中有关于WiFi钓鱼的部分，于是突然来了兴趣，在某淘宝店铺购买了两块无线网卡（一块只支持2.4G频段，另一块同时支持2.4G和5G频段），进行WiFi钓鱼。</p>
+<p>不得非法入侵他人设备，遵纪守法，天网恢恢疏而不漏。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>由于我购买的网卡会附赠配好环境的kali虚拟机，所以这里不作讲解。</p>
+<p>这里我会列出几种钓鱼的方法，分为钓鱼获取WiFi密码和获取个人信息两种情况。</p>
+<h3 id="钓鱼获取WiFi密码"><a href="#钓鱼获取WiFi密码" class="headerlink" title="钓鱼获取WiFi密码"></a>钓鱼获取WiFi密码</h3><p>由于时间有限，没来得及截图，在这里表示抱歉！</p>
+<p>这里使用kali虚拟机，网络连接设置为桥接模式，我的eth0地址是192.168.50.189（每个人的都不一样）。</p>
+<p>这里我们使用airgeddon这个shell脚本，在极客之眼的官网可以下载到这个脚本。运行刚开始会检查依赖环境是否缺失，检查完成后选择外接的无线网卡：</p>
+<p><img src="https://s2.loli.net/2022/09/16/Zol9AECnW6HMaLR.png" srcset="/img/loading.gif" lazyload alt="image-20220916211255839"></p>
+<p>先把网卡设置为监听模式：</p>
+<p><img src="https://s2.loli.net/2022/09/16/asdeoq84vZNOjE1.png" srcset="/img/loading.gif" lazyload alt="image-20220916211518304.png"></p>
+<p>选择“下一步”之后，顺便抓个握手包：</p>
+<p><img src="https://s2.loli.net/2022/09/16/e3VuoitJDaENBfl.png" srcset="/img/loading.gif" lazyload alt="image-20220916212218174"></p>
+<p><img src="https://s2.loli.net/2022/09/16/FmWwhdZH6akl4yK.png" srcset="/img/loading.gif" lazyload alt="image-20220916212246282"></p>
+<p>连按两次“下一步”以后，开始扫描附近的WiFi。扫描到目标WiFi以后按Ctrl+C暂停，再输入目标WiFi的编号：</p>
+<p><img src="https://s2.loli.net/2022/09/16/IrAoHnvE2SWgCwG.png" srcset="/img/loading.gif" lazyload alt="image-20220916212511774"></p>
+<p>选择断网攻击模式：</p>
+<p><img src="https://s2.loli.net/2022/09/16/4uznilxSWCN5ctd.png" srcset="/img/loading.gif" lazyload alt="image-20220916212632442"></p>
+<p>连按三次“n”后，输入抓包时间（范围是10-100秒）后回车，此时屏幕上会出现几个黑色窗口：</p>
+<p><img src="https://s2.loli.net/2022/09/16/eqUCJrvdhKXAfzR.png" srcset="/img/loading.gif" lazyload alt="image-20220916212820103"></p>
+<p>抓到握手包后，脚本会提示握手包的保存位置以及钓鱼获取到密码的保存位置：</p>
+<p><img src="https://s2.loli.net/2022/09/16/zpwXQtoK87dFP6E.png" srcset="/img/loading.gif" lazyload alt="image-20220916213017408"></p>
+<p>一直回车后，选择钓鱼页面的语言（由于脚本是老外写的，所以没有中文版钓鱼页面）：</p>
+<p><img src="https://s2.loli.net/2022/09/16/9TfKVD2SqlZdRn7.png" srcset="/img/loading.gif" lazyload alt="image-20220916213209555"></p>
+<p>回车后再次弹出几个黑框：</p>
+<p><img src="https://s2.loli.net/2022/09/16/xpnbedrYCmW6AF8.png" srcset="/img/loading.gif" lazyload alt="image-20220916213442408"></p>
+<p>与此同时，目标WiFi正在被断网攻击，所以原来连接目标WiFi的设备会连不上目标WiFi，只能转而连接我们的钓鱼WiFi，并在弹出的钓鱼页面中输入WiFi密码：</p>
+<p><img src="https://s2.loli.net/2022/09/16/V4Te61hRW9vMJso.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>如果钓到的WiFi密码和握手包里的匹配，则WiFi密码会显示在箭头所指的地方：</p>
+<p><img src="https://s2.loli.net/2022/09/16/Vq1fbZATmkhI4c8.png" srcset="/img/loading.gif" lazyload alt="image-20220916220444006"></p>
+<p>当然，你也可以不选择钓鱼，直接去爆破前面抓到的pcap结尾的握手包，就是比较看运气。</p>
+<h3 id="钓鱼获取个人信息"><a href="#钓鱼获取个人信息" class="headerlink" title="钓鱼获取个人信息"></a>钓鱼获取个人信息</h3><p>这个不仅可以钓到个人信息，而且也可以钓到WiFi密码。与上一种方法相比，这种方法支持自定义钓鱼页面，可玩性更高。</p>
+<p>这里我使用的是<a target="_blank" rel="noopener" href="https://github.com/hacefresko/EvilPortal.git">EvilPortal</a>这个工具，可以在github下载到。进入到文件夹并执行<code>python3 run.py</code>，选择第一个选项：</p>
+<p><img src="https://s2.loli.net/2022/09/16/o9ramA86gzTCMZ5.png" srcset="/img/loading.gif" lazyload alt="image-20220916221504561"></p>
+<p>WiFi SSID随便取一个，这里我以FreeWifi为例，信道也随便选一个，安全性选“open”，回车即可启动：</p>
+<p><img src="https://s2.loli.net/2022/09/16/oaherRkPXNjTCYf.png" srcset="/img/loading.gif" lazyload alt="image-20220916221817635"></p>
+<p>当其它设备连接上这个WiFi时，就会跳转到提前设置好的钓鱼页面了。怎么设置钓鱼环境呢？</p>
+<p>首先我们先配置好MySQL环境：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql">$ service mysql <span class="hljs-keyword">start</span><br>$ mysql<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">create</span> database fakeap;<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">user</span>;<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> <span class="hljs-keyword">on</span> fakeap.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;user&#x27;</span>@<span class="hljs-string">&#x27;localhost&#x27;</span> identified <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;password&#x27;</span>;<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> use fakeap<br>MariaDB [fakeap]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> accounts(email <span class="hljs-type">varchar</span>(<span class="hljs-number">30</span>), password <span class="hljs-type">varchar</span>(<span class="hljs-number">30</span>));<br>MariaDB [fakeap]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">alter</span> database fakeap <span class="hljs-type">character</span> <span class="hljs-keyword">set</span> <span class="hljs-string">&#x27;utf8&#x27;</span>;<br>MariaDB [fakeap]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> accounts;<br></code></pre></td></tr></table></figure>
+
+<p>配置好数据库环境后，进入<code>/var/www/html/captive</code>目录，这是存放钓鱼页面的目录，把我们的钓鱼页面按照原有的<code>db.php</code>修改后启动脚本，这时kali的MySQL服务和Apache服务就会启动，钓到的用户名密码就会存入数据库。利用这个方法，我们可以钓到其他同学的校园网账号和密码（bushi）。</p>
+<h3 id="断网攻击"><a href="#断网攻击" class="headerlink" title="断网攻击"></a>断网攻击</h3><p>DoS断网攻击可以利用的脚本太多了，这里我以其中三个脚本为例。</p>
+<p>插上网卡后先用<code>lsusb</code>命令检查网卡是否正常插入。</p>
+<h4 id="airgeddon"><a href="#airgeddon" class="headerlink" title="airgeddon"></a>airgeddon</h4><p>还是前面的那个脚本，把网卡设置为监听模式以后选择“4”即可。实际使用过程中发现不太好使，不推荐用这个脚本断网攻击。</p>
+<h4 id="sparrow-wifi"><a href="#sparrow-wifi" class="headerlink" title="sparrow-wifi"></a>sparrow-wifi</h4><p>这是一个Python开发的GUI工具，使用起来也很简单。进入文件夹后，运行命令<code>python3 sparrow-wifi.py</code>，就会弹出一个图形化界面。选择“Falcon”-“Advanced Scan”，并启用监听模式：</p>
+<p><img src="https://s2.loli.net/2022/09/16/4dr9SzLFyfhMuEW.png" srcset="/img/loading.gif" lazyload alt="image-20220916223343208"></p>
+<p><img src="https://s2.loli.net/2022/09/16/x9IMsriqH5NdWe8.png" srcset="/img/loading.gif" lazyload alt="image-20220916223427101"></p>
+<p>点击“start”开始扫描，扫到目标WiFi后点击“Stop scanning”，并在下面列表中的目标WiFi上右键选择箭头所指的选项（下面那个是抓WPA握手包）：</p>
+<p><img src="https://s2.loli.net/2022/09/16/ScRB1odiXzU9L72.png" srcset="/img/loading.gif" lazyload alt="image-20220916223653515"></p>
+<p>弹出的对话框选择“yes”即可开始攻击，要想停止攻击只需在目标WiFi上右键“Stop deauth”即可：</p>
+<p><img src="https://s2.loli.net/2022/09/16/C9UzlmMI81k7AEF.png" srcset="/img/loading.gif" lazyload alt="image-20220916223945748"></p>
+<h4 id="wifidos"><a href="#wifidos" class="headerlink" title="wifidos"></a>wifidos</h4><p>这个脚本使用起来更简单，也是用Python开发的，只有CUI。选择无线网卡和目标WiFi后，即可开始攻击：</p>
+<p><img src="https://s2.loli.net/2022/09/16/WwVjg6kANH325eQ.png" srcset="/img/loading.gif" lazyload alt="image-20220916224315125"></p>
+<p>连按两下Ctrl+C停止攻击。想要这个脚本的，评论区留言或者给我发email即可。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本次教程到此结束，最后还是要提醒大家不要做出违法的事情，谢谢！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%97%A0%E7%BA%BF%E5%AE%89%E5%85%A8/" class="category-chain-item">无线安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kali%E6%B8%97%E9%80%8F/">#kali渗透</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kali渗透（三）--WiFi钓鱼和断网攻击</div>
+      <div>https://rookieterry.github.io/2021/10/31/Kali渗透（三）-WiFi钓鱼和断网攻击/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期日, 十月 31日 2021, 2:46 下午</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/11/08/HackTheBox-Popcorn/" title="HackTheBox--Popcorn">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HackTheBox--Popcorn</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/29/Windows%E5%92%8CLinux%E7%B3%BB%E7%BB%9F%E6%8F%90%E6%9D%83/" title="Windows和Linux系统提权">
+                        <span class="hidden-mobile">Windows和Linux系统提权</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo.terrynet.live/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

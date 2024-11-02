@@ -1,0 +1,835 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="介绍作为一名信息安全爱好者，保护好自己的个人信息是必不可少的，其中的一个重要环节就是保护自己的密码。但是每个平台的密码都不一样，怎么记住那么多密码呢？这时候就需要用到密码管理软件了。因为前段时间，付费密码管理软件–lastpass被黑客脱库，因此让我对公有的密码管理服务更加不放心了。正巧有一次在tg群里吹水时，了解到还有bitwarden这款开源免费、可自行搭建服务端，并且支持多平台的密码管理软件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="家庭服务器搭建vaultwarden（一）">
+<meta property="og:url" content="https://rookieterry.github.io/2023/01/04/%E5%AE%B6%E5%BA%AD%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAvaultwarden%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="介绍作为一名信息安全爱好者，保护好自己的个人信息是必不可少的，其中的一个重要环节就是保护自己的密码。但是每个平台的密码都不一样，怎么记住那么多密码呢？这时候就需要用到密码管理软件了。因为前段时间，付费密码管理软件–lastpass被黑客脱库，因此让我对公有的密码管理服务更加不放心了。正巧有一次在tg群里吹水时，了解到还有bitwarden这款开源免费、可自行搭建服务端，并且支持多平台的密码管理软件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/01/05/XUoK96imxGTOLAs.png">
+<meta property="article:published_time" content="2023-01-04T23:29:26.000Z">
+<meta property="article:modified_time" content="2023-03-02T10:14:22.000Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="数码折腾">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2023/01/05/XUoK96imxGTOLAs.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>家庭服务器搭建vaultwarden（一） - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="家庭服务器搭建vaultwarden（一）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-04 23:29" pubdate>
+          星期三, 一月 4日 2023, 11:29 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">家庭服务器搭建vaultwarden（一）</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>作为一名信息安全爱好者，保护好自己的个人信息是必不可少的，其中的一个重要环节就是保护自己的密码。但是每个平台的密码都不一样，怎么记住那么多密码呢？这时候就需要用到密码管理软件了。因为前段时间，付费密码管理软件–<code>lastpass</code>被黑客脱库，因此让我对公有的密码管理服务更加不放心了。正巧有一次在tg群里吹水时，了解到还有<code>bitwarden</code>这款开源免费、可自行搭建服务端，并且支持多平台的密码管理软件，于是便想着用自己家里的虚拟服务器搭建一个试试。但是，官方的<code>bitwarden</code>使用<code>SQL server</code>存储数据，对于服务器配置要求太高，我便采用了同样开源免费、用<code>Rust</code>语言重写服务端、更轻巧的第三方密码管理软件–<code>vaultwarden</code>。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/dani-garcia/vaultwarden">https://github.com/dani-garcia/vaultwarden</a></p>
+<p>这可能是全网唯一一篇用自己家里的服务器搭建<code>vaultwarden</code>的教程了。网上的教程大多用公有云的vps搭建，但是国内vps需要备案才能使用，费时费力不说还有泄露隐私的风险；除此之外就是使用家里的群晖nas搭建，但是我的nas配置太低，而且<code>ARM</code>架构不支持<code>docker</code>，所以我只能忍痛放弃这条路。因为国内的家庭宽带不像vps一样开放了80和443端口，服务器设置<code>Nginx</code>反向代理也不像群晖nas那样简单方便，所以我踩了不少坑。下面我将亲自示范如何搭建一个开源的密码管理平台<code>vaultwarden</code>，搭建自己的私人密码库，让账号密码更安全。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>首先，你需要一台安装好<code>docker</code>和<code>docker-compose</code>的<code>Linux</code>服务器，并且购买一个域名。对于家庭宽带而言，你需要拥有一个公网ip地址，并且域名需要提前配置好<code>ddns</code>（我的往期文章中讲过阿里云的配置方法，其它域名服务商也类似，都是通过调用api来更新域名解析）。你可以采用命令安装，但是我为了省事，使用了宝塔面板安装（也可以使用宝塔面板的国际版–<code>aapanel</code>，更安全）。完事后拉取<code>vaultwarden</code>的镜像，因为我的宝塔面板拉取镜像的功能有问题，所以只能使用命令拉取了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull vaultwarden/server:latest<br></code></pre></td></tr></table></figure>
+
+<h3 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h3><p>拉取完成后不要急，先安装<code>Nginx</code>并创建一个网站，点击“添加站点”，“创建站点”里面填写你购买好的域名，一定要带上端口号。这里的局域网<code>http</code>端口我为了避免以后可能的冲突，就没有填写80，而是填了一个比较大的作为<code>http</code>端口。<code>PHP</code>版本选择“纯静态”，其它的全部不创建，完成后点“提交”：</p>
+<p><img src="https://s2.loli.net/2023/01/05/mF6CaR8WiEdZlq1.png" srcset="/img/loading.gif" lazyload></p>
+<p>接着，在根目录下创建一个文件夹<code>vw-data</code>，用于存放<code>vaultwarden</code>的数据，再去刚才创建的网站，把网站目录改成你创建的这个文件夹。当然，你也可以用创建网站时自动生成的网站目录，但下图“挂载卷“中的“服务器目录”也要改成自动生成的网站目录，即<code>/www/wwwroot/abc.com/</code>。准备就绪后，去创建对应的<code>docker</code>容器，画红框的按照截图里面的填就行：</p>
+<p><img src="https://s2.loli.net/2023/01/05/PFzU1Ie8CGwtSMT.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://s2.loli.net/2023/01/05/kyTwAMEg4Zh5Qt8.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+<p><strong>注意：这里的服务器端口要和前面创建网站填写的一样，创建网站和创建容器这两步千万不能反过来，否则会报“端口被占用”的错误！</strong></p>
+<p>由于<code>vaultwarden</code>的网页端必须要通过<code>https</code>访问，才能创建账号，所以我们必须要配置<code>SSL</code>证书。根据官方文档中的说明，采用<code>docker</code>挂载<code>SSL</code>证书的方式无法使用自动同步的功能，所以我们采用<code>Nginx</code>反向代理的方式。点击你创建的网站右侧的”设置“，再点左侧的”SSL”，申请证书或者填写已有的证书即可，建议申请通配符证书。</p>
+<p>再点击左侧栏中的“反向代理”，点击”添加反向代理“，”目标URL“填写<code>http://127.0.0.1:前面你设置的局域网http端口</code>，其它的不用填，提交后再点击“配置文件”，把其替换为以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs bash">location / &#123;<br>	<span class="hljs-comment"># 6666端口替换成你前面设置的http端口</span><br>    proxy_pass http://127.0.0.1:6666;<br>    proxy_http_version    1.1;<br>    proxy_cache_bypass    <span class="hljs-variable">$http_upgrade</span>;<br>    proxy_set_header Upgrade            <span class="hljs-variable">$http_upgrade</span>;<br>    proxy_set_header Connection         <span class="hljs-string">&quot;upgrade&quot;</span>;<br>    proxy_set_header Host               <span class="hljs-variable">$host</span>;<br>    proxy_set_header X-Real-IP          <span class="hljs-variable">$remote_addr</span>;<br>    proxy_set_header X-Forwarded-For    <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>    proxy_set_header X-Forwarded-Proto  <span class="hljs-variable">$scheme</span>;<br>    proxy_set_header X-Forwarded-Host   <span class="hljs-variable">$host</span>;<br>    proxy_set_header X-Forwarded-Port   <span class="hljs-variable">$server_port</span>;<br>&#125;<br><br>location /notifications/hub &#123;<br>    proxy_pass http://127.0.0.1:3012;<br>    proxy_set_header Upgrade <span class="hljs-variable">$http_upgrade</span>;<br>    proxy_set_header Connection <span class="hljs-string">&quot;upgrade&quot;</span>;<br>&#125;<br><br>location /notifications/hub/negotiate &#123;<br>	<span class="hljs-comment"># 6666端口替换成你前面设置的http端口</span><br>    proxy_pass http://127.0.0.1:6666;<br>&#125;<br><br>location /admin &#123;<br>    proxy_set_header Host <span class="hljs-variable">$host</span>;<br>    proxy_set_header X-Real-IP <span class="hljs-variable">$remote_addr</span>;<br>    proxy_set_header X-Forwarded-For <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>    proxy_set_header X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br>    <span class="hljs-comment"># 6666端口替换成你前面设置的http端口</span><br>    proxy_pass http://127.0.0.1:6666;<br>&#125;<br><span class="hljs-comment"># 加入robots.txt 防止搜索引擎爬虫抓取</span><br>location = /robots.txt &#123;<br>	<span class="hljs-comment"># 改成你自己的目录</span><br>	root /home/wwwroot/Bitwarden;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>同样，这里的局域网<code>https</code>端口我为了避免以后可能的冲突，也没有填写443，而是前往左侧栏中的“配置文件”，把红框中的443端口替换成了其它的：</p>
+<p><img src="https://s2.loli.net/2023/01/05/GoNxQtYZhVUwLlO.png" srcset="/img/loading.gif" lazyload></p>
+<p>修改完成后，别忘记重载<code>Nginx</code>配置，或者直接重启<code>Nginx</code>。</p>
+<p>最后去你家光猫或者路由器后台设置一下端口转发（有的路由器叫“端口映射”），就可以了，记住外网端口不能填80和443。经过我这样一波操作，理论上用<code>https://域名:外网非标准https端口</code>应该是可以访问的，但实际上怎么都打不开网页端。</p>
+<p>这时，就让我隆重介绍这次折腾的主角–<code>Nginx Proxy Manager</code>！</p>
+<h3 id="正道"><a href="#正道" class="headerlink" title="正道"></a>正道</h3><p>说到底，<code>Nginx Proxy Manager</code>其实就是一个图形化的管理面板。我们同样采用<code>docker-compose</code>安装，在<code>/root</code>目录下新建一个文件夹<code>npm</code>（也可以叫其它名字），并在<code>npm</code>文件夹下创建一个<code>docker-compose.yml</code>文件，内容填写：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">app:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">&#x27;jc21/nginx-proxy-manager:latest&#x27;</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;4636:80&#x27;</span> <span class="hljs-comment"># 前面的局域网http端口可以修改成其它的</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;4637:81&#x27;</span> <span class="hljs-comment"># 前面的局域网gui管理端口可以修改成其它的</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;4638:443&#x27;</span> <span class="hljs-comment"># 前面的局域网https端口可以修改成其它的</span><br></code></pre></td></tr></table></figure>
+
+<p>使用命令<code>docker-compose up -d</code>创建<code>Nginx Proxy Manager</code>容器，局域网内用<code>http://局域网ip:4637</code>访问<code>Nginx Proxy Manager</code>后台，默认账号和密码如下：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">邮箱：<span class="hljs-symbol">admin@</span>example.com<br>密码：changeme<br></code></pre></td></tr></table></figure>
+
+<p>进入后台以后最好修改一下邮箱和密码，其中邮箱是用来提醒你更新<code>SSL</code>证书的。点击最上面菜单里的”Hosts”，再选择下拉框里的”Proxy Hosts”：</p>
+<p><img src="https://s2.loli.net/2023/01/05/1vMidgXtnGr6CJx.png" srcset="/img/loading.gif" lazyload></p>
+<p>点右边的”Add Proxy Host”，下面的内容按照截图里面的填写：</p>
+<p><img src="https://s2.loli.net/2023/01/05/wjZbTVMs7cUFXxK.png" srcset="/img/loading.gif" lazyload></p>
+<p>其中<code>vaultwarden</code>容器的ip可以在宝塔面板里看到。</p>
+<p>再接着设置<code>SSL</code>证书，可以用自己申请好的，也可以用<code>Nginx Proxy Manager</code>提供的申请证书功能，我使用的是自己申请好的。点击上方菜单中的”SSL Certificates”，再选择”Add SSL Certificate”下拉框中的”Custom”：</p>
+<p><img src="https://s2.loli.net/2023/01/05/3MTFpUkJ4aoW1Hq.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://s2.loli.net/2023/01/05/NF2L4VGvoxKZq1l.png" srcset="/img/loading.gif" lazyload></p>
+<p>设置完证书后再回到刚才设置反向代理的页面，选择刚才上传的证书：<img src="https://s2.loli.net/2023/01/05/mlDzZsXuCrhUqjo.png" srcset="/img/loading.gif" lazyload></p>
+<p>这里不建议开启”Force SSL”（强制https）选项，因为实测非标准端口开启此功能后会出现一些问题。</p>
+<p>最后去你家光猫或者路由器后台设置一下端口转发（有的路由器叫“端口映射”），就可以了，记住外网端口不能填80和443。</p>
+<p>在电脑浏览器中输入<code>https://自己的域名:外网https端口</code>，完美访问：</p>
+<p><img src="https://s2.loli.net/2023/01/05/XUoK96imxGTOLAs.png" srcset="/img/loading.gif" lazyload></p>
+<p>还没完，点击“创建账号”创建你自己的账号后，如果你不想其他人使用你的密码库，记得一定要关闭用户注册功能。当然，关闭以后你也可以发邮件邀请其他人注册，只不过要配置<code>SMTP</code>服务器。</p>
+<p>怎么关闭呢？先删除你创建的<code>vaultwarden</code>容器，不用担心刚才创建的账户密码没了，因为它们被存放在了服务器的挂载目录中，也就是我设置的<code>/vw-data</code>。删掉之后再创建docker容器，还是使用<code>vaultwarden/server:latest</code>镜像，但这次不需要设置映射端口了，而且下面的“环境变量”中需要填写以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">SIGNUPS_ALLOWED=<span class="hljs-literal">false</span> <span class="hljs-comment"># 关闭用户注册</span><br>WEBSOCKET_ENABLED=<span class="hljs-literal">true</span> <span class="hljs-comment"># 开启自动同步</span><br>INVITATIONS_ALLOWED=<span class="hljs-literal">true</span> <span class="hljs-comment"># 开启邀请注册</span><br>ADMIN_TOKEN=xxxxxxxxxxx <span class="hljs-comment"># 填写你自己的，使用命令openssl rand -base64 48生成，一定要保存好！</span><br></code></pre></td></tr></table></figure>
+
+<p>启动容器后，如果容器ip改变了，记得去<code>Nginx Proxy Manager</code>面板中修改一下，否则会无法访问。在电脑浏览器中输入<code>https://自己的域名:外网https端口/admin</code>，输入生成的<code>ADMIN_TOKEN</code>，即可在后台设置域名、<code>SMTP</code>服务器、二步验证等信息。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>当然，自建密码管理器也有风险，从网络安全的角度来说，把端口暴露到外网增加了攻击面，也增加了被黑客入侵的风险。为此我尝试过把“自托管服务”中的“服务器URL”改为局域网ip，同步时就打开<code>wireguard VPN</code>连接密码服务器，但是实际操作后发现并不能如我想的实现。下面以安卓手机端登录为例。</p>
+<ul>
+<li>当我填写<code>http://局域网ip:局域网端口</code>并登录时，报错如下：</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/01/05/FZteokx4Phim69a.jpg" srcset="/img/loading.gif" lazyload alt="小米http"></p>
+<ul>
+<li>当我填写<code>https://局域网ip:局域网端口</code>登录时，报错如下：</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/01/05/d79KXQNeTzm1uED.jpg" srcset="/img/loading.gif" lazyload alt="小米https"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在下篇教程中，我将教大家如何实现一些进阶玩法，例如定时备份，让你的数据多一层保障。</p>
+<p>好了，以上就是关于如何搭建<code>vaultwarden</code>的全部教程了，如果还有疑问或者不清楚的，欢迎在评论区留言，我会尽量帮助你们。我们下期再见！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/" class="category-chain-item">生活点滴</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%99%E7%A8%8B/">#教程</a>
+      
+        <a href="/tags/%E6%95%B0%E7%A0%81%E6%8A%98%E8%85%BE/">#数码折腾</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>家庭服务器搭建vaultwarden（一）</div>
+      <div>https://rookieterry.github.io/2023/01/04/家庭服务器搭建vaultwarden（一）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期三, 一月 4日 2023, 11:29 晚上</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/09/%E5%AE%B6%E5%BA%AD%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAvaultwarden%EF%BC%88%E4%BA%8C%EF%BC%89/" title="家庭服务器搭建vaultwarden（二）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">家庭服务器搭建vaultwarden（二）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/21/2022%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/" title="2022年度总结">
+                        <span class="hidden-mobile">2022年度总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo.terrynet.live/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

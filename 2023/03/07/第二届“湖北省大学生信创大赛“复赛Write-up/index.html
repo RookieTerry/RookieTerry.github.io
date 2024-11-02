@@ -1,0 +1,814 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言由于本次比赛的初赛采用的是知识问答的形式，所以没有wp，特此说明。这是一篇迟到的wp，因为距离线上复赛已经过去了四个多月，线下决赛也是姗姗来迟，直到最近几天本人才拿到wp。未经本人授权，禁止转载和发布！ 正文Webgetshell启动环境，拿到源码： 12345678910111213141516171819202122232425262728293031&lt;?phphighlight_f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第二届“湖北省大学生信创大赛”复赛Write-up">
+<meta property="og:url" content="https://rookieterry.github.io/2023/03/07/%E7%AC%AC%E4%BA%8C%E5%B1%8A%E2%80%9C%E6%B9%96%E5%8C%97%E7%9C%81%E5%A4%A7%E5%AD%A6%E7%94%9F%E4%BF%A1%E5%88%9B%E5%A4%A7%E8%B5%9B%E2%80%9C%E5%A4%8D%E8%B5%9BWrite-up/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="前言由于本次比赛的初赛采用的是知识问答的形式，所以没有wp，特此说明。这是一篇迟到的wp，因为距离线上复赛已经过去了四个多月，线下决赛也是姗姗来迟，直到最近几天本人才拿到wp。未经本人授权，禁止转载和发布！ 正文Webgetshell启动环境，拿到源码： 12345678910111213141516171819202122232425262728293031&lt;?phphighlight_f">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821877.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821030.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822774.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822243.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041823574.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822160.png">
+<meta property="article:published_time" content="2023-03-07T21:02:59.000Z">
+<meta property="article:modified_time" content="2023-05-04T10:23:26.000Z">
+<meta property="article:author" content="HackerTerry">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821877.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>第二届“湖北省大学生信创大赛”复赛Write-up - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="第二届“湖北省大学生信创大赛”复赛Write-up"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-07 21:02" pubdate>
+          星期二, 三月 7日 2023, 9:02 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">第二届“湖北省大学生信创大赛”复赛Write-up</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：1 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于本次比赛的初赛采用的是知识问答的形式，所以没有wp，特此说明。这是一篇迟到的wp，因为距离线上复赛已经过去了四个多月，线下决赛也是姗姗来迟，直到最近几天本人才拿到wp。未经本人授权，禁止转载和发布！</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h3><h4 id="getshell"><a href="#getshell" class="headerlink" title="getshell"></a>getshell</h4><p>启动环境，拿到源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-keyword">__FILE__</span>);<br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;h1&gt;WELCOME 23333333333&lt;/h1&gt;&quot;</span>.<span class="hljs-string">&quot;\n&quot;</span>;<br><span class="hljs-variable">$url</span> = <span class="hljs-variable">$_SERVER</span>[<span class="hljs-string">&quot;HTTP_REFERER&quot;</span>];<br><span class="hljs-variable">$r</span> = <span class="hljs-title function_ invoke__">parse_url</span>(<span class="hljs-variable">$url</span>);<br><span class="hljs-keyword">if</span>(!<span class="hljs-keyword">empty</span>(<span class="hljs-variable">$r</span>[<span class="hljs-string">&#x27;host&#x27;</span>]) &amp;&amp; <span class="hljs-variable">$r</span>[<span class="hljs-string">&#x27;host&#x27;</span>] === <span class="hljs-string">&#x27;localhost&#x27;</span> &amp;&amp; <span class="hljs-variable">$r</span>[<span class="hljs-string">&#x27;scheme&#x27;</span>] === <span class="hljs-string">&#x27;file&#x27;</span>)&#123;<br>  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;yeah u are admin&quot;</span>.<span class="hljs-string">&quot;&lt;br&gt;&quot;</span>;<br>&#125;<br><span class="hljs-keyword">else</span>&#123;<br>  <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;u are not admin&#x27;</span>.<span class="hljs-string">&quot;&lt;br&gt;&quot;</span>);<br>&#125;<br><br><span class="hljs-comment">//only admin can do it</span><br><span class="hljs-variable">$content</span> = <span class="hljs-title function_ invoke__">addslashes</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;content&#x27;</span>]);<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;now_you_are_admin&#x27;</span>.<span class="hljs-string">&quot;&lt;br&gt;&quot;</span>;<br><span class="hljs-keyword">if</span>(!<span class="hljs-title function_ invoke__">file_exists</span>(<span class="hljs-string">&quot;admin.php&quot;</span>))&#123;<br>  <span class="hljs-title function_ invoke__">file_put_contents</span>(<span class="hljs-string">&#x27;admin.php&#x27;</span>, <span class="hljs-string">&quot;secret = &#x27;xxx&#x27;&quot;</span>);<br>  <span class="hljs-comment">//change the content</span><br>  <span class="hljs-keyword">if</span>(<span class="hljs-variable">$content</span>)&#123;<br>    <span class="hljs-variable">$file</span> = <span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-string">&quot;./admin.php&quot;</span>);<br>    <span class="hljs-variable">$file</span> = <span class="hljs-title function_ invoke__">preg_replace</span>(<span class="hljs-string">&quot;/secret = &#x27;.*&#x27;/&quot;</span>, <span class="hljs-string">&quot;secret = &#x27;<span class="hljs-subst">&#123;$content&#125;</span>&#x27;&quot;</span>, <span class="hljs-variable">$file</span>);<br>    <span class="hljs-title function_ invoke__">file_put_contents</span>(<span class="hljs-string">&#x27;./admin.php&#x27;</span>, <span class="hljs-variable">$file</span>);<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;reset&#x27;</span>]))&#123;<br>  @<span class="hljs-title function_ invoke__">exec</span>(<span class="hljs-string">&#x27;/bin/rm -rf admin.php&#x27;</span>);<br>&#125;<br><br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>源码分两部分，⼀是身份验证，⼆是写文件。</p>
+<p>第⼀部分身份验证要求伪造admin身份，验证逻辑是通过检测<code>Referer</code>请求头，要求使用file协议，地址是localhost。</p>
+<p>第⼆部分写文件来上马，题目有<code>addslashes</code>函数过滤，引号被转义不能使用，写⼊内容为<code>&lt;?php eval($_GET[1]);?&gt;</code>，绕过引号：</p>
+<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821877.png" srcset="/img/loading.gif" lazyload></p>
+<p>访问<code>admin.php</code>，GET传参进行任意代码执行。我采用的是POST传参，再用蚁剑连接，也能拿到flag。</p>
+<h4 id="tjjz"><a href="#tjjz" class="headerlink" title="tjjz"></a>tjjz</h4><p>好家伙，没想到这个题目的名称就是考查的知识点，属实是没有反应过来。这题考查的是文件上传，加上了条件竞争。</p>
+<p>测试发现环境不能覆盖已有的文件，且<code>upload</code>目录下应该是存有<code>.htaccess</code>文件，使得上传配置文件不可行。</p>
+<p>burpsuite构造包爆破，通过上⼀题推测flag仍然在根目录的flag文件中，使用<code>system(&#39;cat /f*&#39;)</code>进行简单测试：</p>
+<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821030.png" srcset="/img/loading.gif" lazyload alt="web-2"></p>
+<p>调整线程为50，持续发包，再另开⼀重放包，设置10线程，⼀段时间后可以得到反馈：</p>
+<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822774.png" srcset="/img/loading.gif" lazyload alt="web-3"></p>
+<p>拿到flag。</p>
+<h3 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h3><h4 id="crab"><a href="#crab" class="headerlink" title="crab"></a>crab</h4><p>源码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">_BYTE *__fastcall <span class="hljs-title">crab_0o0</span><span class="hljs-params">(_BYTE *a1)</span></span><br><span class="hljs-function"></span>&#123;<br>  _BYTE *v1; <span class="hljs-comment">// rax</span><br>  _BYTE *result; <span class="hljs-comment">// rax</span><br>  _BYTE *v3; <span class="hljs-comment">// [rsp+0h] [rbp-18h]</span><br>  _BYTE *v4; <span class="hljs-comment">// [rsp+10h] [rbp-8h]</span><br>  _BYTE *i; <span class="hljs-comment">// [rsp+10h] [rbp-8h]</span><br><br>  v3 = a1;<br>  v4 = a1;<br>  <span class="hljs-keyword">do</span><br>    v1 = v4++;<br>  <span class="hljs-keyword">while</span> ( *v1 );<br>  <span class="hljs-keyword">for</span> ( i = v4 - <span class="hljs-number">2</span>; ; --i )<br>  &#123;<br>    result = v3;<br>    <span class="hljs-keyword">if</span> ( v3 &gt;= i )<br>      <span class="hljs-keyword">break</span>;<br>    *v3 ^= *i;<br>    *i ^= *v3;<br>    *v3++ ^= *i;<br>  &#125;<br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>拿到密文：<code>pWERzO3YjCldk:2NkGkc</code></p>
+<p>由于异或可逆，这个可以不用逆向，直接用Python脚本跑一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">s=<span class="hljs-string">&#x27;pWERzO3YjCldk:2NkGkc&#x27;</span><br>enc=[<span class="hljs-built_in">ord</span>(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> s]<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(enc)):<br>	enc[i]-=<span class="hljs-number">1</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">bytes</span>(enc))  <span class="hljs-comment"># b&#x27;oVDQyN2XiBkcj91MjFjb&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>再上C脚本：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> _BYTE char</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc,<span class="hljs-type">char</span> **argv,<span class="hljs-type">char</span> *envp[])</span><br>&#123;<br>  <span class="hljs-type">char</span> a1[]=<span class="hljs-string">&quot;oVDQyN2XiBkcj91MjFjb&quot;</span>;<br>  _BYTE *v1; <span class="hljs-comment">// rax</span><br>  _BYTE *v2; <span class="hljs-comment">// [rsp+0h] [rbp-18h]</span><br>  _BYTE *v3; <span class="hljs-comment">// [rsp+10h] [rbp-8h]</span><br>  _BYTE *i; <span class="hljs-comment">// [rsp+10h] [rbp-8h]</span><br><br>  v2 = a1;<br>  v3 = a1;<br>  <span class="hljs-keyword">do</span><br>    v1 = v3++;<br>    <span class="hljs-keyword">while</span> ( *v1 );<br>    <span class="hljs-keyword">for</span> ( i = v3 - <span class="hljs-number">2</span>; v2 &lt; i; --i )<br>    &#123;<br>      *v2 ^= *i;<br>      *i ^= *v2;<br>      *v2++ ^= *i;<br>    &#125;<br>    <span class="hljs-built_in">puts</span>(a1);<br>    <span class="hljs-comment">//bjFjM19jckBiX2NyQDVo</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>base64解码得到flag：</p>
+<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822243.png" srcset="/img/loading.gif" lazyload alt="re"></p>
+<h3 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h3><h4 id="没有文件后缀"><a href="#没有文件后缀" class="headerlink" title="没有文件后缀"></a>没有文件后缀</h4><p>要不是看了wp，我都不知道这道题有原题，不愧是省赛啊（doge）。</p>
+<p>出处是：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zz_Caleb/article/details/88601860">https://blog.csdn.net/zz_Caleb/article/details/88601860</a></p>
+<p>得到flag：<code>CTF&#123;131Ack_3Y3_gA1AxY&#125;</code></p>
+<h3 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h3><h4 id="古典"><a href="#古典" class="headerlink" title="古典"></a>古典</h4><p>签到题，很多队伍很早就解出来了。（我为什么那么菜，过了好久才做出来qwq）</p>
+<p>打开发现是base编码，用在线工具⼀个⼀个试可知是base32编码：</p>
+<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041823574.png" srcset="/img/loading.gif" lazyload alt="cry-1"></p>
+<p>synt是flag进行13位凯撒加密得到：</p>
+<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822160.png" srcset="/img/loading.gif" lazyload alt="cry-2"></p>
+<p>得到flag：<code>flag&#123;791ee565-afde-4772-89a7-6cddd6d0863f&#125;</code></p>
+<h4 id="alice-and-bob"><a href="#alice-and-bob" class="headerlink" title="alice and bob"></a>alice and bob</h4><p>alice和bob是rsa出现的经典人物。附件里只有四个数字，合理推测是n和c，典型模不互素：大的是n，小的是c，e用65537试⼀下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> Crypto.Util.number import *<br>c1 = 0xa30e64bef4373f1ffdb9f6e116643ccef2f1f5e2509ee3937b7c3af6b36b5ef532cfbdeda<br>n1 = 0xe543df8c958aa57dbaea1ec39c192e5a8b26a64fbdcb3073ba388bc189fb645afd600b256<br>c2 = 0x3940203d1de79f980e30497847f25ca8562493310b2953570d435fa98bc7259ea119033c0<br>n2 = 0x9254d235f837be7093dadd7e89af96c43a919a0198b9e7f378a690fe8c655a42dffdaad9d<br><span class="hljs-attribute">q</span>=GCD(n1,n2)<br><span class="hljs-built_in">print</span>(isPrime(q))<br><br><span class="hljs-attribute">p1</span>=n1//q<br><span class="hljs-attribute">p2</span>=n2//q<br><span class="hljs-built_in">print</span>(isPrime(p1))<br><span class="hljs-built_in">print</span>(isPrime(p2))<br><span class="hljs-attribute">e</span>=65537<br><span class="hljs-attribute">d1</span>=inverse(e,(p1-1)*(q-1))<br><span class="hljs-attribute">d2</span>=inverse(e,(p2-1)*(q-1))<br><br><span class="hljs-attribute">m1</span>=pow(c1,d1,n1)<br><span class="hljs-attribute">m2</span>=pow(c2,d2,n2)<br><br><span class="hljs-built_in">print</span>(long_to_bytes(m1))<br><span class="hljs-built_in">print</span>(long_to_bytes(m2))<br><br>PYTHON<br></code></pre></td></tr></table></figure>
+
+<p>果然是这样，最终得到的flag是：<code>flag&#123;real_man_wear_black_suit&#125;</code></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>第二届“湖北省大学生信创大赛”复赛Write-up</div>
+      <div>https://rookieterry.github.io/2023/03/07/第二届“湖北省大学生信创大赛“复赛Write-up/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期二, 三月 7日 2023, 9:02 晚上</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/31/%E5%85%B3%E4%BA%8EPHP%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/" title="关于PHP伪协议的那些事">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于PHP伪协议的那些事</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/09/%E5%AE%B6%E5%BA%AD%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BAvaultwarden%EF%BC%88%E4%BA%8C%EF%BC%89/" title="家庭服务器搭建vaultwarden（二）">
+                        <span class="hidden-mobile">家庭服务器搭建vaultwarden（二）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo.terrynet.live/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

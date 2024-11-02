@@ -1,0 +1,828 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言在上一篇文章中，我使用了openwrt系统作为主路由系统，虽然一样可以用来拨号+科学上网，但是openwrt系统的拨号稳定性实在是一言难尽：每次重启都要登录openwrt后台重新连接接口。我在家时倒也无所谓，但是一旦我不在家时远程重启，家里就会断几天网，为此我没有少挨爸妈的骂。最后，我还是决定选用现在比较流行的双软路由方案：esxi中安装爱快虚拟机作为主路由拨号上网，openwrt虚拟机则改为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="家庭网络改造（下）">
+<meta property="og:url" content="https://rookieterry.github.io/2022/06/29/%E5%AE%B6%E5%BA%AD%E7%BD%91%E7%BB%9C%E6%94%B9%E9%80%A0%EF%BC%88%E4%B8%8B%EF%BC%89/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="前言在上一篇文章中，我使用了openwrt系统作为主路由系统，虽然一样可以用来拨号+科学上网，但是openwrt系统的拨号稳定性实在是一言难尽：每次重启都要登录openwrt后台重新连接接口。我在家时倒也无所谓，但是一旦我不在家时远程重启，家里就会断几天网，为此我没有少挨爸妈的骂。最后，我还是决定选用现在比较流行的双软路由方案：esxi中安装爱快虚拟机作为主路由拨号上网，openwrt虚拟机则改为">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/09/17/zBTnevPfYblaEIZ.jpg">
+<meta property="article:published_time" content="2022-06-29T14:02:45.000Z">
+<meta property="article:modified_time" content="2023-03-06T08:46:29.000Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="数码折腾">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2022/09/17/zBTnevPfYblaEIZ.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>家庭网络改造（下） - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="家庭网络改造（下）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-29 15:02" pubdate>
+          星期三, 六月 29日 2022, 3:02 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">家庭网络改造（下）</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在上一篇文章中，我使用了openwrt系统作为主路由系统，虽然一样可以用来拨号+科学上网，但是openwrt系统的拨号稳定性实在是一言难尽：每次重启都要登录openwrt后台重新连接接口。我在家时倒也无所谓，但是一旦我不在家时远程重启，家里就会断几天网，为此我没有少挨爸妈的骂。最后，我还是决定选用现在比较流行的双软路由方案：esxi中安装爱快虚拟机作为主路由拨号上网，openwrt虚拟机则改为旁路由用于科学上网+去广告等进阶玩法。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="安装主路由系统"><a href="#安装主路由系统" class="headerlink" title="安装主路由系统"></a>安装主路由系统</h3><p>首先要设置网卡直通，网上有很多教程，设置方法这里不再展开了。在上一篇教程中，openwrt的wan口并没有直通，可能会影响实际带宽并且占用CPU性能，不推荐那样做。然后去爱快官网，下载最新的ISO镜像并上传到esxi：<a target="_blank" rel="noopener" href="https://www.ikuai8.com/component/download">https://www.ikuai8.com/component/download</a></p>
+<p>进入esxi的web管理界面，安装爱快虚拟机。选择“新建虚拟机”，然后选择“其它3.x Linux（64位）”：</p>
+<p><img src="https://s2.loli.net/2022/09/17/cKmTCOfZtFhXQRw.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>CPU核心数按需选择，内存最好多给点，4g最好，安装好以后可以改回1-2g。USB控制器可以删掉，CD&#x2F;DVD驱动器记得选择刚才上传的爱快ISO镜像。</p>
+<p>重要的一步来了：一定要添加直通的网卡作为WAN口！选择“添加其它设备”–“PCI设备”，选择你需要直通的网卡，然后保留至少一个虚拟网络适配器作为LAN口。这里放一张我设置好的图：</p>
+<p><img src="https://s2.loli.net/2022/09/17/A4Vnm9PrYFjQ5Lq.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>最后说一下，切记：<strong>直通PCI设备的话，内存高级设置里面必须要勾选一下“预留所有客户机内存 (全部锁定) ”，不勾选会无法开机！</strong></p>
+<p>设置完毕后点击完成，再开启刚才创建的虚拟机，选择安装系统的硬盘并回车，系统安装完成后会自动重启。重启完毕后，我们来设置一下爱快的LAN口地址。切记：管理口IP请设置成跟esxi的局域网同网段的IP！例如你家esxi的IP地址为192.168.50.231，则爱快主路由LAN口的地址为192.168.50.xx。</p>
+<p>输入2并回车，选择“设置LAN1地址”：</p>
+<p><img src="https://s2.loli.net/2022/09/17/1TV563FXDBzRawZ.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>输入0并回车：</p>
+<p><img src="https://s2.loli.net/2022/09/17/Yb9qCLRUiKgxfzO.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>输入“192.168.50.xx”，这里我为了方便管理，填了“192.168.50.1”：</p>
+<p><img src="https://s2.loli.net/2022/09/17/on4MZfYL1yU5k2X.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>然后首页输入8重启爱快虚拟机。爱快重启成功后，WEB管理地址的LAN口就会显示刚刚设置的IP了！</p>
+<p>到这里我们的虚拟机，爱快软路由系统层面就已经安装并且简单设置好了！接下来教大家如何进行详细上网配置！</p>
+<h3 id="配置主路由"><a href="#配置主路由" class="headerlink" title="配置主路由"></a>配置主路由</h3><p>打开浏览器，输入爱快的管理口IP，从网页端设置参数！默认账户密码都是admin，如果你网页输入管理口IP打不开爱快后台，说明访问的机器可能不在同一个局域网！这里建议你把电脑设备的网络手动设置一下，设置到跟爱快软路由同一个网段再来设置！</p>
+<p><strong>登录进去后，会提示你绑定爱快云平台，这里我们先不绑定，因为爱快还没有通网络，后面有需要再来绑定！</strong></p>
+<p>在左侧“网络设置”–“DHCP设置”–“DHCP服务端”中，新建一个DHCP服务：</p>
+<p><img src="https://s2.loli.net/2022/09/17/Gyepkt4lXAbhwz1.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>首选dns第一个填写为op的IP地址，备用dns可以填写自己喜欢的。这里由于我之前的华硕路由器IP地址为192.168.50.2，所以我设置的是从192.168.50.3开始分配IP地址。设置完成后保存即可。</p>
+<p>接着我们来绑定WAN口，在爱快首页的“系统概况”中点击wan1的图标，选择我们之前设置直通的网卡并绑定。接入方式改为“ADSL&#x2F;PPPoE拨号”，填入宽带账号密码后保存，网线另一端插入光猫LAN口即可正常拨号上网：</p>
+<p><img src="https://s2.loli.net/2022/09/17/RVJoafHmLjOQY1n.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><strong>注意：拨号成功后，爱快web首页的外网图标会变绿，而且状态信息会显示已链接，否则拨号失败，检查账户密码是否正确或光猫是否为桥接模式。</strong></p>
+<p>类似的，我们把LAN口绑定为开始在esxi里设置的虚拟网卡，IP地址和之前设置的LAN口地址相同。如果你的软路由网口足够多，你也可以把LAN口绑定为直通的网卡。由于我的软路由只有两个千兆网口，所以爱快的LAN口使用虚拟网卡。</p>
+<p>至此，爱快主路由的安装与调教就结束了！</p>
+<h3 id="配置旁路由"><a href="#配置旁路由" class="headerlink" title="配置旁路由"></a>配置旁路由</h3><p>由于之前已经在虚拟机中安装好了openwrt，所以这里只需要简单更改一下op虚拟机的网络配置即可。回到esxi管理页面，把op的直通网卡删掉，只保留一个虚拟网卡（同样的，如果你的软路由网口足够多，你也可以把LAN口绑定为直通的网卡）：</p>
+<p><img src="https://s2.loli.net/2022/09/17/pj7wNJRrTPECclu.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>确认配置没问题后保存开机即可，这里我把op的管理IP设置为了192.168.50.235。那怎么修改op管理IP呢？</p>
+<p>在op的web控制台中，输入命令：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>config/network<br></code></pre></td></tr></table></figure>
+
+<p>用键盘方向键移动光标到：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gams"><span class="hljs-keyword">option</span> ipaddr <span class="hljs-string">&#x27;192.168.2.1&#x27;</span> <br></code></pre></td></tr></table></figure>
+
+<p>这行，输入法切换成英文模式，然后按键盘i键进行删减，然后修改成你想要的局域网IP地址。修改好后先按一下右上角esc按键！接着按shift+:（冒号键），然后下面会出现一个冒号输入wq，按回车键保存，修改好后重启op虚拟机即可。</p>
+<p>进入op管理后台，不同编译版本的固件，默认账号和密码会不一样。在左侧的“网络”–“接口”中，修改LAN口的配置。网关填写爱快的IP地址，dns我写的是114.114.114.114和223.5.5.5，大家有喜欢的dns也可以填写其他的，比如运营商dns：</p>
+<p><img src="https://s2.loli.net/2022/09/17/KWeOiAt76vqCfp4.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>把最下面的DHCP服务器设置，忽略此网口打勾，ipv6设置里面全部设置成禁用，最后点击保存即可：</p>
+<p><img src="https://s2.loli.net/2022/09/17/e2MThAytPkUpoVz.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>最后保存一下设置，就可以正常上网了。</p>
+<p><strong>如果大家设置后出现了无法上网的情况，请检查防火墙或者dns！</strong></p>
+<p>最后我再跟大家讲解一下，如何让规划局域网里面的某些设备，通过openwrt旁路由进行上网。</p>
+<h3 id="设备分流"><a href="#设备分流" class="headerlink" title="设备分流"></a>设备分流</h3><p>众所周知，走旁路由上网的设备，网速会有明显下降。那么，我们有没有办法让没有出国需求的设备只走主路由，有出国需求的设备走旁路由呢？答案是肯定的。而且，只走主路由的设备甚至可以跑满家里的千兆带宽！</p>
+<p>在爱快后台的“网络设置”–“DHCP设置”–“DHCP静态分配”中，手动设置要出国设备的网关为旁路由IP，不用出国时就停用规则，如图：</p>
+<p><img src="https://s2.loli.net/2022/09/17/Ywx32fIGQeLvcy7.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>重新连接家里的WiFi网络（台式机重新插拔网线），会发现网关已经变化，如果可以正常访问国内网站和国外网站，则说明大功告成了！</p>
+<p>至于ipv6的配置方法，因为武汉电信还未开通，所以这里不做讲解。</p>
+<p>最后放出改造后的拓扑图：</p>
+<p><img src="https://s2.loli.net/2022/09/17/zBTnevPfYblaEIZ.jpg" srcset="/img/loading.gif" lazyload alt="新版瑞云居网络拓扑图（双软路由）"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有关家庭网络改造的文章就此告一段落了，使用一段时间后发现，双软路由是真香！至于添加SSL证书、端口转发、ddns之类的高级玩法，请自行上网搜索或参考本人往期文章，谢谢您的耐心阅读！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%94%9F%E6%B4%BB%E7%82%B9%E6%BB%B4/" class="category-chain-item">生活点滴</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E7%A0%81%E6%8A%98%E8%85%BE/">#数码折腾</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>家庭网络改造（下）</div>
+      <div>https://rookieterry.github.io/2022/06/29/家庭网络改造（下）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期三, 六月 29日 2022, 3:02 下午</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/17/Burpsuite%E4%BB%A3%E7%90%86%E6%B1%A0%E6%8F%92%E4%BB%B6-IPRotate%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/" title="Burpsuite代理池插件--IPRotate配置教程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Burpsuite代理池插件--IPRotate配置教程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/05/21/%E5%AE%B6%E5%BA%AD%E7%BD%91%E7%BB%9C%E6%94%B9%E9%80%A0%EF%BC%88%E4%B8%8A%EF%BC%89/" title="家庭网络改造（上）">
+                        <span class="hidden-mobile">家庭网络改造（上）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://twikoo.terrynet.live/","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
