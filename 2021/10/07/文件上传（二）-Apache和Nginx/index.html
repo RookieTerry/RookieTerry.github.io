@@ -26,7 +26,7 @@
 <meta property="og:description" content="下面我们来总结另外几个与中间件以及http请求头有关文件上传的漏洞，它们都与客户机或服务器的操作系统无关。 Apache文件名解析漏洞由于Apache解析文件后缀名的顺序是从右往左，所以我们可以在文件名最后加上Apache无法识别的文件后缀名来绕过。例如我们要上传一个PHP木马，那我们可以把文件名命名为”*.php.123”，其中”123”是Apache无法识别的后缀名，则Apache会解析左边的">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-10-07T16:58:38.000Z">
-<meta property="article:modified_time" content="2023-01-13T09:52:03.000Z">
+<meta property="article:modified_time" content="2023-01-13T09:52:02.000Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="文件上传">
 <meta name="twitter:card" content="summary_large_image">
@@ -496,9 +496,9 @@
   <div id="twikoo"></div>
   <script type="text/javascript">
     Fluid.utils.loadComments('#comments', function() {
-      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.7/twikoo.all.min.js', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.39/twikoo.all.min.js', function() {
         var options = Object.assign(
-          {"envId":"https://deluxe-twilight-0b2696.netlify.app/.netlify/functions/twikoo","region":"ap-shanghai","path":"window.location.pathname"},
+          {"envId":"https://deluxe-twilight-0b2696.netlify.app/.netlify/functions/twikoo","region":"us-east-2","path":"window.location.pathname"},
           {
             el: '#twikoo',
             path: 'window.location.pathname',
