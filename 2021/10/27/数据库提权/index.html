@@ -25,13 +25,13 @@
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
 <meta property="og:description" content="MySQL数据库提权提权方式 udf提权 mof提权 启动项提权 反弹shell提权  udf提权User Defined Functions，简称UDF，通俗来讲就是用户可自定义函数。udf提权就是利用到创建自定义函数（sys_eval），在mysql中调用这个自定义的函数（sys_eval）来实现获取对方主机的system的shell权限，从而达到提权的目的。 简单来说便是利用提权脚本放到对方">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/09/16/mIaPk8zxe56J1gn.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/database_priv_esc.png">
 <meta property="article:published_time" content="2021-10-27T12:53:10.000Z">
-<meta property="article:modified_time" content="2026-07-13T08:09:19.984Z">
+<meta property="article:modified_time" content="2026-07-16T16:10:13.375Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="权限提升">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/09/16/mIaPk8zxe56J1gn.png">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/database_priv_esc.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -333,7 +333,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：30 分钟前
                   
                 
               </p>
@@ -473,7 +473,7 @@
 <h2 id="OracleShell工具提权"><a href="#OracleShell工具提权" class="headerlink" title="OracleShell工具提权"></a>OracleShell工具提权</h2><p>除此之外，我们也可以采用自动化工具OracleShell提权Oracle数据库，前提条件也是获取到dba的最高权限权限，并且需要知道SID，通常与账号密码在一起。<br>可以使用sqlmap检测是否为dbs权限，返回true则为dba权限：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sqlmap 数据库类型://用户名:密码@URL/数据库名 --is-dba<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://s2.loli.net/2022/09/16/mIaPk8zxe56J1gn.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/database_priv_esc.png" srcset="/img/loading.gif" lazyload alt="Oracle Shell"></p>
 <p>后面直接用工具连接即可。</p>
 
                 

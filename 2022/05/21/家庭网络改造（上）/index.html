@@ -25,13 +25,13 @@
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
 <meta property="og:description" content="网络环境原来的网络结构拓扑图：  背景去年暑假本人刚搬进新家，刚开始用以前的网络设备还能凑合一下，但是后期随着设备增多，网络的稳定性和速度就不得不考虑了。因为本人有科学上网的需求，所以自从搬新家以后就一直采用主+旁网络架构（见图一）。这种方式虽然被很多人推崇，但是由于设备出网的流量需要先从主路由到旁路由再到主路由，浪费了带宽资源还降低了网速，所以我打算改造家里的网络架构。 之前我购买了一台软路由并">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/09/17/scd6QgX8xmzIRGK.jpg">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/home_network_upgrade_20.jpg">
 <meta property="article:published_time" content="2022-05-20T16:38:57.000Z">
-<meta property="article:modified_time" content="2026-07-13T14:55:34.730Z">
+<meta property="article:modified_time" content="2026-07-16T15:12:24.269Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="数码折腾">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/09/17/scd6QgX8xmzIRGK.jpg">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/home_network_upgrade_20.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -333,7 +333,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：1 小时前
                   
                 
               </p>
@@ -342,7 +342,7 @@
               <div class="markdown-body">
                 
                 <h2 id="网络环境"><a href="#网络环境" class="headerlink" title="网络环境"></a>网络环境</h2><p>原来的网络结构拓扑图：</p>
-<p><img src="https://s2.loli.net/2022/05/15/14vfLbR3x2NQyPa.png" srcset="/img/loading.gif" lazyload alt="旧版网络拓扑图"></p>
+<p><img src="/img/notes/home_network_upgrade_13.jpg" srcset="/img/loading.gif" lazyload alt="旧版网络拓扑图"></p>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>去年暑假本人刚搬进新家，刚开始用以前的网络设备还能凑合一下，但是后期随着设备增多，网络的稳定性和速度就不得不考虑了。因为本人有科学上网的需求，所以自从搬新家以后就一直采用主+旁网络架构（见图一）。这种方式虽然被很多人推崇，但是由于设备出网的流量需要先从主路由到旁路由再到主路由，浪费了带宽资源还降低了网速，所以我打算改造家里的网络架构。</p>
 <p>之前我购买了一台软路由并安装了esxi6.7系统，在里面安装多个虚拟机来满足我不同的需求。还有一台去年双十一抢购的华硕的TUF-AX3000，支持双频WiFi6并且刷了梅林改版固件，于是我想到了以下两种家庭组网方案：</p>
 <p>1.华硕路由器做主路由拨号+科学上网，软路由内安装esxi，作为一台普通网络设备接入局域网</p>
@@ -350,23 +350,23 @@
 <p>其中第一种方案因为梅林改版的出国插件不支持最新的trojan和vless协议，而且无法单线多拨，可玩性不如openwrt，于是打算采用第二种方案。</p>
 <h2 id="实施"><a href="#实施" class="headerlink" title="实施"></a>实施</h2><p>确定方案之后，就准备开干了。我的软路由是在海鲜市场花八百多淘来的，为了排除恰饭嫌疑就不放链接了。配置是i3-6100u的CPU，8g的内存，螃蟹网卡配两个双千兆网口，带金属外壳和电源，自己又装了个256g的三星固态盘，不装nas足够用了。先用U盘安装esxi系统，再去网上下载esir版openwrt固件并转换成esxi镜像<strong>（推荐使用工具：StarWind V2V Converter）</strong>，这里的安装过程参考其他大佬的文章，不展开细说了。</p>
 <p>首先把esxi管理口插入电脑，进入esxi的web管理后台。选择左侧菜单栏的“网络”选项，可以看到虚拟交换机、物理网卡之类的选项（这里的<code>Wan</code>和<code>WAN</code>是后来加的）：</p>
-<p><img src="https://s2.loli.net/2022/05/15/qmDIMSPRFVg9UKa.jpg" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p><img src="/img/notes/home_network_upgrade_14.jpg" srcset="/img/loading.gif" lazyload alt="1"></p>
 <p>在”虚拟交换机“选项中新增一个，配置可以按照我的填写，我这里就命名为<code>Wan</code>：</p>
-<p><img src="https://s2.loli.net/2022/05/15/haeEugnCx7F2vWm.jpg" srcset="/img/loading.gif" lazyload alt="2"></p>
+<p><img src="/img/notes/home_network_upgrade_15.jpg" srcset="/img/loading.gif" lazyload alt="2"></p>
 <p>再新建一个端口组，选择刚才新建的虚拟交换机，我这里命名为<code>WAN</code>：</p>
-<p><img src="https://s2.loli.net/2022/05/15/HAcnNqRyCDhKI5d.jpg" srcset="/img/loading.gif" lazyload alt="3"></p>
+<p><img src="/img/notes/home_network_upgrade_16.jpg" srcset="/img/loading.gif" lazyload alt="3"></p>
 <p>回到我们之前安装好的openwrt虚拟机，关掉它并添加一块新的虚拟网络适配器，选择刚才新建的<code>WAN</code>端口组：</p>
-<p><img src="https://s2.loli.net/2022/05/15/D4NLJBPQAduX2lw.jpg" srcset="/img/loading.gif" lazyload alt="4"></p>
+<p><img src="/img/notes/home_network_upgrade_17.jpg" srcset="/img/loading.gif" lazyload alt="4"></p>
 <p>进入openwrt后台，左侧边栏的“网络-接口”，分别修改wan和wan6接口。选择“物理设置”，勾选对应选项：</p>
-<p><img src="https://s2.loli.net/2022/05/15/3CeyuqTgDavL6xW.jpg" srcset="/img/loading.gif" lazyload alt="5"></p>
+<p><img src="/img/notes/home_network_upgrade_18.jpg" srcset="/img/loading.gif" lazyload alt="5"></p>
 <p>在wan&#x2F;wan6口的“基本设置”中，把“协议”改为“PPPoE”，填入你的宽带账号和密码，保存并应用。</p>
 <p>同样的，我们去设置lan口。把“协议”改为“静态地址”，”ipv4地址“改成192.168.xxx.1，“使用自定义dns服务器”可填可不填。因为华硕路由器仅用作交换机，不需要DHCP服务，所以我们打开openwrt的DHCP服务。往下滑到“DHCP服务器-基本设置”，取消勾选“忽略此接口”，在“高级设置”中勾选“动态DHCP”，保存并应用。</p>
 <p>把软路由的wan口插入光猫，lan口插入电脑，如果电脑能够上网，那么说明快要成功了。这时还差一步，就是设置交换机。可能有人会问：为什么不把华硕路由器用作二级路由呢？openwrt的lan口接路由器wan口，华硕路由器后台的“外部网络”设置为“动态ip”，不方便吗？其实设置为二级路由意味着局域网内其它设备会和openwrt处于不同网段，其它设备想上网必须先经过华硕路由器的一次nat转换，损耗一部分网速还增加了游戏延迟，不利于游戏体验，所以我把华硕路由器作为交换机。</p>
 <p>电脑与openwrt断开连接，用网线连接电脑和华硕路由器的lan口进入路由器后台。在左侧边栏的“高级设置-内部网络-内网地址设置”中，把华硕路由器的ip地址改为其它与openwrt同网段的ip，不冲突即可。再前往“DHCP服务器”选项，关闭华硕路由器的DHCP功能即可。</p>
-<p><img src="https://s2.loli.net/2022/05/15/Cn3JKjfX4yFIeoa.jpg" srcset="/img/loading.gif" lazyload alt="6"></p>
+<p><img src="/img/notes/home_network_upgrade_19.jpg" srcset="/img/loading.gif" lazyload alt="6"></p>
 <p>把openwrt的lan口与华硕路由器的lan口相连，华硕路由器wan口什么都不接，这样华硕路由器就相当于一个交换机了。</p>
 <p>最后放出改造后的拓扑图：</p>
-<p><img src="https://s2.loli.net/2022/09/17/scd6QgX8xmzIRGK.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/home_network_upgrade_20.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>至于ddns、端口转发、外网访问等进阶玩法，这里就不展开了。安装过程可能有点繁琐，但一次配置，长久使用，使用起来还是很舒服的，大家再根据自己的实际需求优化下就好了！</p>
 
                 

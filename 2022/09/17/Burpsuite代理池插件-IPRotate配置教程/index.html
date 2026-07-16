@@ -18,25 +18,25 @@
   <meta name="author" content="HackerTerry">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言最近看到某个安全群里有大佬分享了一款burpsuite抓包隐藏本机ip的插件，它可以让使用者无需手动配置代理链，即可在抓包的过程中隐藏最近的ip。然而安装过程中踩了很多坑，这里写一篇文章分享给大家，让师傅们少走弯路。 正文这个插件托管在GitHub上，链接是：https:&#x2F;&#x2F;github.com&#x2F;RhinoSecurityLabs&#x2F;IPRotate_Burp_Extension 因为是pyth">
+    <meta name="description" content="前言最近看到某个安全群里有大佬分享了一款burpsuite抓包隐藏本机ip的插件，它可以让使用者无需手动配置代理链，即可在抓包的过程中隐藏最近的ip。然而安装过程中踩了很多坑，这里写一篇文章分享给大家，让师傅们少走弯路。  声明：图片中的水印域名曾经是我个人所有，并非盗图！  正文这个插件托管在GitHub上，链接是：https:&#x2F;&#x2F;github.com&#x2F;RhinoSecurityLabs&#x2F;IPR">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Burpsuite代理池插件--IPRotate配置教程">
 <meta property="og:url" content="https://rookieterry.github.io/2022/09/17/Burpsuite%E4%BB%A3%E7%90%86%E6%B1%A0%E6%8F%92%E4%BB%B6-IPRotate%E9%85%8D%E7%BD%AE%E6%95%99%E7%A8%8B/index.html">
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
-<meta property="og:description" content="前言最近看到某个安全群里有大佬分享了一款burpsuite抓包隐藏本机ip的插件，它可以让使用者无需手动配置代理链，即可在抓包的过程中隐藏最近的ip。然而安装过程中踩了很多坑，这里写一篇文章分享给大家，让师傅们少走弯路。 正文这个插件托管在GitHub上，链接是：https:&#x2F;&#x2F;github.com&#x2F;RhinoSecurityLabs&#x2F;IPRotate_Burp_Extension 因为是pyth">
+<meta property="og:description" content="前言最近看到某个安全群里有大佬分享了一款burpsuite抓包隐藏本机ip的插件，它可以让使用者无需手动配置代理链，即可在抓包的过程中隐藏最近的ip。然而安装过程中踩了很多坑，这里写一篇文章分享给大家，让师傅们少走弯路。  声明：图片中的水印域名曾经是我个人所有，并非盗图！  正文这个插件托管在GitHub上，链接是：https:&#x2F;&#x2F;github.com&#x2F;RhinoSecurityLabs&#x2F;IPR">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/02/24/CiLkqxArjSFw1QH.png">
-<meta property="og:image" content="https://s2.loli.net/2022/02/24/hM789wHs5ZmnPJl.png">
-<meta property="og:image" content="https://s2.loli.net/2022/02/24/lUmtfGNM1kXsFeu.png">
-<meta property="og:image" content="https://s2.loli.net/2022/02/24/wiPNoEtMdV4fKXr.png">
-<meta property="og:image" content="https://s2.loli.net/2022/02/24/QjKzNmqnuYOscoD.png">
-<meta property="og:image" content="https://s2.loli.net/2022/02/24/DZcHU4nNXbVeI15.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/burpsuite_iprotate_1.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/burpsuite_iprotate_2.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/burpsuite_iprotate_3.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/burpsuite_iprotate_4.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/burpsuite_iprotate_5.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/burpsuite_iprotate_6.webp">
 <meta property="article:published_time" content="2022-09-17T09:08:43.000Z">
-<meta property="article:modified_time" content="2026-07-13T14:35:15.255Z">
+<meta property="article:modified_time" content="2026-07-16T14:45:25.329Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="教程">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/02/24/CiLkqxArjSFw1QH.png">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/burpsuite_iprotate_1.webp">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -338,7 +338,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：2 小时前
                   
                 
               </p>
@@ -347,31 +347,34 @@
               <div class="markdown-body">
                 
                 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近看到某个安全群里有大佬分享了一款burpsuite抓包隐藏本机ip的插件，它可以让使用者无需手动配置代理链，即可在抓包的过程中隐藏最近的ip。然而安装过程中踩了很多坑，这里写一篇文章分享给大家，让师傅们少走弯路。</p>
+<blockquote>
+<p>声明：图片中的水印域名曾经是我个人所有，并非盗图！</p>
+</blockquote>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>这个插件托管在GitHub上，链接是：<a target="_blank" rel="noopener" href="https://github.com/RhinoSecurityLabs/IPRotate_Burp_Extension">https://github.com/RhinoSecurityLabs/IPRotate_Burp_Extension</a></p>
 <p>因为是python插件，而且依赖python2环境，所以需要配置jython：<a target="_blank" rel="noopener" href="https://www.jython.org/download">Downloads | Jython</a></p>
-<p><img src="https://s2.loli.net/2022/02/24/CiLkqxArjSFw1QH.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/burpsuite_iprotate_1.webp" srcset="/img/loading.gif" lazyload alt="Jython下载"></p>
 <p>去burpsuite配置插件依赖（注意避免中文路径）：</p>
-<p><img src="https://s2.loli.net/2022/02/24/hM789wHs5ZmnPJl.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/burpsuite_iprotate_2.webp" srcset="/img/loading.gif" lazyload></p>
 <p>准备就绪后，我遇到了第一个坑：解决不同版本之间python的冲突问题。</p>
 <p>由于我的电脑之前只有python3.9，所以我去官网下载了python2中最新的2.7.18版本，并自动配置了windows环境变量。然而命令行输入python3却会弹出微软应用商店（想必大家都遇到过），这时只需要把不同版本的python.exe文件名分别改成python2.exe和python3.exe，问题就解决了：</p>
-<p><img src="https://s2.loli.net/2022/02/24/lUmtfGNM1kXsFeu.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/burpsuite_iprotate_3.webp" srcset="/img/loading.gif" lazyload></p>
 <p>接下来burpsuite插件配置页面会提示缺少第三方库boto3，这时要注意在python2的环境下安装，但是我直接用pip安装会报错（忘记截图了）：</p>
 <figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vhdl">Fatal <span class="hljs-literal">error</span> <span class="hljs-keyword">in</span> launcher:Unable <span class="hljs-keyword">to</span> create <span class="hljs-keyword">process</span> using &#x27;<span class="hljs-string">&quot;C:\python27\python.exe&quot;</span> <span class="hljs-string">&quot;C:\Python27\Scripts\pip.exe&quot;</span><span class="hljs-symbol">&#x27;install</span> boto3<br></code></pre></td></tr></table></figure>
 
 <p>这里可以使用anaconda这个工具来在不同版本间安装包，或者利用下面文章的方法（windows自行去网址复制脚本）：</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42478365/article/details/116801930">kali linux 中python2不带pip的解决方法_程序员届的小菜鸡的博客-CSDN博客_kali python2安装pip</a></p>
 <p>python2运行脚本后即可正常使用pip2安装包。效果如下：</p>
-<p><img src="https://s2.loli.net/2022/02/24/wiPNoEtMdV4fKXr.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>安装成功以后，输入以下的access-key和secret-key激活：</p>
+<p><img src="/img/notes/burpsuite_iprotate_4.webp" srcset="/img/loading.gif" lazyload></p>
+<p>安装成功以后，输入以下的access-key和secret-key激活（不保证后续仍然可用）：</p>
 <figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs gauss">Access <span class="hljs-built_in">Key</span>:AKIAISGP63MXTUVKLTHA<br>Secret <span class="hljs-built_in">Key</span>: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<br></code></pre></td></tr></table></figure>
 
 <p>因为是测试环境，所以用vps中python自带的http模块启动一个服务（这里我以80端口为例）：</p>
 <figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs axapta">python3 -m http.<span class="hljs-keyword">server</span> 端口       <span class="hljs-meta">#python3</span><br>python -m SimpleHTTPServer 端口   <span class="hljs-meta">#python2</span><br></code></pre></td></tr></table></figure>
 
 <p>先启动插件（Target Host填vps的ip），再用浏览器访问vps的ip+端口后，切换代理用burpsuite抓包：</p>
-<p><img src="https://s2.loli.net/2022/02/24/QjKzNmqnuYOscoD.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/burpsuite_iprotate_5.webp" srcset="/img/loading.gif" lazyload></p>
 <p>vps可以看到请求ip，放入burpsuite重放器中重放可观察到请求ip变化：</p>
-<p><img src="https://s2.loli.net/2022/02/24/DZcHU4nNXbVeI15.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/burpsuite_iprotate_6.webp" srcset="/img/loading.gif" lazyload></p>
 <p>注意这里一定要用burpsuite请求，否则无法触发代理池的效果。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由于本人技术太菜，所以折腾了将近一个下午。好处就是，无需手动配置代理池，节省了我们筛选可用代理ip的时间。在这里再次感谢群里大佬的帮助！</p>
 

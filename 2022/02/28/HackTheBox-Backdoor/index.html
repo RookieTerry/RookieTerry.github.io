@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2022/02/08/476lxjZDtkYV3Sq.png">
 <meta property="article:published_time" content="2022-02-28T15:21:51.000Z">
-<meta property="article:modified_time" content="2026-07-13T14:36:40.045Z">
+<meta property="article:modified_time" content="2026-07-16T15:23:20.881Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="HackTheBox">
 <meta name="twitter:card" content="summary_large_image">
@@ -333,7 +333,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：1 小时前
                   
                 
               </p>
@@ -343,29 +343,27 @@
                 
                 <p>迟到了好久的wp，趁寒假补个票~顺便靠这个靶场混点htb分数（doge）</p>
 <h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>操起nmap就是一把梭，扫出来三个开放端口：22,80,1337</p>
-<p><img src="https://s2.loli.net/2022/02/08/Jg4Tpm2IVRUAkcM.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p><img src="/img/notes/htb_backdoor_1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
 <p>打开网页，发现是一个WordPress页面，这时想到了用wpscan插件扫：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">wpscan --url http://10.10.11.125/ --plugins-detection aggressive --enumerate u,p<br></code></pre></td></tr></table></figure>
 
 <p>扫描时间很长，而且也没扫出什么有用的信息。</p>
 <h2 id="getshell"><a href="#getshell" class="headerlink" title="getshell"></a>getshell</h2><p>看到wpscan扫出的结果，想到去插件目录看看，没想到是个Apache目录遍历：</p>
-<p><img src="https://s2.loli.net/2022/02/07/rgRUI8G47hyAijq.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/htb_backdoor_2.png" srcset="/img/loading.gif" lazyload></p>
 <p>上网查询ebook插件相关的exp，还真就找到了：<a target="_blank" rel="noopener" href="https://www.exploit-db.com/exploits/39575">https://www.exploit-db.com/exploits/39575</a></p>
 <p>没想到是任意文件下载，先按照poc把WordPress的配置文件下载下来，找到了数据库用户名和密码：</p>
-<p><img src="https://s2.loli.net/2022/02/07/7JQarqjGuUDdsM4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/htb_backdoor_3.png" srcset="/img/loading.gif" lazyload></p>
 <p>尝试用这个用户名和密码登录WordPress后台，失败。看来只能下载其它重要文件，例如<code>/etc/passwd</code>，在里面发现了用户名<code>user</code>。我也尝试过下载ssh公钥，结果以失败告终。</p>
-<p>这时，我想起来虽然上传不了pspy，但是可以查看进程日志。下载<code>/proc/sched_debug</code>查看进程，我看到其中有一个很特别的gdbserver进程：</p>
-<p><img src="C:\Users\Admin\Desktop\HTB--Backdoor\4.png" srcset="/img/loading.gif" lazyload></p>
-<p>再下载对应的进程文件<code>/proc/29222/cmdline</code>，查看对应端口号，发现正好是前面扫出来的1337端口。上网搜索gdbserver的exp：<a target="_blank" rel="noopener" href="https://www.exploit-db.com/exploits/50539">https://www.exploit-db.com/exploits/50539</a></p>
+<p>这时，我想起来虽然上传不了pspy，但是可以查看进程日志。下载<code>/proc/sched_debug</code>查看进程，我看到其中有一个很特别的gdbserver进程。再下载对应的进程文件<code>/proc/29222/cmdline</code>，查看对应端口号，发现正好是前面扫出来的1337端口。上网搜索gdbserver的exp：<a target="_blank" rel="noopener" href="https://www.exploit-db.com/exploits/50539">https://www.exploit-db.com/exploits/50539</a></p>
 <p>运行脚本，按照提示操作：</p>
-<p><img src="https://s2.loli.net/2022/02/08/TLW3a6GuoJ9rpcx.png" srcset="/img/loading.gif" lazyload alt="5"></p>
+<p><img src="/img/notes/htb_backdoor_4.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里不知道哪一步出了问题，迟迟收不到弹回来的shell。。。没办法，只能试试msf了。换成msf后，成功getshell：</p>
-<p><img src="https://s2.loli.net/2022/02/08/lzXwc2EPtWITFsf.png" srcset="/img/loading.gif" lazyload alt="6"></p>
+<p><img src="/img/notes/htb_backdoor_5.png" srcset="/img/loading.gif" lazyload></p>
 <p>user的flag就在<code>/home/user</code>目录下。</p>
 <h2 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h2><p>突然想到前段时间爆出的Linux提权通杀漏洞–<strong>CVE-2021-4034</strong>，用python3自带的http服务上传并执行后会报出如下错误：</p>
-<p><img src="https://s2.loli.net/2022/02/08/QwScAXaqv3UfT8D.png" srcset="/img/loading.gif" lazyload alt="7"></p>
+<p><img src="/img/notes/htb_backdoor_6.png" srcset="/img/loading.gif" lazyload></p>
 <p><code>sudo -l</code>也没有用。好吧，看来是没法偷懒了。。。老规矩，传个pspy看进程，果然发现了root权限执行的操作：</p>
-<p><img src="https://s2.loli.net/2022/02/08/a59zghSK2pox7cY.png" srcset="/img/loading.gif" lazyload alt="8"></p>
+<p><img src="/img/notes/htb_backdoor_7.png" srcset="/img/loading.gif" lazyload></p>
 <p>又是个枯燥无味的计划任务提权，htb老套路了。查找到以下关于<code>screen</code>命令的资料：</p>
 <blockquote>
 <p>使用“-x”选项，我们可以附加到已经附加到其他地方的会话。现在在这种情况下，会话已经以 root 身份运行，因此我们可以附加到该会话以获取 root 访问权限。</p>
@@ -375,9 +373,9 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">python3 -c <span class="hljs-string">&quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;)&quot;</span>  <span class="hljs-comment"># 开启python交互式终端</span><br><span class="hljs-built_in">export</span> TERM=xterm<br>/usr/bin/screen -x root/root<br></code></pre></td></tr></table></figure>
 
 <p>提权成功：</p>
-<p><img src="https://s2.loli.net/2022/02/08/SYjfhPwb5pkQryU.png" srcset="/img/loading.gif" lazyload alt="9"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个靶场还是比较贴近实际的，不过对于安服仔水平的我来说，实在算不上简单。好在历经了一波三折，最终还是拿下了！</p>
-<p><img src="https://s2.loli.net/2022/02/08/476lxjZDtkYV3Sq.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/htb_backdoor_8.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个靶场还是比较贴近实际的，不过对于脚本小子水平的我来说，实在算不上简单。好在历经了一波三折，最终还是拿下了！</p>
+<p><img src="/img/notes/htb_backdoor_9.png" srcset="/img/loading.gif" lazyload></p>
 
                 
               </div>

@@ -25,13 +25,13 @@
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
 <meta property="og:description" content="前言在上一篇文章中，我使用了openwrt系统作为主路由系统，虽然一样可以用来拨号+科学上网，但是openwrt系统的拨号稳定性实在是一言难尽：每次重启都要登录openwrt后台重新连接接口。我在家时倒也无所谓，但是一旦我不在家时远程重启，家里就会断几天网，为此我没有少挨爸妈的骂。最后，我还是决定选用现在比较流行的双软路由方案：esxi中安装爱快虚拟机作为主路由拨号上网，openwrt虚拟机则改为">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/09/17/zBTnevPfYblaEIZ.jpg">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/home_network_upgrade_8.webp">
 <meta property="article:published_time" content="2022-06-29T07:02:45.000Z">
-<meta property="article:modified_time" content="2026-07-13T14:55:54.029Z">
+<meta property="article:modified_time" content="2026-07-16T15:05:12.789Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="数码折腾">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/09/17/zBTnevPfYblaEIZ.jpg">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/home_network_upgrade_8.webp">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -333,7 +333,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：2 小时前
                   
                 
               </p>
@@ -342,34 +342,37 @@
               <div class="markdown-body">
                 
                 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在上一篇文章中，我使用了openwrt系统作为主路由系统，虽然一样可以用来拨号+科学上网，但是openwrt系统的拨号稳定性实在是一言难尽：每次重启都要登录openwrt后台重新连接接口。我在家时倒也无所谓，但是一旦我不在家时远程重启，家里就会断几天网，为此我没有少挨爸妈的骂。最后，我还是决定选用现在比较流行的双软路由方案：esxi中安装爱快虚拟机作为主路由拨号上网，openwrt虚拟机则改为旁路由用于科学上网+去广告等进阶玩法。</p>
+<blockquote>
+<p>声明：图片中的水印域名曾经是我个人所有，并非盗图！</p>
+</blockquote>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="安装主路由系统"><a href="#安装主路由系统" class="headerlink" title="安装主路由系统"></a>安装主路由系统</h3><p>首先要设置网卡直通，网上有很多教程，设置方法这里不再展开了。在上一篇教程中，openwrt的wan口并没有直通，可能会影响实际带宽并且占用CPU性能，不推荐那样做。然后去爱快官网，下载最新的ISO镜像并上传到esxi：<a target="_blank" rel="noopener" href="https://www.ikuai8.com/component/download">https://www.ikuai8.com/component/download</a></p>
 <p>进入esxi的web管理界面，安装爱快虚拟机。选择“新建虚拟机”，然后选择“其它3.x Linux（64位）”：</p>
-<p><img src="https://s2.loli.net/2022/09/17/cKmTCOfZtFhXQRw.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>CPU核心数按需选择，内存最好多给点，4g最好，安装好以后可以改回1-2g。USB控制器可以删掉，CD&#x2F;DVD驱动器记得选择刚才上传的爱快ISO镜像。</p>
+<p><img src="/img/notes/home_network_upgrade_1.png" srcset="/img/loading.gif" lazyload alt="新建虚拟机"></p>
+<p>CPU核心数按需选择，内存最好多给点，4GB最好，安装好以后可以改回1-2GB。USB控制器可以删掉，CD&#x2F;DVD驱动器记得选择刚才上传的爱快ISO镜像。</p>
 <p>重要的一步来了：一定要添加直通的网卡作为WAN口！选择“添加其它设备”–“PCI设备”，选择你需要直通的网卡，然后保留至少一个虚拟网络适配器作为LAN口。这里放一张我设置好的图：</p>
-<p><img src="https://s2.loli.net/2022/09/17/A4Vnm9PrYFjQ5Lq.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_2.png" srcset="/img/loading.gif" lazyload alt="配置虚拟机"></p>
 <p>最后说一下，切记：<strong>直通PCI设备的话，内存高级设置里面必须要勾选一下“预留所有客户机内存 (全部锁定) ”，不勾选会无法开机！</strong></p>
 <p>设置完毕后点击完成，再开启刚才创建的虚拟机，选择安装系统的硬盘并回车，系统安装完成后会自动重启。重启完毕后，我们来设置一下爱快的LAN口地址。切记：管理口IP请设置成跟esxi的局域网同网段的IP！例如你家esxi的IP地址为192.168.50.231，则爱快主路由LAN口的地址为192.168.50.xx。</p>
 <p>输入2并回车，选择“设置LAN1地址”：</p>
-<p><img src="https://s2.loli.net/2022/09/17/1TV563FXDBzRawZ.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_3.png" srcset="/img/loading.gif" lazyload alt="爱快控制台1"></p>
 <p>输入0并回车：</p>
-<p><img src="https://s2.loli.net/2022/09/17/Yb9qCLRUiKgxfzO.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_4.webp" srcset="/img/loading.gif" lazyload alt="爱快控制台2"></p>
 <p>输入“192.168.50.xx”，这里我为了方便管理，填了“192.168.50.1”：</p>
-<p><img src="https://s2.loli.net/2022/09/17/on4MZfYL1yU5k2X.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_5.webp" srcset="/img/loading.gif" lazyload alt="爱快控制台3"></p>
 <p>然后首页输入8重启爱快虚拟机。爱快重启成功后，WEB管理地址的LAN口就会显示刚刚设置的IP了！</p>
 <p>到这里我们的虚拟机，爱快软路由系统层面就已经安装并且简单设置好了！接下来教大家如何进行详细上网配置！</p>
 <h3 id="配置主路由"><a href="#配置主路由" class="headerlink" title="配置主路由"></a>配置主路由</h3><p>打开浏览器，输入爱快的管理口IP，从网页端设置参数！默认账户密码都是admin，如果你网页输入管理口IP打不开爱快后台，说明访问的机器可能不在同一个局域网！这里建议你把电脑设备的网络手动设置一下，设置到跟爱快软路由同一个网段再来设置！</p>
 <p><strong>登录进去后，会提示你绑定爱快云平台，这里我们先不绑定，因为爱快还没有通网络，后面有需要再来绑定！</strong></p>
 <p>在左侧“网络设置”–“DHCP设置”–“DHCP服务端”中，新建一个DHCP服务：</p>
-<p><img src="https://s2.loli.net/2022/09/17/Gyepkt4lXAbhwz1.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_6.webp" srcset="/img/loading.gif" lazyload alt="新建DHCP服务端"></p>
 <p>首选dns第一个填写为op的IP地址，备用dns可以填写自己喜欢的。这里由于我之前的华硕路由器IP地址为192.168.50.2，所以我设置的是从192.168.50.3开始分配IP地址。设置完成后保存即可。</p>
 <p>接着我们来绑定WAN口，在爱快首页的“系统概况”中点击wan1的图标，选择我们之前设置直通的网卡并绑定。接入方式改为“ADSL&#x2F;PPPoE拨号”，填入宽带账号密码后保存，网线另一端插入光猫LAN口即可正常拨号上网：</p>
-<p><img src="https://s2.loli.net/2022/09/17/RVJoafHmLjOQY1n.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_7.webp" srcset="/img/loading.gif" lazyload alt="设置WAN口"></p>
 <p><strong>注意：拨号成功后，爱快web首页的外网图标会变绿，而且状态信息会显示已链接，否则拨号失败，检查账户密码是否正确或光猫是否为桥接模式。</strong></p>
 <p>类似的，我们把LAN口绑定为开始在esxi里设置的虚拟网卡，IP地址和之前设置的LAN口地址相同。如果你的软路由网口足够多，你也可以把LAN口绑定为直通的网卡。由于我的软路由只有两个千兆网口，所以爱快的LAN口使用虚拟网卡。</p>
 <p>至此，爱快主路由的安装与调教就结束了！</p>
 <h3 id="配置旁路由"><a href="#配置旁路由" class="headerlink" title="配置旁路由"></a>配置旁路由</h3><p>由于之前已经在虚拟机中安装好了openwrt，所以这里只需要简单更改一下op虚拟机的网络配置即可。回到esxi管理页面，把op的直通网卡删掉，只保留一个虚拟网卡（同样的，如果你的软路由网口足够多，你也可以把LAN口绑定为直通的网卡）：</p>
-<p><img src="https://s2.loli.net/2022/09/17/pj7wNJRrTPECclu.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_8.webp" srcset="/img/loading.gif" lazyload></p>
 <p>确认配置没问题后保存开机即可，这里我把op的管理IP设置为了192.168.50.235。那怎么修改op管理IP呢？</p>
 <p>在op的web控制台中，输入命令：</p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">vi <span class="hljs-regexp">/etc/</span>config/network<br></code></pre></td></tr></table></figure>
@@ -379,19 +382,18 @@
 
 <p>这行，输入法切换成英文模式，然后按键盘i键进行删减，然后修改成你想要的局域网IP地址。修改好后先按一下右上角esc按键！接着按shift+:（冒号键），然后下面会出现一个冒号输入wq，按回车键保存，修改好后重启op虚拟机即可。</p>
 <p>进入op管理后台，不同编译版本的固件，默认账号和密码会不一样。在左侧的“网络”–“接口”中，修改LAN口的配置。网关填写爱快的IP地址，dns我写的是114.114.114.114和223.5.5.5，大家有喜欢的dns也可以填写其他的，比如运营商dns：</p>
-<p><img src="https://s2.loli.net/2022/09/17/KWeOiAt76vqCfp4.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_9.webp" srcset="/img/loading.gif" lazyload></p>
 <p>把最下面的DHCP服务器设置，忽略此网口打勾，ipv6设置里面全部设置成禁用，最后点击保存即可：</p>
-<p><img src="https://s2.loli.net/2022/09/17/e2MThAytPkUpoVz.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_10.webp" srcset="/img/loading.gif" lazyload></p>
 <p>最后保存一下设置，就可以正常上网了。</p>
 <p><strong>如果大家设置后出现了无法上网的情况，请检查防火墙或者dns！</strong></p>
 <p>最后我再跟大家讲解一下，如何让规划局域网里面的某些设备，通过openwrt旁路由进行上网。</p>
 <h3 id="设备分流"><a href="#设备分流" class="headerlink" title="设备分流"></a>设备分流</h3><p>众所周知，走旁路由上网的设备，网速会有明显下降。那么，我们有没有办法让没有出国需求的设备只走主路由，有出国需求的设备走旁路由呢？答案是肯定的。而且，只走主路由的设备甚至可以跑满家里的千兆带宽！</p>
 <p>在爱快后台的“网络设置”–“DHCP设置”–“DHCP静态分配”中，手动设置要出国设备的网关为旁路由IP，不用出国时就停用规则，如图：</p>
-<p><img src="https://s2.loli.net/2022/09/17/Ywx32fIGQeLvcy7.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/home_network_upgrade_11.webp" srcset="/img/loading.gif" lazyload></p>
 <p>重新连接家里的WiFi网络（台式机重新插拔网线），会发现网关已经变化，如果可以正常访问国内网站和国外网站，则说明大功告成了！</p>
-<p>至于ipv6的配置方法，因为武汉电信还未开通，所以这里不做讲解。</p>
 <p>最后放出改造后的拓扑图：</p>
-<p><img src="https://s2.loli.net/2022/09/17/zBTnevPfYblaEIZ.jpg" srcset="/img/loading.gif" lazyload alt="新版瑞云居网络拓扑图（双软路由）"></p>
+<p><img src="/img/notes/home_network_upgrade_12.jpg" srcset="/img/loading.gif" lazyload alt="新版网络拓扑图（双软路由）"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有关家庭网络改造的文章就此告一段落了，使用一段时间后发现，双软路由是真香！至于添加SSL证书、端口转发、ddns之类的高级玩法，请自行上网搜索或参考本人往期文章，谢谢您的耐心阅读！</p>
 
                 

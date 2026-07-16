@@ -25,17 +25,10 @@
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
 <meta property="og:description" content="前言由于本次比赛的初赛采用的是知识问答的形式，所以没有wp，特此说明。这是一篇迟到的wp，因为距离线上复赛已经过去了四个多月，线下决赛也是姗姗来迟，直到最近几天本人才拿到wp。未经本人授权，禁止转载和发布！ 正文Webgetshell启动环境，拿到源码： 12345678910111213141516171819202122232425262728293031&lt;?phphighlight_f">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821877.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821030.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822774.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822243.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041823574.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822160.png">
 <meta property="article:published_time" content="2023-03-07T13:02:59.000Z">
-<meta property="article:modified_time" content="2026-07-13T08:09:19.986Z">
+<meta property="article:modified_time" content="2026-07-16T13:51:04.625Z">
 <meta property="article:author" content="HackerTerry">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821877.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -337,7 +330,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：3 小时前
                   
                 
               </p>
@@ -351,16 +344,10 @@
 
 <p>源码分两部分，⼀是身份验证，⼆是写文件。</p>
 <p>第⼀部分身份验证要求伪造admin身份，验证逻辑是通过检测<code>Referer</code>请求头，要求使用file协议，地址是localhost。</p>
-<p>第⼆部分写文件来上马，题目有<code>addslashes</code>函数过滤，引号被转义不能使用，写⼊内容为<code>&lt;?php eval($_GET[1]);?&gt;</code>，绕过引号：</p>
-<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821877.png" srcset="/img/loading.gif" lazyload></p>
-<p>访问<code>admin.php</code>，GET传参进行任意代码执行。我采用的是POST传参，再用蚁剑连接，也能拿到flag。</p>
+<p>第⼆部分写文件来上马，题目有<code>addslashes</code>函数过滤，引号被转义不能使用，写⼊内容为<code>&lt;?php eval($_GET[1]);?&gt;</code>，绕过引号。访问<code>admin.php</code>，GET传参进行任意代码执行。我采用的是POST传参，再用蚁剑连接，也能拿到flag。</p>
 <h4 id="tjjz"><a href="#tjjz" class="headerlink" title="tjjz"></a>tjjz</h4><p>好家伙，没想到这个题目的名称就是考查的知识点，属实是没有反应过来。这题考查的是文件上传，加上了条件竞争。</p>
 <p>测试发现环境不能覆盖已有的文件，且<code>upload</code>目录下应该是存有<code>.htaccess</code>文件，使得上传配置文件不可行。</p>
-<p>burpsuite构造包爆破，通过上⼀题推测flag仍然在根目录的flag文件中，使用<code>system(&#39;cat /f*&#39;)</code>进行简单测试：</p>
-<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041821030.png" srcset="/img/loading.gif" lazyload alt="web-2"></p>
-<p>调整线程为50，持续发包，再另开⼀重放包，设置10线程，⼀段时间后可以得到反馈：</p>
-<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822774.png" srcset="/img/loading.gif" lazyload alt="web-3"></p>
-<p>拿到flag。</p>
+<p>burpsuite构造包爆破，通过上⼀题推测flag仍然在根目录的flag文件中，使用<code>system(&#39;cat /f*&#39;)</code>进行简单测试。调整线程为50，持续发包，再另开⼀重放包，设置10线程，⼀段时间后可以得到反馈，拿到flag。</p>
 <h3 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h3><h4 id="crab"><a href="#crab" class="headerlink" title="crab"></a>crab</h4><p>源码如下：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function">_BYTE *__fastcall <span class="hljs-title">crab_0o0</span><span class="hljs-params">(_BYTE *a1)</span></span><br><span class="hljs-function"></span>&#123;<br>  _BYTE *v1; <span class="hljs-comment">// rax</span><br>  _BYTE *result; <span class="hljs-comment">// rax</span><br>  _BYTE *v3; <span class="hljs-comment">// [rsp+0h] [rbp-18h]</span><br>  _BYTE *v4; <span class="hljs-comment">// [rsp+10h] [rbp-8h]</span><br>  _BYTE *i; <span class="hljs-comment">// [rsp+10h] [rbp-8h]</span><br><br>  v3 = a1;<br>  v4 = a1;<br>  <span class="hljs-keyword">do</span><br>    v1 = v4++;<br>  <span class="hljs-keyword">while</span> ( *v1 );<br>  <span class="hljs-keyword">for</span> ( i = v4 - <span class="hljs-number">2</span>; ; --i )<br>  &#123;<br>    result = v3;<br>    <span class="hljs-keyword">if</span> ( v3 &gt;= i )<br>      <span class="hljs-keyword">break</span>;<br>    *v3 ^= *i;<br>    *i ^= *v3;<br>    *v3++ ^= *i;<br>  &#125;<br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -371,17 +358,12 @@
 <p>再上C脚本：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> _BYTE char</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc,<span class="hljs-type">char</span> **argv,<span class="hljs-type">char</span> *envp[])</span><br>&#123;<br>  <span class="hljs-type">char</span> a1[]=<span class="hljs-string">&quot;oVDQyN2XiBkcj91MjFjb&quot;</span>;<br>  _BYTE *v1; <span class="hljs-comment">// rax</span><br>  _BYTE *v2; <span class="hljs-comment">// [rsp+0h] [rbp-18h]</span><br>  _BYTE *v3; <span class="hljs-comment">// [rsp+10h] [rbp-8h]</span><br>  _BYTE *i; <span class="hljs-comment">// [rsp+10h] [rbp-8h]</span><br><br>  v2 = a1;<br>  v3 = a1;<br>  <span class="hljs-keyword">do</span><br>    v1 = v3++;<br>    <span class="hljs-keyword">while</span> ( *v1 );<br>    <span class="hljs-keyword">for</span> ( i = v3 - <span class="hljs-number">2</span>; v2 &lt; i; --i )<br>    &#123;<br>      *v2 ^= *i;<br>      *i ^= *v2;<br>      *v2++ ^= *i;<br>    &#125;<br>    <span class="hljs-built_in">puts</span>(a1);<br>    <span class="hljs-comment">//bjFjM19jckBiX2NyQDVo</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>base64解码得到flag：</p>
-<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822243.png" srcset="/img/loading.gif" lazyload alt="re"></p>
+<p>base64解码得到flag。</p>
 <h3 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h3><h4 id="没有文件后缀"><a href="#没有文件后缀" class="headerlink" title="没有文件后缀"></a>没有文件后缀</h4><p>要不是看了wp，我都不知道这道题有原题，不愧是省赛啊（doge）。</p>
 <p>出处是：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zz_Caleb/article/details/88601860">https://blog.csdn.net/zz_Caleb/article/details/88601860</a></p>
 <p>得到flag：<code>CTF&#123;131Ack_3Y3_gA1AxY&#125;</code></p>
 <h3 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h3><h4 id="古典"><a href="#古典" class="headerlink" title="古典"></a>古典</h4><p>签到题，很多队伍很早就解出来了。（我为什么那么菜，过了好久才做出来qwq）</p>
-<p>打开发现是base编码，用在线工具⼀个⼀个试可知是base32编码：</p>
-<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041823574.png" srcset="/img/loading.gif" lazyload alt="cry-1"></p>
-<p>synt是flag进行13位凯撒加密得到：</p>
-<p><img src="https://raw.githubusercontent.com/RookieTerry/RookieTerry.github.io/main/img/202305041822160.png" srcset="/img/loading.gif" lazyload alt="cry-2"></p>
-<p>得到flag：<code>flag&#123;791ee565-afde-4772-89a7-6cddd6d0863f&#125;</code></p>
+<p>打开发现是base编码，用在线工具⼀个⼀个试可知是base32编码，synt是flag进行13位凯撒加密得到，得到flag：<code>flag&#123;791ee565-afde-4772-89a7-6cddd6d0863f&#125;</code></p>
 <h4 id="alice-and-bob"><a href="#alice-and-bob" class="headerlink" title="alice and bob"></a>alice and bob</h4><p>alice和bob是rsa出现的经典人物。附件里只有四个数字，合理推测是n和c，典型模不互素：大的是n，小的是c，e用65537试⼀下：</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> Crypto.Util.number import *<br>c1 = 0xa30e64bef4373f1ffdb9f6e116643ccef2f1f5e2509ee3937b7c3af6b36b5ef532cfbdeda<br>n1 = 0xe543df8c958aa57dbaea1ec39c192e5a8b26a64fbdcb3073ba388bc189fb645afd600b256<br>c2 = 0x3940203d1de79f980e30497847f25ca8562493310b2953570d435fa98bc7259ea119033c0<br>n2 = 0x9254d235f837be7093dadd7e89af96c43a919a0198b9e7f378a690fe8c655a42dffdaad9d<br><span class="hljs-attribute">q</span>=GCD(n1,n2)<br><span class="hljs-built_in">print</span>(isPrime(q))<br><br><span class="hljs-attribute">p1</span>=n1//q<br><span class="hljs-attribute">p2</span>=n2//q<br><span class="hljs-built_in">print</span>(isPrime(p1))<br><span class="hljs-built_in">print</span>(isPrime(p2))<br><span class="hljs-attribute">e</span>=65537<br><span class="hljs-attribute">d1</span>=inverse(e,(p1-1)*(q-1))<br><span class="hljs-attribute">d2</span>=inverse(e,(p2-1)*(q-1))<br><br><span class="hljs-attribute">m1</span>=pow(c1,d1,n1)<br><span class="hljs-attribute">m2</span>=pow(c2,d2,n2)<br><br><span class="hljs-built_in">print</span>(long_to_bytes(m1))<br><span class="hljs-built_in">print</span>(long_to_bytes(m2))<br><br>PYTHON<br></code></pre></td></tr></table></figure>
 

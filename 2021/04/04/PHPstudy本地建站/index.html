@@ -18,20 +18,20 @@
   <meta name="author" content="HackerTerry">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言在经过了两周的学习以后，我终于结束了web前端（HTML5，JavaScript）部分内容以及后端（PHP，MySQL）部分内容的学习。通过这段时间的学习，我已经可以独立做出一个登录和注册的页面，并将其内容提交至MySQL数据库。下面，我将为大家详细介绍我搭建登录和注册页面的全过程。 准备工作对于小白来说，我不推荐租借或购买虚拟主机（VPS）进行搭建网站的相关练习，因为搭建环境比较复杂，新手不">
+    <meta name="description" content="前言在经过了两周的学习以后，我终于结束了web前端（HTML5，JavaScript）部分内容以及后端（PHP，MySQL）部分内容的学习。通过这段时间的学习，我已经可以独立做出一个登录和注册的页面，并将其内容提交至MySQL数据库。下面，我将为大家详细介绍我搭建登录和注册页面的全过程。  声明：图片中的水印域名曾经是我个人所有，并非盗图！  准备工作对于小白来说，我不推荐租借或购买虚拟主机（VP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHPstudy本地建站">
 <meta property="og:url" content="https://rookieterry.github.io/2021/04/04/PHPstudy%E6%9C%AC%E5%9C%B0%E5%BB%BA%E7%AB%99/index.html">
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
-<meta property="og:description" content="前言在经过了两周的学习以后，我终于结束了web前端（HTML5，JavaScript）部分内容以及后端（PHP，MySQL）部分内容的学习。通过这段时间的学习，我已经可以独立做出一个登录和注册的页面，并将其内容提交至MySQL数据库。下面，我将为大家详细介绍我搭建登录和注册页面的全过程。 准备工作对于小白来说，我不推荐租借或购买虚拟主机（VPS）进行搭建网站的相关练习，因为搭建环境比较复杂，新手不">
+<meta property="og:description" content="前言在经过了两周的学习以后，我终于结束了web前端（HTML5，JavaScript）部分内容以及后端（PHP，MySQL）部分内容的学习。通过这段时间的学习，我已经可以独立做出一个登录和注册的页面，并将其内容提交至MySQL数据库。下面，我将为大家详细介绍我搭建登录和注册页面的全过程。  声明：图片中的水印域名曾经是我个人所有，并非盗图！  准备工作对于小白来说，我不推荐租借或购买虚拟主机（VP">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/09/16/CaVSj7RLeuko4HE.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/phpstudy_6.png">
 <meta property="article:published_time" content="2021-04-04T15:03:02.000Z">
-<meta property="article:modified_time" content="2026-07-13T15:17:16.273Z">
+<meta property="article:modified_time" content="2026-07-16T16:27:50.311Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="前端">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/09/16/CaVSj7RLeuko4HE.png">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/phpstudy_6.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -282,7 +282,7 @@
         
         
           <!-- compatible with older versions-->
-          9 分钟
+          10 分钟
         
       </span>
     
@@ -333,7 +333,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：12 分钟前
                   
                 
               </p>
@@ -342,33 +342,36 @@
               <div class="markdown-body">
                 
                 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在经过了两周的学习以后，我终于结束了web前端（HTML5，JavaScript）部分内容以及后端（PHP，MySQL）部分内容的学习。通过这段时间的学习，我已经可以独立做出一个登录和注册的页面，并将其内容提交至MySQL数据库。下面，我将为大家详细介绍我搭建登录和注册页面的全过程。</p>
+<blockquote>
+<p>声明：图片中的水印域名曾经是我个人所有，并非盗图！</p>
+</blockquote>
 <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>对于小白来说，我不推荐租借或购买虚拟主机（VPS）进行搭建网站的相关练习，因为搭建环境比较复杂，新手不容易理解。我们可以在电脑上下载PHPstudy本地建站，一键部署WAMP (Windows+Apache+MySQL+PHP)环境，利用虚拟域名来模拟网站环境。</p>
 <p>首先，我们先前往PHPstudy官网下载小皮面板。下载完毕后，点击WAMP旁边的“启动”按钮，安装相关环境。安装完成后，点击左侧边栏的“网站”。</p>
-<p><img src="https://s2.loli.net/2022/09/16/CaVSj7RLeuko4HE.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_1.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后在“域名”里面填写www开头的网址，这里以<a target="_blank" rel="noopener" href="http://www.test.com为例.填写网址之后勾选“创建数据库”,并设置账号密码./">www.test.com为例。填写网址之后勾选“创建数据库”，并设置账号密码。</a></p>
-<p><img src="https://s2.loli.net/2022/09/16/BH6TULFwRIXtOl3.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p><img src="https://s2.loli.net/2022/09/16/23SqfcMVgL9nIUx.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/phpstudy_3.png" srcset="/img/loading.gif" lazyload></p>
 <p>准备就绪后前往你电脑中的“phpstudy_pro”文件夹，找到“WWW”子文件夹下面以刚才自定义域名为名字的文件夹，并将已经创建好的网页文件夹复制进去。后面我会具体讲到登录和注册的制作过程。</p>
-<p><img src="https://s2.loli.net/2022/09/16/cgIMYaHmfUZkPw7.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_4.png" srcset="/img/loading.gif" lazyload></p>
 <p>双击PHPstudy“网站”下面的“物理路径”，并选择复制进来的网页文件夹。注意网页文件中必须有一个文件是index.html，否则需要在“管理”的“修改”里面更改“网站首页”才可以看到你制作的网页。</p>
-<p><img src="https://s2.loli.net/2022/09/16/gjsM2db9c84JNlF.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_5.png" srcset="/img/loading.gif" lazyload></p>
 <p>前往“软件管理”中下载并安装数据库管理工具sqlfront。新手推荐使用这个，因为它是图形化界面。当然，你也可以选择使用Navicat，只不过正版需要付费。</p>
-<p><img src="https://s2.loli.net/2022/09/16/5nkIqYtPm1iTa3C.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_6.png" srcset="/img/loading.gif" lazyload></p>
 <p>进入之后，点击“新建”来创建一个登录信息。</p>
-<p><img src="https://s2.loli.net/2022/09/16/Iigj29aocAqeX6G.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_7.png" srcset="/img/loading.gif" lazyload></p>
 <p>“host”一栏填写默认本机IP–127.0.0.1，然后在下方选中你刚才创建的数据库。</p>
-<p><img src="https://s2.loli.net/2022/09/16/lVwT1IrHzoDdfyA.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_8.png" srcset="/img/loading.gif" lazyload></p>
 <p>打开以后双击刚才创建的数据库，光标移至上面并右击“新建”–“表格”，弹出以下窗口。</p>
-<p><img src="https://s2.loli.net/2022/09/16/Q96ast75VfPKo2b.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_9.png" srcset="/img/loading.gif" lazyload></p>
 <p>依葫芦画瓢，新建对应的字段用于存储数据。</p>
-<p><img src="https://s2.loli.net/2022/09/16/pmhEPaXDBrqjgCN.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_10.png" srcset="/img/loading.gif" lazyload></p>
 <p>至此，数据库的准备工作就完成了。接下来，我会在下一篇文章中详细讲述编写登录和注册页面的源代码的过程，谢谢大家的支持！</p>
 <h2 id="SQLfront报错"><a href="#SQLfront报错" class="headerlink" title="SQLfront报错"></a>SQLfront报错</h2><p>在创建数据库的过程中，我遇到了一些意想不到的情况。例如，下图的1055号报错。</p>
-<p><img src="https://s2.loli.net/2022/09/16/EDlvpc6Gt42fd5J.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_11.png" srcset="/img/loading.gif" lazyload></p>
 <p>解决方法：在“PHPstudy_pro”文件夹的“Extensions”子目录中找到MySQL对应的文件夹，并用记事本打开里面的my.ini文件。</p>
-<p><img src="https://s2.loli.net/2022/09/16/Uw9MADmCXEjJdhL.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_12.png" srcset="/img/loading.gif" lazyload></p>
 <p>在【mysqld】下面添加方框内语句，保存后重启PHPstudy。</p>
-<p><img src="https://s2.loli.net/2022/09/16/9e8tfc7b2yozusT.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/img/notes/phpstudy_13.png" srcset="/img/loading.gif" lazyload></p>
 <p>重新进入SQLfront，没有再出现报错！</p>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>感谢大家的耐心阅读，如有疑问，欢迎在评论区留言！</p>
 

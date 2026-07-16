@@ -25,13 +25,13 @@
 <meta property="og:site_name" content="HackerTerry&#39;s Blog">
 <meta property="og:description" content="前言最近翻看去年买的近源渗透有关的书籍，看到书中有关于WiFi钓鱼的部分，于是突然来了兴趣，在某淘宝店铺购买了两块无线网卡（一块只支持2.4G频段，另一块同时支持2.4G和5G频段），进行WiFi钓鱼。 本文仅为内网实验，不得用于非法入侵他人设备，切记要遵纪守法，天网恢恢疏而不漏。 正文由于我购买的网卡会附赠配好环境的kali虚拟机，所以这里不作讲解。 这里我会列出几种钓鱼的方法，分为钓鱼获取Wi">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/09/16/Vq1fbZATmkhI4c8.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/wifi_phishing_12.png">
 <meta property="article:published_time" content="2021-10-31T06:46:08.000Z">
-<meta property="article:modified_time" content="2026-07-13T14:38:30.758Z">
+<meta property="article:modified_time" content="2026-07-16T16:06:44.979Z">
 <meta property="article:author" content="HackerTerry">
 <meta property="article:tag" content="kali渗透">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/09/16/Vq1fbZATmkhI4c8.png">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/wifi_phishing_12.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -333,7 +333,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：3 天前
+                    本文最后更新于：33 分钟前
                   
                 
               </p>
@@ -348,34 +348,34 @@
 <h3 id="钓鱼获取WiFi密码"><a href="#钓鱼获取WiFi密码" class="headerlink" title="钓鱼获取WiFi密码"></a>钓鱼获取WiFi密码</h3><p>由于时间有限，没来得及截图，在这里表示抱歉！</p>
 <p>这里使用kali虚拟机，网络连接设置为桥接模式，我的eth0地址是192.168.50.189（每个人的都不一样）。</p>
 <p>这里我们使用airgeddon这个shell脚本，在极客之眼的官网可以下载到这个脚本。运行刚开始会检查依赖环境是否缺失，检查完成后选择外接的无线网卡：</p>
-<p><img src="https://s2.loli.net/2022/09/16/Zol9AECnW6HMaLR.png" srcset="/img/loading.gif" lazyload alt="image-20220916211255839"></p>
+<p><img src="/img/notes/wifi_phishing_1.png" srcset="/img/loading.gif" lazyload></p>
 <p>先把网卡设置为监听模式：</p>
-<p><img src="https://s2.loli.net/2022/09/16/asdeoq84vZNOjE1.png" srcset="/img/loading.gif" lazyload alt="image-20220916211518304.png"></p>
+<p><img src="/img/notes/wifi_phishing_2.png" srcset="/img/loading.gif" lazyload></p>
 <p>选择“下一步”之后，顺便抓个握手包：</p>
-<p><img src="https://s2.loli.net/2022/09/16/e3VuoitJDaENBfl.png" srcset="/img/loading.gif" lazyload alt="image-20220916212218174"></p>
-<p><img src="https://s2.loli.net/2022/09/16/FmWwhdZH6akl4yK.png" srcset="/img/loading.gif" lazyload alt="image-20220916212246282"></p>
+<p><img src="/img/notes/wifi_phishing_3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/wifi_phishing_4.png" srcset="/img/loading.gif" lazyload></p>
 <p>连按两次“下一步”以后，开始扫描附近的WiFi。扫描到目标WiFi以后按Ctrl+C暂停，再输入目标WiFi的编号：</p>
-<p><img src="https://s2.loli.net/2022/09/16/IrAoHnvE2SWgCwG.png" srcset="/img/loading.gif" lazyload alt="image-20220916212511774"></p>
+<p><img src="/img/notes/wifi_phishing_5.png" srcset="/img/loading.gif" lazyload></p>
 <p>选择断网攻击模式：</p>
-<p><img src="https://s2.loli.net/2022/09/16/4uznilxSWCN5ctd.png" srcset="/img/loading.gif" lazyload alt="image-20220916212632442"></p>
+<p><img src="/img/notes/wifi_phishing_6.png" srcset="/img/loading.gif" lazyload></p>
 <p>连按三次“n”后，输入抓包时间（范围是10-100秒）后回车，此时屏幕上会出现几个黑色窗口：</p>
-<p><img src="https://s2.loli.net/2022/09/16/eqUCJrvdhKXAfzR.png" srcset="/img/loading.gif" lazyload alt="image-20220916212820103"></p>
+<p><img src="/img/notes/wifi_phishing_7.png" srcset="/img/loading.gif" lazyload></p>
 <p>抓到握手包后，脚本会提示握手包的保存位置以及钓鱼获取到密码的保存位置：</p>
-<p><img src="https://s2.loli.net/2022/09/16/zpwXQtoK87dFP6E.png" srcset="/img/loading.gif" lazyload alt="image-20220916213017408"></p>
+<p><img src="/img/notes/wifi_phishing_8.png" srcset="/img/loading.gif" lazyload></p>
 <p>一直回车后，选择钓鱼页面的语言（由于脚本是老外写的，所以没有中文版钓鱼页面）：</p>
-<p><img src="https://s2.loli.net/2022/09/16/9TfKVD2SqlZdRn7.png" srcset="/img/loading.gif" lazyload alt="image-20220916213209555"></p>
+<p><img src="/img/notes/wifi_phishing_9.png" srcset="/img/loading.gif" lazyload></p>
 <p>回车后再次弹出几个黑框：</p>
-<p><img src="https://s2.loli.net/2022/09/16/xpnbedrYCmW6AF8.png" srcset="/img/loading.gif" lazyload alt="image-20220916213442408"></p>
+<p><img src="/img/notes/wifi_phishing_10.png" srcset="/img/loading.gif" lazyload></p>
 <p>与此同时，目标WiFi正在被断网攻击，所以原来连接目标WiFi的设备会连不上目标WiFi，只能转而连接我们的钓鱼WiFi，并在弹出的钓鱼页面中输入WiFi密码：</p>
-<p><img src="https://s2.loli.net/2022/09/16/V4Te61hRW9vMJso.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/wifi_phishing_11.png" srcset="/img/loading.gif" lazyload></p>
 <p>如果钓到的WiFi密码和握手包里的匹配，则WiFi密码会显示在箭头所指的地方：</p>
-<p><img src="https://s2.loli.net/2022/09/16/Vq1fbZATmkhI4c8.png" srcset="/img/loading.gif" lazyload alt="image-20220916220444006"></p>
+<p><img src="/img/notes/wifi_phishing_12.png" srcset="/img/loading.gif" lazyload></p>
 <p>当然，你也可以不选择钓鱼，直接去爆破前面抓到的pcap结尾的握手包，就是比较看运气。</p>
 <h3 id="钓鱼获取个人信息"><a href="#钓鱼获取个人信息" class="headerlink" title="钓鱼获取个人信息"></a>钓鱼获取个人信息</h3><p>这个不仅可以钓到个人信息，而且也可以钓到WiFi密码。与上一种方法相比，这种方法支持自定义钓鱼页面，可玩性更高。</p>
 <p>这里我使用的是<a target="_blank" rel="noopener" href="https://github.com/hacefresko/EvilPortal.git">EvilPortal</a>这个工具，可以在github下载到。进入到文件夹并执行<code>python3 run.py</code>，选择第一个选项：</p>
-<p><img src="https://s2.loli.net/2022/09/16/o9ramA86gzTCMZ5.png" srcset="/img/loading.gif" lazyload alt="image-20220916221504561"></p>
+<p><img src="/img/notes/wifi_phishing_13.png" srcset="/img/loading.gif" lazyload></p>
 <p>WiFi SSID随便取一个，这里我以FreeWifi为例，信道也随便选一个，安全性选“open”，回车即可启动：</p>
-<p><img src="https://s2.loli.net/2022/09/16/oaherRkPXNjTCYf.png" srcset="/img/loading.gif" lazyload alt="image-20220916221817635"></p>
+<p><img src="/img/notes/wifi_phishing_14.png" srcset="/img/loading.gif" lazyload></p>
 <p>当其它设备连接上这个WiFi时，就会跳转到提前设置好的钓鱼页面了。怎么设置钓鱼环境呢？</p>
 <p>首先我们先配置好MySQL环境：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql">$ service mysql <span class="hljs-keyword">start</span><br>$ mysql<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">create</span> database fakeap;<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">user</span>;<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> <span class="hljs-keyword">on</span> fakeap.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;user&#x27;</span>@<span class="hljs-string">&#x27;localhost&#x27;</span> identified <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;password&#x27;</span>;<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> use fakeap<br>MariaDB [fakeap]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> accounts(email <span class="hljs-type">varchar</span>(<span class="hljs-number">30</span>), password <span class="hljs-type">varchar</span>(<span class="hljs-number">30</span>));<br>MariaDB [fakeap]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">alter</span> database fakeap <span class="hljs-type">character</span> <span class="hljs-keyword">set</span> <span class="hljs-string">&#x27;utf8&#x27;</span>;<br>MariaDB [fakeap]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> accounts;<br></code></pre></td></tr></table></figure>
@@ -385,14 +385,14 @@
 <p>插上网卡后先用<code>lsusb</code>命令检查网卡是否正常插入。</p>
 <h4 id="airgeddon"><a href="#airgeddon" class="headerlink" title="airgeddon"></a>airgeddon</h4><p>还是前面的那个脚本，把网卡设置为监听模式以后选择“4”即可。实际使用过程中发现不太好使，不推荐用这个脚本断网攻击。</p>
 <h4 id="sparrow-wifi"><a href="#sparrow-wifi" class="headerlink" title="sparrow-wifi"></a>sparrow-wifi</h4><p>这是一个Python开发的GUI工具，使用起来也很简单。进入文件夹后，运行命令<code>python3 sparrow-wifi.py</code>，就会弹出一个图形化界面。选择“Falcon”-“Advanced Scan”，并启用监听模式：</p>
-<p><img src="https://s2.loli.net/2022/09/16/4dr9SzLFyfhMuEW.png" srcset="/img/loading.gif" lazyload alt="image-20220916223343208"></p>
-<p><img src="https://s2.loli.net/2022/09/16/x9IMsriqH5NdWe8.png" srcset="/img/loading.gif" lazyload alt="image-20220916223427101"></p>
+<p><img src="/img/notes/wifi_phishing_15.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/notes/wifi_phishing_16.png" srcset="/img/loading.gif" lazyload></p>
 <p>点击“start”开始扫描，扫到目标WiFi后点击“Stop scanning”，并在下面列表中的目标WiFi上右键选择箭头所指的选项（下面那个是抓WPA握手包）：</p>
-<p><img src="https://s2.loli.net/2022/09/16/ScRB1odiXzU9L72.png" srcset="/img/loading.gif" lazyload alt="image-20220916223653515"></p>
+<p><img src="/img/notes/wifi_phishing_17.png" srcset="/img/loading.gif" lazyload></p>
 <p>弹出的对话框选择“yes”即可开始攻击，要想停止攻击只需在目标WiFi上右键“Stop deauth”即可：</p>
-<p><img src="https://s2.loli.net/2022/09/16/C9UzlmMI81k7AEF.png" srcset="/img/loading.gif" lazyload alt="image-20220916223945748"></p>
+<p><img src="/img/notes/wifi_phishing_18.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="wifidos"><a href="#wifidos" class="headerlink" title="wifidos"></a>wifidos</h4><p>这个脚本使用起来更简单，也是用Python开发的，只有CUI。选择无线网卡和目标WiFi后，即可开始攻击：</p>
-<p><img src="https://s2.loli.net/2022/09/16/WwVjg6kANH325eQ.png" srcset="/img/loading.gif" lazyload alt="image-20220916224315125"></p>
+<p><img src="/img/notes/wifi_phishing_19.png" srcset="/img/loading.gif" lazyload></p>
 <p>连按两下Ctrl+C停止攻击。想要这个脚本的，评论区留言或者给我发email即可。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本次教程到此结束，最后还是要提醒大家不要做出违法的事情，谢谢！</p>
 
