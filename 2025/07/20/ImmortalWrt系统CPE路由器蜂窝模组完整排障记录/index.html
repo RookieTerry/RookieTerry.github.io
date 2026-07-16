@@ -1,0 +1,1007 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#8c9ae6">
+  <meta name="author" content="HackerTerry">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前情提要由于我租住的房子没有接入光纤网络，无法办理宽带，我便只能研究起流量卡的上网方案。在互联网上的中文技术论坛浏览了相关的讨论帖，发现大家都极为推崇CPE路由器，优点是插入流量卡上网很稳定。但是一般的大品牌国产CPE路由器功能又太过单一，例如没有收短信的功能，而我的流量卡有时会用来接收一些短信验证码。 爱好折腾网络设备的我又怎能甘心，就开始在国内二手平台上“寻宝”，没想到还真让我发现了一款不一般">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ImmortalWrt系统CPE路由器蜂窝模组完整排障记录">
+<meta property="og:url" content="https://rookieterry.github.io/2025/07/20/ImmortalWrt%E7%B3%BB%E7%BB%9FCPE%E8%B7%AF%E7%94%B1%E5%99%A8%E8%9C%82%E7%AA%9D%E6%A8%A1%E7%BB%84%E5%AE%8C%E6%95%B4%E6%8E%92%E9%9A%9C%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="HackerTerry&#39;s Blog">
+<meta property="og:description" content="前情提要由于我租住的房子没有接入光纤网络，无法办理宽带，我便只能研究起流量卡的上网方案。在互联网上的中文技术论坛浏览了相关的讨论帖，发现大家都极为推崇CPE路由器，优点是插入流量卡上网很稳定。但是一般的大品牌国产CPE路由器功能又太过单一，例如没有收短信的功能，而我的流量卡有时会用来接收一些短信验证码。 爱好折腾网络设备的我又怎能甘心，就开始在国内二手平台上“寻宝”，没想到还真让我发现了一款不一般">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/immortalwrt_qmodem.png">
+<meta property="og:image" content="https://rookieterry.github.io/img/notes/immortalwrt_interfaces.png">
+<meta property="article:published_time" content="2025-07-20T15:56:07.000Z">
+<meta property="article:modified_time" content="2026-07-16T11:19:27.388Z">
+<meta property="article:author" content="HackerTerry">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="数码折腾">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rookieterry.github.io/img/notes/immortalwrt_qmodem.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ImmortalWrt系统CPE路由器蜂窝模组完整排障记录 - HackerTerry&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"rookieterry.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":"UA-241125581-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'UA-241125581-1', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>HackerTerry&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/hacker.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ImmortalWrt系统CPE路由器蜂窝模组完整排障记录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        HackerTerry
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-20 23:56" pubdate>
+          星期日, 七月 20日 2025, 11:56 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          17k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          138 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ImmortalWrt系统CPE路由器蜂窝模组完整排障记录</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：12 分钟前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h2><p>由于我租住的房子没有接入光纤网络，无法办理宽带，我便只能研究起流量卡的上网方案。在互联网上的中文技术论坛浏览了相关的讨论帖，发现大家都极为推崇CPE路由器，优点是插入流量卡上网很稳定。但是一般的大品牌国产CPE路由器功能又太过单一，例如没有收短信的功能，而我的流量卡有时会用来接收一些短信验证码。</p>
+<p>爱好折腾网络设备的我又怎能甘心，就开始在国内二手平台上“寻宝”，没想到还真让我发现了一款不一般的CPE路由器：它是一款出口澳洲电信Telstra的出口版CPE路由器，并且还预装了类似于OpenWrt的ImmortalWrt系统，可玩性显著高于一般的国产CPE路由器。这款路由器搭载了Qualcomm IPQ8072A的芯片，Cortex-A53架构，并且蜂窝网络采用的是Quectel（移远）的5G模组。看价格挺合适，于是果断拿下，没想到插上流量卡并使用了一段时间以后，却发现了一些小问题。下面就跟随我的笔记一起，来复盘一下完整的排障记录。</p>
+<h2 id="遇到的问题和排错过程"><a href="#遇到的问题和排错过程" class="headerlink" title="遇到的问题和排错过程"></a>遇到的问题和排错过程</h2><h3 id="QModem插件自动覆盖网络接口配置"><a href="#QModem插件自动覆盖网络接口配置" class="headerlink" title="QModem插件自动覆盖网络接口配置"></a>QModem插件自动覆盖网络接口配置</h3><p>在插入流量卡并完成路由器配置后的最初几天，5G 模组能够正常连接，QModem 的“拨号总览”页面显示绿色的“已连接”状态。</p>
+<p><img src="/img/notes/immortalwrt_qmodem.png" srcset="/img/loading.gif" lazyload alt="immortalwrt_qmodem.png"></p>
+<p>最初在“移动网络 → 拨号总览”中启用 QModem 自动拨号后，QModem 会创建名为 <code>wwan0</code> 的逻辑接口，并运行DHCP协议。该接口能够提供 IPv4 网络，但当时无法稳定获得 IPv6 地址及向 LAN 下发 IPv6 前缀。取消“启用拨号”后，手工创建 <code>proto=&#39;quectel&#39;</code> 的 <code>wwan0</code> 接口，则能够获得运营商下发的 IPv6 地址。</p>
+<p>问题在于，这个手工接口不能稳定保留。路由器重启、QModem 重拨或执行 <code>/etc/init.d/qmodem_network restart</code> 后，可能出现以下情况：</p>
+<ul>
+<li><code>network.wwan0</code> 被重新创建或删除；</li>
+<li><code>proto</code>、<code>device</code>、<code>ifname</code>、DNS 等字段被 QModem 改写；</li>
+<li>LuCI 中的接口消失或显示“错误：网络设备不存在”；</li>
+<li>QModem 的模组状态变为红色“未连接”；</li>
+<li>即使已经执行 <code>uci commit network</code>，下一次重拨后配置仍会发生变化。</li>
+</ul>
+<p>这说明问题不是 UCI 没有提交成功，而是提交以后仍有其他进程继续修改 <code>/etc/config/network</code>。OpenWrt 的 UCI 只负责保存配置；如果后台服务之后再次执行 <code>uci set</code>、<code>uci delete</code> 和 <code>uci commit</code>，原有配置仍会被覆盖。UCI 和 netifd 的职责可分别参考 OpenWrt 官方的 <a target="_blank" rel="noopener" href="https://github.com/openwrt/uci">UCI</a> 与 <a target="_blank" rel="noopener" href="https://github.com/openwrt/netifd">netifd</a> 项目。</p>
+<p>排查 <code>/etc/init.d/qmodem_init</code>、<code>/etc/init.d/qmodem_network</code> 和 <code>/etc/init.d/qmodem_reboot</code> 后，最终确认真正修改接口的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">/usr/share/qmodem/modem_dial.sh<br></code></pre></td></tr></table></figure>
+
+<p>其中主要涉及两个函数：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">set_if()<br>flush_if()<br></code></pre></td></tr></table></figure>
+
+<p><code>set_if()</code> 会创建或改写 <code>network.&lt;接口名&gt;</code>，而 <code>flush_if()</code> 会根据接口中的 <code>modem_config</code> 字段删除与当前模组关联的网络接口。<code>hang()</code> 在停止或重拨前会调用 <code>flush_if()</code>，因此 QModem 的“重拨”实际包含“先停止并清理接口，再重新创建接口”的过程。</p>
+<p>在脚本中还发现了一个关键拼写错误：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">interface=$(uci -q get network.<span class="hljs-variable">$interface_name</span>)<br><br><span class="hljs-comment"># 原代码误写成 inetrface</span><br><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$inetrface</span>&quot;</span> ]; <span class="hljs-keyword">then</span><br>    ...<br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+<p>因为 <code>inetrface</code> 从未赋值，所以条件几乎始终成立。即使 <code>network.wwan0</code> 已经存在，脚本仍会把它当作不存在，重复执行创建和覆盖逻辑。该判断应改为：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$interface</span>&quot;</span> ]; <span class="hljs-keyword">then</span><br>    ...<br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+<p>不过，仅修正拼写仍不足以解决问题，因为 <code>set_if()</code> 后半部分还会强制执行：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sh">uci <span class="hljs-built_in">set</span> network.<span class="hljs-variable">$&#123;interface_name&#125;</span>.ifname=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;set_modem_netcard&#125;</span>&quot;</span><br>uci <span class="hljs-built_in">set</span> network.<span class="hljs-variable">$&#123;interface_name&#125;</span>.device=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;set_modem_netcard&#125;</span>&quot;</span><br>uci <span class="hljs-built_in">set</span> network.<span class="hljs-variable">$&#123;interface_name&#125;</span>.modem_config=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;modem_config&#125;</span>&quot;</span><br>uci <span class="hljs-built_in">set</span> network.<span class="hljs-variable">$&#123;interface_name&#125;</span>.proto=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;proto&#125;</span>&quot;</span><br>uci commit network<br></code></pre></td></tr></table></figure>
+
+<p>当前模组工作在 QMAP 模式时，<code>set_modem_netcard</code> 通常为 <code>wwan0_1</code>，因此 QModem 会把原本正确的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs uci">option device &#x27;/dev/cdc-wdm0&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>覆盖成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs uci">option device &#x27;wwan0_1&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>这正是 LuCI 中“调制解调器设备”反复变成 <code>wwan0_1</code> 的原因。</p>
+<p>这里必须区分几个不同对象：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/dev/cdc-wdm0</code></td>
+<td>QMI 控制字符设备，供 <code>quectel</code> 协议或拨号程序建立数据会话</td>
+</tr>
+<tr>
+<td><code>wwan0</code></td>
+<td>QMI 父网卡，<code>quectel-CM-M -i</code> 应使用的基础网络接口</td>
+</tr>
+<tr>
+<td><code>wwan0_1</code></td>
+<td>QMAP mux 数据网卡，实际 IPv4&#x2F;IPv6 地址通常配置在此接口上</td>
+</tr>
+<tr>
+<td><code>wwan0_4</code></td>
+<td>netifd&#x2F;协议脚本运行时生成的动态 IPv4 逻辑接口</td>
+</tr>
+<tr>
+<td><code>wwan0_6</code></td>
+<td>netifd&#x2F;协议脚本运行时生成的动态 IPv6 逻辑接口</td>
+</tr>
+</tbody></table>
+<p>因此，下面两个选项不能混为一谈：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs uci">option device &#x27;/dev/cdc-wdm0&#x27;<br>option ifname &#x27;wwan0_1&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>前者是 QMI 控制设备，后者是数据面网卡。将 <code>device</code> 改成 <code>wwan0_1</code> 会导致 <code>quectel</code> 协议无法获得正确的调制解调器控制设备；把 <code>quectel-CM-M</code> 的 <code>-i</code> 参数改成 <code>wwan0_1</code> 也同样错误。实际日志已经证明，正确使用 <code>-i wwan0</code> 时，程序能够自动识别：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">Auto find qmichannel = /dev/cdc-wdm0<br>Auto find usbnet_adapter = wwan0<br>qmap_netcard = wwan0_1<br></code></pre></td></tr></table></figure>
+
+<p>最开始我还尝试通过以下设置禁用 QModem 自动扫描：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh">uci <span class="hljs-built_in">set</span> qmodem.main.block_auto_probe=<span class="hljs-string">&#x27;1&#x27;</span><br>uci <span class="hljs-built_in">set</span> qmodem.main.enable_usb_scan=<span class="hljs-string">&#x27;0&#x27;</span><br>uci <span class="hljs-built_in">set</span> qmodem.main.enable_pcie_scan=<span class="hljs-string">&#x27;0&#x27;</span><br>uci commit qmodem<br></code></pre></td></tr></table></figure>
+
+<p>这些设置可以减少自动探测或重新生成模组配置，但它们不是解决 <code>network.wwan0</code> 被覆盖的核心措施，并且在某些版本中可能导致模组开机后不再自动发现。因此不能把它们当作通用必选配置。真正需要限制的是 <code>modem_dial.sh</code> 对已有用户接口的增删改逻辑。</p>
+<h3 id="自定义配置持久化"><a href="#自定义配置持久化" class="headerlink" title="自定义配置持久化"></a>自定义配置持久化</h3><p>在明确 <code>/dev/cdc-wdm0</code>、<code>wwan0</code> 和 <code>wwan0_1</code> 的区别后，固定的 <code>wwan0</code> 配置应保留 QMI 控制设备和 QMAP 数据网卡两个字段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs uci">config interface &#x27;wwan0&#x27;<br>        option modem_config &#x27;4_1&#x27;<br>        option proto &#x27;quectel&#x27;<br>        option metric &#x27;11&#x27;<br>        option device &#x27;/dev/cdc-wdm0&#x27;<br>        option ifname &#x27;wwan0_1&#x27;<br>        option apn &#x27;&lt;运营商APN&gt;&#x27;<br>        option pincode &#x27;&lt;SIM卡PIN&gt;&#x27;<br>        option auth &#x27;none&#x27;<br>        option pdptype &#x27;ipv4v6&#x27;<br>        option defaultroute &#x27;1&#x27;<br>        option peerdns &#x27;0&#x27;<br>        list dns &#x27;223.5.5.5&#x27;<br>        list dns &#x27;223.6.6.6&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>需要注意，<code>ifname</code> 应通过以下命令确认，而不是通过 <code>uci show network | grep interface</code> 推断：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">ip <span class="hljs-built_in">link</span> show<br><span class="hljs-built_in">ls</span> -1 /sys/class/net<br>find /sys/bus/usb/devices/4-1 -<span class="hljs-built_in">type</span> d -name net -<span class="hljs-built_in">print</span> -<span class="hljs-built_in">exec</span> <span class="hljs-built_in">ls</span> -1 &#123;&#125; \;<br></code></pre></td></tr></table></figure>
+
+<p>因为<code>uci show network</code> 只能显示 UCI 逻辑配置，不能证明当前内核实际存在名为 <code>wwan0_1</code> 的网卡。</p>
+<p>使用 UCI 重建接口时，可以执行：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs sh">uci -q delete network.wwan0<br>uci <span class="hljs-built_in">set</span> network.wwan0=<span class="hljs-string">&#x27;interface&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.modem_config=<span class="hljs-string">&#x27;4_1&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.proto=<span class="hljs-string">&#x27;quectel&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.metric=<span class="hljs-string">&#x27;11&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.device=<span class="hljs-string">&#x27;/dev/cdc-wdm0&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.ifname=<span class="hljs-string">&#x27;wwan0_1&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.apn=<span class="hljs-string">&#x27;&lt;运营商APN&gt;&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.pincode=<span class="hljs-string">&#x27;&lt;SIM卡PIN&gt;&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.auth=<span class="hljs-string">&#x27;none&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.pdptype=<span class="hljs-string">&#x27;ipv4v6&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.defaultroute=<span class="hljs-string">&#x27;1&#x27;</span><br>uci <span class="hljs-built_in">set</span> network.wwan0.peerdns=<span class="hljs-string">&#x27;0&#x27;</span><br>uci -q delete network.wwan0.dns<br>uci add_list network.wwan0.dns=<span class="hljs-string">&#x27;223.5.5.5&#x27;</span><br>uci add_list network.wwan0.dns=<span class="hljs-string">&#x27;223.6.6.6&#x27;</span><br>uci commit network<br></code></pre></td></tr></table></figure>
+
+<p>但仅在 <code>/etc/config/network</code> 中设置 APN、PIN 和 PDP 类型并不完整。<code>modem_dial.sh</code> 的 <code>update_config()</code> 从 <code>/etc/config/qmodem</code> 的模组 section 中读取：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">apn<br>pincode<br>auth<br>pdp_type<br>dns_list<br></code></pre></td></tr></table></figure>
+
+<p>如果 <code>qmodem.4_1.apn</code> 不存在，部分版本会使用默认值 <code>auto</code>。当时的日志已经出现：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">requestGetProfile ... &lt;运营商APN&gt; ... IPV4V6<br>requestSetProfile ... auto ... IPV4V6<br></code></pre></td></tr></table></figure>
+
+<p>这说明 QModem 曾把模组内部原有的正确 PDP profile 改成 <code>auto</code>。因此相同的拨号参数还应写入 QModem 配置：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">uci <span class="hljs-built_in">set</span> qmodem.4_1.apn=<span class="hljs-string">&#x27;&lt;运营商APN&gt;&#x27;</span><br>uci <span class="hljs-built_in">set</span> qmodem.4_1.pincode=<span class="hljs-string">&#x27;&lt;SIM卡PIN&gt;&#x27;</span><br>uci <span class="hljs-built_in">set</span> qmodem.4_1.auth=<span class="hljs-string">&#x27;none&#x27;</span><br>uci <span class="hljs-built_in">set</span> qmodem.4_1.pdp_type=<span class="hljs-string">&#x27;ipv4v6&#x27;</span><br>uci <span class="hljs-built_in">set</span> qmodem.4_1.dns_list=<span class="hljs-string">&#x27;223.5.5.5 223.6.6.6&#x27;</span><br>uci commit qmodem<br></code></pre></td></tr></table></figure>
+
+<p>这里使用 <code>dns_list</code>，是因为当前提供的脚本明确执行：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">config_get dns_list <span class="hljs-variable">$modem_config</span> dns_list<br></code></pre></td></tr></table></figure>
+
+<p>仅设置 <code>list dns</code> 不一定会被这个版本的 QModem 拨号脚本读取。</p>
+<p>如果 SIM 卡已经关闭 PIN，应删除 QModem 中的 PIN，而不是写入字符串 <code>disabled</code>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">uci -q delete qmodem.4_1.pincode<br>uci commit qmodem<br></code></pre></td></tr></table></figure>
+
+<p>否则 SIM 一旦再次报告需要 PIN，脚本可能把 <code>disabled</code> 当作真实 PIN 发送。</p>
+<h3 id="自定义网络配置持久化"><a href="#自定义网络配置持久化" class="headerlink" title="自定义网络配置持久化"></a>自定义网络配置持久化</h3><p>执行 <code>uci commit</code> 只能保存当前内容，不能阻止 QModem 后续再次执行 <code>uci set</code> 或 <code>uci delete</code>。要真正持久化配置，必须让 QModem 保留拨号与状态检测能力，同时停止它对已有用户接口的自动覆盖和删除。</p>
+<p>之前使用的<code>uci set qmodem.4_1.define_connect=&#39;0&#39;</code>命令来“禁用自动创建&#x2F;删除 UCI 网络接口”，但<code>define_connect</code> 只在部分 AT 拨号分支中决定使用哪个 PDP context，并没有控制 <code>set_if()</code> 或 <code>flush_if()</code> 是否运行，因此不能依靠这个选项解决接口覆盖问题。</p>
+<p>我还尝试过使用 iface hotplug 在 <code>wwan0 ifdown</code> 时重新写回 UCI。该方法存在几个问题：</p>
+<ul>
+<li>QModem 删除 section 时不一定产生可供该脚本捕获的 <code>ifdown</code> 事件；</li>
+<li>hotplug 中再次执行 <code>network reload</code> 可能触发新的接口事件，形成递归或事件风暴；</li>
+<li>每次恢复都重复 <code>add_list dns</code>，可能生成重复 DNS 项；</li>
+<li>它只是在接口被删除后补写，不能阻止 QModem 先破坏正在运行的 netifd 状态。</li>
+</ul>
+<p>因此，hotplug 恢复脚本不是最终方案。实际需要修改的是 <code>/usr/share/qmodem/modem_dial.sh</code>，至少处理以下三处逻辑。</p>
+<p>第一，修正拼写错误：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">- if [ -z &quot;$inetrface&quot; ]; then</span><br><span class="hljs-addition">+ if [ -z &quot;$interface&quot; ]; then</span><br></code></pre></td></tr></table></figure>
+
+<p>第二，在 <code>set_if()</code> 写入 UCI 之前识别用户固定接口。检测到 <code>device=&#39;/dev/cdc-wdm0&#39;</code> 时，不再覆盖其 <code>device</code>、<code>ifname</code>、<code>proto</code>、APN、PIN 和 DNS；但不要在函数中途过早 <code>return</code>，以免跳过后续必要的 LED、状态或其他处理。示意代码如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sh">user_managed_if=0<br>existing_device=<span class="hljs-string">&quot;<span class="hljs-subst">$(uci -q get network.$&#123;interface_name&#125;.device)</span>&quot;</span><br>existing_proto=<span class="hljs-string">&quot;<span class="hljs-subst">$(uci -q get network.$&#123;interface_name&#125;.proto)</span>&quot;</span><br><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$existing_device</span>&quot;</span> = <span class="hljs-string">&#x27;/dev/cdc-wdm0&#x27;</span> ] &amp;&amp; \<br>   [ <span class="hljs-string">&quot;<span class="hljs-variable">$existing_proto</span>&quot;</span> = <span class="hljs-string">&#x27;quectel&#x27;</span> ]; <span class="hljs-keyword">then</span><br>    user_managed_if=1<br>    m_debug <span class="hljs-string">&quot;preserve user managed interface <span class="hljs-variable">$&#123;interface_name&#125;</span>&quot;</span><br><span class="hljs-keyword">fi</span><br><br><span class="hljs-comment"># 只有不是用户固定接口时，才执行原来的创建/覆盖逻辑</span><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$user_managed_if</span>&quot;</span> -eq 0 ]; <span class="hljs-keyword">then</span><br>    <span class="hljs-comment"># 原 set_if() 中创建和更新 network.$&#123;interface_name&#125; 的代码</span><br>    :<br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+<p>第三，<code>hang()</code> 不再调用会删除固定用户接口的 <code>flush_if()</code>，或者给 <code>flush_ip_cb()</code> 增加保护条件，只删除由 QModem 临时创建、且没有被标记为用户固定配置的接口。例如可以给固定接口增加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs uci">option qmodem_preserve &#x27;1&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>并在删除回调中判断：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-function"><span class="hljs-title">flush_ip_cb</span></span>()<br>&#123;<br>    <span class="hljs-built_in">local</span> network_cfg=<span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span><br>    <span class="hljs-built_in">local</span> bind_modem_config<br>    <span class="hljs-built_in">local</span> preserve<br><br>    config_get bind_modem_config <span class="hljs-string">&quot;<span class="hljs-variable">$network_cfg</span>&quot;</span> modem_config<br>    config_get preserve <span class="hljs-string">&quot;<span class="hljs-variable">$network_cfg</span>&quot;</span> qmodem_preserve <span class="hljs-string">&#x27;0&#x27;</span><br><br>    <span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$remove_target</span>&quot;</span> = <span class="hljs-string">&quot;<span class="hljs-variable">$bind_modem_config</span>&quot;</span> ] &amp;&amp; \<br>       [ <span class="hljs-string">&quot;<span class="hljs-variable">$preserve</span>&quot;</span> != <span class="hljs-string">&#x27;1&#x27;</span> ]; <span class="hljs-keyword">then</span><br>        uci delete network.<span class="hljs-string">&quot;<span class="hljs-variable">$network_cfg</span>&quot;</span><br>    <span class="hljs-keyword">fi</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对应 UCI 配置增加：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">uci <span class="hljs-built_in">set</span> network.wwan0.qmodem_preserve=<span class="hljs-string">&#x27;1&#x27;</span><br>uci commit network<br></code></pre></td></tr></table></figure>
+
+<p>这种做法比完全注释 <code>flush_if()</code> 更安全，因为其他由 QModem 动态创建的临时接口仍可按原逻辑清理。</p>
+<p>修改后应检查：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">/etc/init.d/qmodem_network restart<br>uci show network.wwan0<br>logread -e modem_dial -e modem_hang<br></code></pre></td></tr></table></figure>
+
+<p>需要确认重拨日志中不再出现：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">delete interface wwan0<br>set interface wwan0 to wwan0_1<br></code></pre></td></tr></table></figure>
+
+<p>同时还要确认实际拨号命令仍使用父接口，不能改成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">-i wwan0_1<br></code></pre></td></tr></table></figure>
+
+<p>也不要在未确认该版本命令行语法前自行增加：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">-d /dev/cdc-wdm0<br></code></pre></td></tr></table></figure>
+
+<p>此前的实际日志已经表明，这两种改法会使 <code>quectel-CM-M</code> 无法检测网络接口或错误解析参数，随后进程退出并被 procd 反复拉起。</p>
+<h3 id="手动重启网络才出现IPv6接口"><a href="#手动重启网络才出现IPv6接口" class="headerlink" title="手动重启网络才出现IPv6接口"></a>手动重启网络才出现IPv6接口</h3><p>在解决 UCI 配置被覆盖以后，路由器冷启动时 LuCI 中仍可能只有：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">lan<br>wan<br>wan6<br>wwan0<br></code></pre></td></tr></table></figure>
+
+<p>这些接口，执行<code>/etc/init.d/network restart</code>后才生成<code>wwan0_4</code>和<code>wwan0_6</code>这两个逻辑接口，并获得 IPv6 地址和 LAN 前缀。</p>
+<p><img src="/img/notes/immortalwrt_interfaces.png" srcset="/img/loading.gif" lazyload alt="immortalwrt_interfaces.png"></p>
+<p><code>network restart</code> 的作用不是单纯刷新 LuCI，而是停止并重新启动 netifd 管理的协议流程，重新读取 <code>/etc/config/network</code>，再次运行 <code>proto=&#39;quectel&#39;</code> 的协议处理器。<code>wwan0_4</code> 和 <code>wwan0_6</code> 是该协议流程在运行时注册的动态逻辑接口；如果第一次协议初始化发生在模组控制口或 QMAP 网卡就绪之前，它们就不会生成。</p>
+<p>冷启动时的实际竞态大致为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">netifd 读取 network.wwan0<br>        ↓<br>/dev/cdc-wdm0、wwan0 或 wwan0_1 尚未完全就绪<br>        ↓<br>quectel 协议第一次初始化不完整<br>        ↓<br>QModem 稍后完成模组扫描、SIM 检查和拨号<br>        ↓<br>netifd 没有自动重新执行完整协议初始化<br></code></pre></td></tr></table></figure>
+
+<p>手工执行 <code>network restart</code> 时，模组通常已经完成 USB 枚举、网络注册和 QMAP 数据接口创建，所以第二次协议初始化能够成功生成动态接口。</p>
+<p>我曾经尝试以下做法：</p>
+<ul>
+<li>在 <code>qmodem_network start_service()</code> 中立即执行 <code>network reload</code>；</li>
+<li>在 <code>wwan0 ifup</code> hotplug 中执行 <code>network reload</code>；</li>
+<li>在 <code>wwan0_1 add/ifup</code> 后执行 <code>ifup wwan0_4</code>、<code>ifup wwan0_6</code>；</li>
+<li>统一增加 <code>sleep 5</code>、<code>sleep 20</code> 或 <code>sleep 30</code>。</li>
+</ul>
+<p>这些方法在实际调试过程中均未稳定解决问题。主要原因是：</p>
+<ol>
+<li><code>network reload</code> 可能发生得太早，且不一定重置失败的协议实例；</li>
+<li>在 iface hotplug 中再次 reload network 容易形成重复事件；</li>
+<li><code>wwan0_4</code>、<code>wwan0_6</code> 尚未被 netifd 注册时，执行 <code>ifup</code> 没有可操作对象；</li>
+<li>固定延时无法适应 USB 枚举、SIM 解锁和运营商注册时间的波动。</li>
+</ol>
+<p>因此，应保留“完整 <code>network restart</code> 能恢复”的已验证结论，但把自动化方式改为“等待实际设备就绪后，只在每次开机执行一次”。可以创建 <code>/etc/init.d/restart-network</code>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh /etc/rc.common</span><br><br>START=100<br>USE_PROCD=1<br><br><span class="hljs-function"><span class="hljs-title">start_service</span></span>() &#123;<br>    procd_open_instance<br>    procd_set_param <span class="hljs-built_in">command</span> /bin/sh -c <span class="hljs-string">&#x27;</span><br><span class="hljs-string">        marker=/tmp/qmodem-network-restarted</span><br><span class="hljs-string">        [ -e &quot;$marker&quot; ] &amp;&amp; exit 0</span><br><span class="hljs-string"></span><br><span class="hljs-string">        ready=0</span><br><span class="hljs-string">        for i in $(seq 1 90); do</span><br><span class="hljs-string">            if [ -e /dev/cdc-wdm0 ] &amp;&amp; \</span><br><span class="hljs-string">               [ -d /sys/class/net/wwan0 ] &amp;&amp; \</span><br><span class="hljs-string">               [ -d /sys/class/net/wwan0_1 ]; then</span><br><span class="hljs-string">                ready=1</span><br><span class="hljs-string">                break</span><br><span class="hljs-string">            fi</span><br><span class="hljs-string">            sleep 2</span><br><span class="hljs-string">        done</span><br><span class="hljs-string"></span><br><span class="hljs-string">        if [ &quot;$ready&quot; -ne 1 ]; then</span><br><span class="hljs-string">            logger -t restart-network \</span><br><span class="hljs-string">                &quot;QMI/QMAP devices did not become ready&quot;</span><br><span class="hljs-string">            exit 1</span><br><span class="hljs-string">        fi</span><br><span class="hljs-string"></span><br><span class="hljs-string">        # 设备节点出现后，再给 QModem/网络注册少量稳定时间</span><br><span class="hljs-string">        sleep 5</span><br><span class="hljs-string">        touch &quot;$marker&quot;</span><br><span class="hljs-string">        logger -t restart-network \</span><br><span class="hljs-string">            &quot;QMI/QMAP ready, restarting network once&quot;</span><br><span class="hljs-string">        /etc/init.d/network restart</span><br><span class="hljs-string">    &#x27;</span><br>    procd_set_param stdout 1<br>    procd_set_param stderr 1<br>    procd_close_instance<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>启用：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">chmod</span> +x /etc/init.d/restart-network<br>/etc/init.d/restart-network <span class="hljs-built_in">enable</span><br>/etc/init.d/restart-network start<br></code></pre></td></tr></table></figure>
+
+<p>该脚本比固定 <code>sleep 30</code> 更可靠，但仍需要在当前设备上验证。判断恢复成功不能只看 LuCI，应使用：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sh">ubus call network.interface.wwan0_4 status<br>ubus call network.interface.wwan0_6 status<br>ip -6 addr show dev wwan0_1 scope global<br>ip -6 route show default<br></code></pre></td></tr></table></figure>
+
+<p>如果条件式启动脚本仍不能稳定恢复，就需要进一步确认 QModem 与 netifd 是否同时对同一 QMI data call 进行拨号。长期最干净的架构是只保留一个拨号控制者；否则任何自动重启都只能缓解竞态，不能消除两套拨号流程之间的控制权冲突。</p>
+<h3 id="长期运行后IPv6地址消失"><a href="#长期运行后IPv6地址消失" class="headerlink" title="长期运行后IPv6地址消失"></a>长期运行后IPv6地址消失</h3><p>最开始，我认为长期 IPv6 丢失是因为QMI 模式下 DHCPv6&#x2F;PD 客户端不会像 IPv4 一样自动续租，但这种说法存在问题。OpenWrt 的 <a target="_blank" rel="noopener" href="https://github.com/openwrt/odhcp6c">odhcp6c</a> 本身负责 DHCPv6、前缀委派和租约生命周期；如果租约无法续期，应继续检查客户端进程、上游会话、netifd 动态接口及 QMI data call，而不能直接认定“不支持续租”。</p>
+<p>当前设备上的实际现象是：运行一段时间后，<code>wwan0_6</code> 可能从 netifd 中消失，IPv6 默认路由或公网连通性随之丢失；此时执行完整的 <code>network restart</code> 可以重新创建动态接口并恢复 IPv6。因此更准确的描述是：</p>
+<blockquote>
+<p>QMI&#x2F;IPv6 会话或 netifd 动态协议状态在长期运行后没有自动恢复，导致 <code>wwan0_6</code>、IPv6 地址、默认路由或前缀委派中的一个或多个状态失效。</p>
+</blockquote>
+<p>我编写的原有检测脚本存在以下问题：</p>
+<ul>
+<li>任意一次 ping 失败就立即重启整个网络，容易因移动网络瞬时抖动造成重启风暴；</li>
+<li>ping 未指定出口接口，可能使用其他 IPv6 路由；</li>
+<li>同时要求 <code>wwan0_4</code> 正常，会把纯 IPv4 逻辑状态误算为 IPv6 故障；</li>
+<li>没有锁，cron 上一次尚未结束时可能再次启动；</li>
+<li>每十分钟持续写详细日志文件，可能造成不必要的日志增长；</li>
+<li>只检查 <code>br-lan</code> 地址，不能区分上游 IPv6、默认路由和 LAN 前缀哪个环节失效。</li>
+</ul>
+<p>改进后的 <code>/usr/bin/check_ipv6.sh</code> 如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><br>LOCK=<span class="hljs-string">&#x27;/var/lock/ipv6-check.lock&#x27;</span><br>FAILFILE=<span class="hljs-string">&#x27;/tmp/ipv6-check.fail&#x27;</span><br>TAG=<span class="hljs-string">&#x27;ipv6-check&#x27;</span><br>WAN_DEV=<span class="hljs-string">&#x27;wwan0_1&#x27;</span><br>WAN6_IF=<span class="hljs-string">&#x27;wwan0_6&#x27;</span><br>TEST_HOST=<span class="hljs-string">&#x27;2606:4700:4700::1111&#x27;</span><br><br>lock -n <span class="hljs-string">&quot;<span class="hljs-variable">$LOCK</span>&quot;</span> 2&gt;/dev/null || <span class="hljs-built_in">exit</span> 0<br><span class="hljs-built_in">trap</span> <span class="hljs-string">&#x27;lock -u &quot;$LOCK&quot; 2&gt;/dev/null&#x27;</span> EXIT<br><br><span class="hljs-function"><span class="hljs-title">logical_if_up</span></span>() &#123;<br>    ubus call <span class="hljs-string">&quot;network.interface.<span class="hljs-variable">$&#123;WAN6_IF&#125;</span>&quot;</span> status 2&gt;/dev/null |<br>        jsonfilter -e <span class="hljs-string">&#x27;@.up&#x27;</span> 2&gt;/dev/null |<br>        grep -qx <span class="hljs-literal">true</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">has_global_addr</span></span>() &#123;<br>    ip -6 addr show dev <span class="hljs-string">&quot;<span class="hljs-variable">$WAN_DEV</span>&quot;</span> scope global 2&gt;/dev/null |<br>        grep -q <span class="hljs-string">&#x27;inet6 &#x27;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">has_default_route</span></span>() &#123;<br>    ip -6 route show default 2&gt;/dev/null |<br>        grep -q <span class="hljs-string">&quot;dev <span class="hljs-variable">$&#123;WAN_DEV&#125;</span>&quot;</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">has_connectivity</span></span>() &#123;<br>    ping6 -I <span class="hljs-string">&quot;<span class="hljs-variable">$WAN_DEV</span>&quot;</span> -c 2 -w 6 <span class="hljs-string">&quot;<span class="hljs-variable">$TEST_HOST</span>&quot;</span> \<br>        &gt;/dev/null 2&gt;&amp;1<br>&#125;<br><br><span class="hljs-keyword">if</span> logical_if_up &amp;&amp; has_global_addr &amp;&amp; \<br>   has_default_route &amp;&amp; has_connectivity; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> 0 &gt; <span class="hljs-string">&quot;<span class="hljs-variable">$FAILFILE</span>&quot;</span><br>    <span class="hljs-built_in">exit</span> 0<br><span class="hljs-keyword">fi</span><br><br>fails=<span class="hljs-string">&quot;<span class="hljs-subst">$(cat <span class="hljs-string">&quot;<span class="hljs-variable">$FAILFILE</span>&quot;</span> 2&gt;/dev/null)</span>&quot;</span><br><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;<span class="hljs-variable">$fails</span>&quot;</span> <span class="hljs-keyword">in</span><br>    <span class="hljs-string">&#x27;&#x27;</span>|*[!0-9]*) fails=0 ;;<br><span class="hljs-keyword">esac</span><br><br>fails=$((fails + <span class="hljs-number">1</span>))<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$fails</span>&quot;</span> &gt; <span class="hljs-string">&quot;<span class="hljs-variable">$FAILFILE</span>&quot;</span><br>logger -t <span class="hljs-string">&quot;<span class="hljs-variable">$TAG</span>&quot;</span> <span class="hljs-string">&quot;IPv6 check failed (<span class="hljs-variable">$&#123;fails&#125;</span>/3)&quot;</span><br><br><span class="hljs-comment"># 移动网络可能短暂切换小区或刷新会话，连续三次失败后再恢复</span><br>[ <span class="hljs-string">&quot;<span class="hljs-variable">$fails</span>&quot;</span> -lt 3 ] &amp;&amp; <span class="hljs-built_in">exit</span> 0<br><br>logger -t <span class="hljs-string">&quot;<span class="hljs-variable">$TAG</span>&quot;</span> \<br>    <span class="hljs-string">&quot;IPv6 failed repeatedly; restarting network&quot;</span><br><br>/etc/init.d/network restart<br><br>recovered=0<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> $(<span class="hljs-built_in">seq</span> 1 60); <span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">sleep</span> 2<br>    <span class="hljs-keyword">if</span> logical_if_up &amp;&amp; has_global_addr &amp;&amp; \<br>       has_default_route &amp;&amp; has_connectivity; <span class="hljs-keyword">then</span><br>        recovered=1<br>        <span class="hljs-built_in">break</span><br>    <span class="hljs-keyword">fi</span><br><span class="hljs-keyword">done</span><br><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$recovered</span>&quot;</span> -eq 1 ]; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> 0 &gt; <span class="hljs-string">&quot;<span class="hljs-variable">$FAILFILE</span>&quot;</span><br>    logger -t <span class="hljs-string">&quot;<span class="hljs-variable">$TAG</span>&quot;</span> <span class="hljs-string">&quot;IPv6 recovered&quot;</span><br><span class="hljs-keyword">else</span><br>    logger -t <span class="hljs-string">&quot;<span class="hljs-variable">$TAG</span>&quot;</span> <span class="hljs-string">&quot;IPv6 recovery failed&quot;</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+<p>赋予权限并配置 cron：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">chmod</span> +x /usr/bin/check_ipv6.sh<br>*/5 * * * * /usr/bin/check_ipv6.sh<br></code></pre></td></tr></table></figure>
+
+<p>然后重启 cron：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">/etc/init.d/cron restart<br></code></pre></td></tr></table></figure>
+
+<p>之所以最终仍使用<code>/etc/init.d/network restart</code>，而不是<code>ifup wwan0_6</code>，是因为发生故障时 <code>wwan0_6</code> 往往已经不再是 netifd 中存在的逻辑接口。对一个尚未注册的动态接口执行 <code>ifup</code> 无法重建它；完整重启 netifd 网络流程才能重新读取 <code>network.wwan0</code> 并再次运行 <code>quectel</code> 协议处理器。</p>
+<p>不再建议在 <code>/etc/rc.local</code> 中无条件执行：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">( <span class="hljs-built_in">sleep</span> 30; /etc/init.d/network restart ) &amp;<br></code></pre></td></tr></table></figure>
+
+<p>因为固定延时已经在实际排障中证明不稳定，而且可能和前述条件式初始化脚本重复执行。开机恢复由 <code>/etc/init.d/restart-network</code> 负责，运行期间的自愈由 <code>check_ipv6.sh</code> 负责，两者不要同时无条件重启网络。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="修改系统配置"><a href="#修改系统配置" class="headerlink" title="修改系统配置"></a>修改系统配置</h3><p>最终方案的核心不是“多写几个 hotplug 脚本”，而是明确配置所有权，并把开机竞态与长期运行故障分别处理。</p>
+<p>参考以下模板配置 <code>/etc/config/network</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs uci">config interface &#x27;loopback&#x27;<br>        option device &#x27;lo&#x27;<br>        option proto &#x27;static&#x27;<br>        list ipaddr &#x27;127.0.0.1/8&#x27;<br><br>config globals &#x27;globals&#x27;<br>        option packet_steering &#x27;0&#x27;<br><br>config device<br>        option name &#x27;br-lan&#x27;<br>        option type &#x27;bridge&#x27;<br>        list ports &#x27;lan1&#x27;<br>        list ports &#x27;lan2&#x27;<br>        list ports &#x27;lan3&#x27;<br>        list ports &#x27;lan4&#x27;<br><br>config interface &#x27;lan&#x27;<br>        option device &#x27;br-lan&#x27;<br>        option proto &#x27;static&#x27;<br>        option ip6assign &#x27;64&#x27;<br>        option ip6ifaceid &#x27;eui64&#x27;<br>        option ipv6 &#x27;1&#x27;<br>        list ipaddr &#x27;192.168.75.1/24&#x27;<br>        list dns &#x27;223.5.5.5&#x27;<br>        list dns &#x27;223.6.6.6&#x27;<br><br>config interface &#x27;wan&#x27;<br>        option device &#x27;wan&#x27;<br>        option proto &#x27;pppoe&#x27;<br>        option ipv6 &#x27;auto&#x27;<br><br>config interface &#x27;wan6&#x27;<br>        option device &#x27;wan&#x27;<br>        option proto &#x27;dhcpv6&#x27;<br>        option reqaddress &#x27;try&#x27;<br>        option reqprefix &#x27;auto&#x27;<br><br>config interface &#x27;wwan0&#x27;<br>        option modem_config &#x27;4_1&#x27;<br>        option qmodem_preserve &#x27;1&#x27;<br>        option proto &#x27;quectel&#x27;<br>        option metric &#x27;11&#x27;<br>        option device &#x27;/dev/cdc-wdm0&#x27;<br>        option ifname &#x27;wwan0_1&#x27;<br>        option apn &#x27;&lt;运营商APN&gt;&#x27;<br>        option pincode &#x27;&lt;SIM卡PIN&gt;&#x27;<br>        option auth &#x27;none&#x27;<br>        option pdptype &#x27;ipv4v6&#x27;<br>        option defaultroute &#x27;1&#x27;<br>        option peerdns &#x27;0&#x27;<br>        list dns &#x27;223.5.5.5&#x27;<br>        list dns &#x27;223.6.6.6&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>参考当前脚本实际读取的字段配置 <code>/etc/config/qmodem</code>。模组路径、AT 端口、频段等字段应保留设备自动检测出的值，不建议照抄其他设备的完整 section，只需要确保拨号关键字段与 <code>network.wwan0</code> 一致：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs uci">config main &#x27;main&#x27;<br>        option enable_dial &#x27;1&#x27;<br><br>config modem-device &#x27;4_1&#x27;<br>        option alias &#x27;wwan0&#x27;<br>        option path &#x27;/sys/bus/usb/devices/4-1/&#x27;<br>        option data_interface &#x27;usb&#x27;<br>        option enable_dial &#x27;1&#x27;<br>        option soft_reboot &#x27;1&#x27;<br>        option extend_prefix &#x27;1&#x27;<br>        option pdp_type &#x27;ipv4v6&#x27;<br>        option state &#x27;enabled&#x27;<br>        option metric &#x27;11&#x27;<br>        option name &#x27;rg500q-ea&#x27;<br>        option manufacturer &#x27;quectel&#x27;<br>        option platform &#x27;qualcomm&#x27;<br>        option at_port &#x27;/dev/ttyUSB3&#x27;<br>        option apn &#x27;&lt;运营商APN&gt;&#x27;<br>        option pincode &#x27;&lt;SIM卡PIN&gt;&#x27;<br>        option auth &#x27;none&#x27;<br>        option dns_list &#x27;223.5.5.5 223.6.6.6&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>实际应用顺序为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">1. 备份原始 modem_dial.sh 和 UCI 配置；<br>2. 修正 inetrface 拼写错误；<br>3. 给固定 wwan0 增加 qmodem_preserve=&#x27;1&#x27;；<br>4. 修改 set_if()，不覆盖被保护接口；<br>5. 修改 flush_ip_cb()，不删除被保护接口；<br>6. 同步 network.wwan0 与 qmodem.4_1 的 APN、PIN、PDP 和 DNS；<br>7. 保持 quectel-CM-M 使用 -i wwan0，不改成 wwan0_1；<br>8. 开机等待 /dev/cdc-wdm0、wwan0、wwan0_1 出现后，只执行一次 network restart；<br>9. 定时任务定期检查 wwan0_6、上游全局 IPv6、默认路由和公网连通性；<br>10. 连续失败三次才执行 network restart。<br></code></pre></td></tr></table></figure>
+
+<h3 id="备份系统配置"><a href="#备份系统配置" class="headerlink" title="备份系统配置"></a>备份系统配置</h3><p>修改 <code>/usr/share/qmodem</code> 下的脚本不会自动进入常规 UCI 备份，应将相关文件加入 <code>/etc/sysupgrade.conf</code>，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">/usr/share/qmodem/modem_dial.sh<br>/etc/init.d/restart-network<br>/usr/bin/check_ipv6.sh<br></code></pre></td></tr></table></figure>
+
+<p>然后检查并生成备份：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">sysupgrade -l<br>sysupgrade -b /tmp/immortalwrt-backup.tar.gz<br></code></pre></td></tr></table></figure>
+
+<h3 id="添加HTTPS访问"><a href="#添加HTTPS访问" class="headerlink" title="添加HTTPS访问"></a>添加HTTPS访问</h3><p>ImmortalWrt 系统默认只支持 HTTP 访问 web 后台，如果还需要为 LuCI 配置 HTTPS，可以继续使用现有 uhttpd 结构，uhttpd 配置示例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs uci">config uhttpd &#x27;main&#x27;<br>        list listen_http &#x27;0.0.0.0:80&#x27;<br>        list listen_http &#x27;[::]:80&#x27;<br>        list listen_https &#x27;0.0.0.0:443&#x27;<br>        list listen_https &#x27;[::]:443&#x27;<br>        option redirect_https &#x27;1&#x27;<br>        option home &#x27;/www&#x27;<br>        option rfc1918_filter &#x27;1&#x27;<br>        option max_requests &#x27;3&#x27;<br>        option max_connections &#x27;100&#x27;<br>        option cert &#x27;/etc/config/certs/cloudflare.pem&#x27;<br>        option key &#x27;/etc/config/certs/cloudflare.key&#x27;<br>        option cgi_prefix &#x27;/cgi-bin&#x27;<br>        list lua_prefix &#x27;/cgi-bin/luci=/usr/lib/lua/luci/sgi/uhttpd.lua&#x27;<br>        option script_timeout &#x27;60&#x27;<br>        option network_timeout &#x27;30&#x27;<br>        option http_keepalive &#x27;20&#x27;<br>        option tcp_keepalive &#x27;1&#x27;<br>        option ubus_prefix &#x27;/ubus&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>该 HTTPS 配置与 QModem&#x2F;IPv6 修复是两个独立问题。<code>network restart</code> 后若 Web 后台不可访问，应单独检查：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">/etc/init.d/uhttpd status<br>logread -e uhttpd -e procd<br>ss -lntp | grep -E <span class="hljs-string">&#x27;:(80|443)&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>不应把 uhttpd 进程崩溃简单归因于 IPv6 地址尚未出现。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4/" class="category-chain-item">网络运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%99%E7%A8%8B/">#教程</a>
+      
+        <a href="/tags/%E6%95%B0%E7%A0%81%E6%8A%98%E8%85%BE/">#数码折腾</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ImmortalWrt系统CPE路由器蜂窝模组完整排障记录</div>
+      <div>https://rookieterry.github.io/2025/07/20/ImmortalWrt系统CPE路由器蜂窝模组完整排障记录/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>HackerTerry</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>星期日, 七月 20日 2025, 11:56 晚上</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/11/12/Klook2025%E4%BA%A7%E7%A0%94%E5%AE%9E%E4%B9%A0%E7%94%9F%EF%BC%88%E6%8A%80%E6%9C%AF%E7%A0%94%E5%8F%91%EF%BC%89%E4%B8%80%E9%9D%A2%E9%9D%A2%E7%BB%8F/" title="Klook2025产研实习生（技术研发）一面面经">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Klook2025产研实习生（技术研发）一面面经</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/22/360%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%91%98%EF%BC%88Web%E6%96%B9%E5%90%91%EF%BC%89%E7%A7%8B%E6%8B%9B%E9%9D%A2%E7%BB%8F/" title="360安全研究员（Web方向）秋招面经">
+                        <span class="hidden-mobile">360安全研究员（Web方向）秋招面经</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.39/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://deluxe-twilight-0b2696.netlify.app/.netlify/functions/twikoo","region":"us-east-2","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+              Fluid.plugins.imageCaption(imgSelector);
+              Fluid.plugins.fancyBox(imgSelector);
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br> <a href="https://ipw.cn/ipv6webcheck/?site=hackerterry.netlify.app" title="本站支持IPv6访问" target="_blank"><img style="display:inline-block;vertical-align:middle" alt="本站支持IPv6访问" src="https://static.ipw.cn/icon/ipv6-s5.svg" srcset="/img/loading.gif" lazyload></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
