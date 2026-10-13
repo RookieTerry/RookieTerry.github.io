@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>腾讯云雀自动化测试校招一面面经</title>
+    <link href="/2026/10/13/%E8%85%BE%E8%AE%AF%E4%BA%91%E9%9B%80%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E6%A0%A1%E6%8B%9B%E4%B8%80%E9%9D%A2%E9%9D%A2%E7%BB%8F/"/>
+    <url>/2026/10/13/%E8%85%BE%E8%AE%AF%E4%BA%91%E9%9B%80%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E6%A0%A1%E6%8B%9B%E4%B8%80%E9%9D%A2%E9%9D%A2%E7%BB%8F/</url>
+    
+    <content type="html"><![CDATA[<h1 id="岗位名称"><a href="#岗位名称" class="headerlink" title="岗位名称"></a>岗位名称</h1><p>测试工程师</p><h1 id="工作地点"><a href="#工作地点" class="headerlink" title="工作地点"></a>工作地点</h1><p>武汉</p><h1 id="业务方向"><a href="#业务方向" class="headerlink" title="业务方向"></a>业务方向</h1><p>微信小店测试</p><h1 id="岗位职责"><a href="#岗位职责" class="headerlink" title="岗位职责"></a>岗位职责</h1><p>负责平台产品质量保障、缺陷及用户反馈跟进等，主要包括：</p><ol><li>根据业务需求设计测试方案，编写测试用例，执行系统测试，保障业务质量；</li><li>参与用户反馈跟进、问题复现等工作；</li><li>参与业务自动化测试能力建设，编写&#x2F;维护自动化用例。</li></ol><h1 id="岗位要求"><a href="#岗位要求" class="headerlink" title="岗位要求"></a>岗位要求</h1><ol><li>本科及以上学历，理工科相关专业，有良好的计算机相关基础</li><li>一年左右测试经验，背景优秀的应届毕业生亦可； </li><li>责任感强、有快速学习能力和较强的逻辑思维能力、沟通能力；</li><li>熟悉软件工程，了解测试流程及基本测试方法；</li><li>具备代码阅读能力，具备初级开发能力，掌握Python、Go、C&#x2F;C++其中1种或多门语言；</li></ol><h1 id="时间线"><a href="#时间线" class="headerlink" title="时间线"></a>时间线</h1><p>2026&#x2F;8&#x2F;19 上午11:00一面</p><h1 id="面试问题"><a href="#面试问题" class="headerlink" title="面试问题"></a>面试问题</h1><ol><li>自我介绍</li><li>简单介绍一下项目经历</li><li>怎么保持自动化测试的稳定性？</li><li>测试中的难题怎么解决的？</li><li>测试用例中P0和P1级别的大概占比多少？</li><li>测试用例通过率大概有多少？</li><li>回归测试是只跑了P0和P1级别的用例吗，用时怎么统计的？</li><li>整个自动化测试框架都是自己独立实现的吗？</li><li>接口测试有接入自动化流程吗？</li><li>测试的接口主要有哪些功能？</li><li>自动化测试怎么实现测试数据自动生成和清理的？</li><li>Linux常用命令，以及用哪条命令查看日志的？</li><li>手撕requests库和curl命令发起http请求的代码</li><li>手撕leetcode算法题-两数之和</li><li>http和https的区别</li><li>怎么用AI工具辅助测试工作的？有用过workbuddy吗？</li><li>反问环节，有没有什么需要问的？</li></ol><h1 id="个人感想"><a href="#个人感想" class="headerlink" title="个人感想"></a>个人感想</h1><p>面试主要侧重对简历上实习和项目经历的拷打，问的很细节。后面好几天一直都没收到反馈，应该是默拒了。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>生活点滴</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>面经</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Klook2025产研实习生（技术研发）一面面经</title>
     <link href="/2025/11/12/Klook2025%E4%BA%A7%E7%A0%94%E5%AE%9E%E4%B9%A0%E7%94%9F%EF%BC%88%E6%8A%80%E6%9C%AF%E7%A0%94%E5%8F%91%EF%BC%89%E4%B8%80%E9%9D%A2%E9%9D%A2%E7%BB%8F/"/>
     <url>/2025/11/12/Klook2025%E4%BA%A7%E7%A0%94%E5%AE%9E%E4%B9%A0%E7%94%9F%EF%BC%88%E6%8A%80%E6%9C%AF%E7%A0%94%E5%8F%91%EF%BC%89%E4%B8%80%E9%9D%A2%E9%9D%A2%E7%BB%8F/</url>
